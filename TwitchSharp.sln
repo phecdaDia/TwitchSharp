@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchRPGBot", "TwitchRPGBo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiPyramidsBot", "AntiPyramidsBot\AntiPyramidsBot.csproj", "{67152427-4695-4079-A6A3-60CF18931EA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaouBot", "Maoubot\MaouBot.csproj", "{D9958505-06E3-4D33-BE04-C8745F0CB511}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maoubot-GUI", "Maoubot-GUI\Maoubot-GUI.csproj", "{ECB2C5C1-41AE-4BE2-8609-B38D51006CDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{67152427-4695-4079-A6A3-60CF18931EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67152427-4695-4079-A6A3-60CF18931EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67152427-4695-4079-A6A3-60CF18931EA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECB2C5C1-41AE-4BE2-8609-B38D51006CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB2C5C1-41AE-4BE2-8609-B38D51006CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB2C5C1-41AE-4BE2-8609-B38D51006CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB2C5C1-41AE-4BE2-8609-B38D51006CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -90,16 +90,39 @@ namespace AntiPyramidsBot
 							if (!Same) return;
 							else PyramidCounter++;
 
-							if (PyramidCounter >= MinPyramidSize)
+							//if (PyramidCounter >= MinPyramidSize)
+							//{
+							//	Tcb.SendChatMessage(AntiPyramidMessages[MessageCounter]);
+							//	MessageCounter++;
+							//	MessageCounter %= AntiPyramidMessages.Length;
+							//	PyramidCounter = 0;
+							//	CurrentNick = Tcb.Nick;
+
+							//}
+	                    } else if (PyramidCounter >= MinPyramidSize)
+						{
+							if (PyramidCounter - 1 == MessageSplit.Length)
 							{
+								bool Same = true;
+								String Sample = MessageSplit[0];
+								for (int i = 1; i < MessageSplit.Length; i++)
+								{
+									if (MessageSplit[i] != Sample) Same = false;
+
+								}
+
+								if (!Same) return;
+
 								Tcb.SendChatMessage(AntiPyramidMessages[MessageCounter]);
 								MessageCounter++;
 								MessageCounter %= AntiPyramidMessages.Length;
 								PyramidCounter = 0;
 								CurrentNick = Tcb.Nick;
-
+							} else
+							{
+								PyramidCounter = 0;
 							}
-	                    } else
+						} else
 						{
 							PyramidCounter = 0;
 						}
