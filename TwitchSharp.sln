@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaouBot", "TwitchGame\MaouBot.csproj", "{D9958505-06E3-4D33-BE04-C8745F0CB511}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchSharp", "TwitchSharp\TwitchSharp.csproj", "{FD0F112C-2978-43D4-AF63-527A81D01EAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KubaBot", "KubaBot\KubaBot.csproj", "{B6145704-646C-44F0-AF5D-100DA1F6F0DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchRPGBot", "TwitchRPGBot\TwitchRPGBot.csproj", "{191C7BF8-8FBB-4D46-AF1C-252933A46C1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokenBot", "BrokenBot\BrokenBot.csproj", "{9AF6111F-3B0D-4D70-8690-EAA452A87394}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiPyramidsBot", "AntiPyramidsBot\AntiPyramidsBot.csproj", "{67152427-4695-4079-A6A3-60CF18931EA5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9958505-06E3-4D33-BE04-C8745F0CB511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD0F112C-2978-43D4-AF63-527A81D01EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD0F112C-2978-43D4-AF63-527A81D01EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD0F112C-2978-43D4-AF63-527A81D01EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD0F112C-2978-43D4-AF63-527A81D01EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6145704-646C-44F0-AF5D-100DA1F6F0DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6145704-646C-44F0-AF5D-100DA1F6F0DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6145704-646C-44F0-AF5D-100DA1F6F0DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6145704-646C-44F0-AF5D-100DA1F6F0DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{191C7BF8-8FBB-4D46-AF1C-252933A46C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{191C7BF8-8FBB-4D46-AF1C-252933A46C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{191C7BF8-8FBB-4D46-AF1C-252933A46C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{191C7BF8-8FBB-4D46-AF1C-252933A46C1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AF6111F-3B0D-4D70-8690-EAA452A87394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AF6111F-3B0D-4D70-8690-EAA452A87394}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AF6111F-3B0D-4D70-8690-EAA452A87394}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AF6111F-3B0D-4D70-8690-EAA452A87394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67152427-4695-4079-A6A3-60CF18931EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67152427-4695-4079-A6A3-60CF18931EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67152427-4695-4079-A6A3-60CF18931EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67152427-4695-4079-A6A3-60CF18931EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
