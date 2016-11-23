@@ -20,6 +20,7 @@ namespace TwitchSharp.Utilities
 		{
 			try
 			{
+				new FileInfo(FilePath).Directory.Create();
 				using (StreamWriter writer = new StreamWriter(FilePath))
 				{
 					XmlSerializer xmlSerializer = new XmlSerializer(SourceObject.GetType());

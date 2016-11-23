@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xml\QuoteFile.cs" />
     <EmbeddedResource Include="Maoubot.resx">
       <DependentUpon>Maoubot.cs</DependentUpon>
     </EmbeddedResource>
@@ -78,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TwitchSharp\TwitchSharp.csproj">
+      <Project>{fd0f112c-2978-43d4-af63-527a81d01eab}</Project>
+      <Name>TwitchSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
