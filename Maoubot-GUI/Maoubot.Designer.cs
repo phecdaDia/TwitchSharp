@@ -34,6 +34,9 @@
 			this.Debugbox = new System.Windows.Forms.TextBox();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.buttonConfigLoad = new System.Windows.Forms.Button();
 			this.buttonConfigSave = new System.Windows.Forms.Button();
 			this.textBoxChannel = new System.Windows.Forms.TextBox();
@@ -42,9 +45,6 @@
 			this.buttonConnect = new System.Windows.Forms.Button();
 			this.textBoxNickname = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -135,6 +135,33 @@
 			this.tabPage1.Text = "Login/Connect";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(6, 61);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(46, 13);
+			this.label3.TabIndex = 9;
+			this.label3.Text = "Channel";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(6, 35);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(56, 13);
+			this.label2.TabIndex = 8;
+			this.label2.Text = "oAuth Key";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(4, 9);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(55, 13);
+			this.label1.TabIndex = 7;
+			this.label1.Text = "Nickname";
+			// 
 			// buttonConfigLoad
 			// 
 			this.buttonConfigLoad.Location = new System.Drawing.Point(169, 84);
@@ -143,6 +170,7 @@
 			this.buttonConfigLoad.TabIndex = 6;
 			this.buttonConfigLoad.Text = "Load Config";
 			this.buttonConfigLoad.UseVisualStyleBackColor = true;
+			this.buttonConfigLoad.Click += new System.EventHandler(this.buttonConfigLoad_Click);
 			// 
 			// buttonConfigSave
 			// 
@@ -152,6 +180,7 @@
 			this.buttonConfigSave.TabIndex = 5;
 			this.buttonConfigSave.Text = "Save Config";
 			this.buttonConfigSave.UseVisualStyleBackColor = true;
+			this.buttonConfigSave.Click += new System.EventHandler(this.buttonConfigSave_Click);
 			// 
 			// textBoxChannel
 			// 
@@ -177,6 +206,7 @@
 			this.button2.TabIndex = 2;
 			this.button2.Text = "Disconnect/Quit";
 			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// buttonConnect
 			// 
@@ -205,33 +235,6 @@
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "tabPage2";
 			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(4, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(55, 13);
-			this.label1.TabIndex = 7;
-			this.label1.Text = "Nickname";
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 35);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(56, 13);
-			this.label2.TabIndex = 8;
-			this.label2.Text = "oAuth Key";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 61);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(46, 13);
-			this.label3.TabIndex = 9;
-			this.label3.Text = "Channel";
 			// 
 			// Maoubot
 			// 

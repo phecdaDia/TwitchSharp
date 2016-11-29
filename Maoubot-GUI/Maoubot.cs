@@ -62,8 +62,9 @@ namespace Maoubot_GUI
 		/// Append Message to the Chatbot
 		/// </summary>
 		/// <param name="Message"></param>
-		private void LogWrite(String Message)
+		private void LogWrite(String Message, params object[] format)
 		{
+			Message = String.Format(Message, format);
 			if (Chatbox.InvokeRequired)
 			{
 				Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
@@ -78,17 +79,18 @@ namespace Maoubot_GUI
 		/// Append Message to the Chatbot and a newline.
 		/// </summary>
 		/// <param name="Message"></param>
-		private void LogWriteLine(String Message)
+		private void LogWriteLine(String Message, params object[] format)
 		{
-			LogWrite(String.Format("{0}\n", Message));
+			LogWrite(String.Format("{0}\n", Message), format);
 		}
 		
 		/// <summary>
 		/// Append Message to the Debugbox
 		/// </summary>
 		/// <param name="Message"></param>
-		private void LogDebugWrite(String Message)
+		private void LogDebugWrite(String Message, params object[] format)
 		{
+			Message = String.Format(Message, format);
 			if (Debugbox.InvokeRequired)
 			{
 				Debugbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
@@ -103,9 +105,9 @@ namespace Maoubot_GUI
 		/// Append Message to the Debugbox and a newline
 		/// </summary>
 		/// <param name="Message"></param>
-		private void LogDebugWriteLine(String Message)
+		private void LogDebugWriteLine(String Message, params object[] format)
 		{
-			LogDebugWrite(String.Format("{0}\n", Message));
+			LogDebugWrite(String.Format("{0}\n", Message), format);
 		}
 
 
@@ -204,16 +206,47 @@ namespace Maoubot_GUI
 			if (e.MessageType == MessageType.Ping)
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
+				LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
 			}
 			else if (e.MessageType == MessageType.Chat || e.MessageType == MessageType.Whisper)
 			{
-
+				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+			}
+			else if (e.MessageType == MessageType.Notification)
+			{
+				LogWriteLine("[NOTIFY] {0}", e.Message);
+			} else if (e.MessageType == MessageType.Server)
+			{
+				LogDebugWriteLine("{0}", e.RawMessage);
 			}
 		}
 
 		private void buttonConnect_Click(object sender, EventArgs e)
 		{
+			SaveTwitchConfig();
 
+			Tcb.setNick(Cf.Nick);
+			Tcb.setOAuth(Cf.oAuth);
+
+			Tcb.Run();
+
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			Tcb.Stop();
+			Tcb.PartChannel();
+
+		}
+
+		private void buttonConfigSave_Click(object sender, EventArgs e)
+		{
+			SaveTwitchConfig();
+		}
+
+		private void buttonConfigLoad_Click(object sender, EventArgs e)
+		{
+			LoadTwitchConfig();
 		}
 	}
 }

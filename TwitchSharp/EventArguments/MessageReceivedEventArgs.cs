@@ -56,6 +56,10 @@ namespace TwitchSharp.EventArguments
 
                 
                 this.Nick = s1[0].Split('!').First().Substring(1);
+				if (this.Nick == "twitchnotify")
+				{
+					this.MessageType = MessageType.Notification;
+				}
                 this.Channel = s1[2].Substring(1);
                 this.Host = s1[0].Split('@').Last();
             }
@@ -68,5 +72,6 @@ namespace TwitchSharp.EventArguments
         Chat = 1,
         Ping = 2,
 		Whisper = 3,
+		Notification = 4,
     }
 }
