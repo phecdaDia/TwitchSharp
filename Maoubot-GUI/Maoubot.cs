@@ -20,9 +20,11 @@ namespace Maoubot_GUI
 		private static readonly String ConfigPath = @"Config\";
 		private static readonly String TwitchConfigPath = ConfigPath + @"twitch.xml";
 		private static readonly String QuotesConfigPath = ConfigPath + @"quotes.xml";
+		private static readonly String MaoubotConfigPath = ConfigPath + @"maoubot.xml";
 
 		private ConfigFile Cf;
-		private QuoteFile Qf;
+		private QuoteConfig Qf;
+		private BotConfig Bf;
 
 		private TwitchChatBot Tcb;
 
@@ -42,9 +44,25 @@ namespace Maoubot_GUI
 
 			this.Load += LoadForm;
 
-			
+
 		}
 
+		/// <summary>
+		/// Creates the TCB object and adds events
+		/// </summary>
+		private void CreateTwitchChatBot()
+		{
+			this.Tcb = new TwitchChatBot();
+			this.Tcb.LoginCompleted += (s, e) =>
+			{
+				Tcb.JoinChannel(Cf.Channel);
+			};
+
+			this.Tcb.MessageReceived += Tcb_MessageReceived;
+			this.Tcb.CommandExecute += Tcb_CommandExecute;
+		}
+
+		#region FormEvents
 		/// <summary>
 		/// Load Event Method
 		/// Loads important assets ( Twitch.xml, etc )
@@ -57,9 +75,10 @@ namespace Maoubot_GUI
 			LoadQuoteConfig();
 			CreateTwitchChatBot();
 		}
-
+		#endregion
+		#region Logging
 		/// <summary>
-		/// Append Message to the Chatbot
+		/// Append Message to the Chatbox
 		/// </summary>
 		/// <param name="Message"></param>
 		private void LogWrite(String Message, params object[] format)
@@ -76,7 +95,7 @@ namespace Maoubot_GUI
 		}
 		
 		/// <summary>
-		/// Append Message to the Chatbot and a newline.
+		/// Append Message to the Chatbox and a newline.
 		/// </summary>
 		/// <param name="Message"></param>
 		private void LogWriteLine(String Message, params object[] format)
@@ -93,7 +112,7 @@ namespace Maoubot_GUI
 			Message = String.Format(Message, format);
 			if (Debugbox.InvokeRequired)
 			{
-				Debugbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
+				Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
 			}
 			else
 			{
@@ -109,11 +128,8 @@ namespace Maoubot_GUI
 		{
 			LogDebugWrite(String.Format("{0}\n", Message), format);
 		}
-
-
-
-		// Config Methods
-
+		#endregion
+		#region Config Save/Load
 		/// <summary>
 		/// Saves the TwitchConfig to twitch.xml **XXX_TODO_XXX**
 		/// </summary>
@@ -158,19 +174,27 @@ namespace Maoubot_GUI
 
 		// Quote Methods
 
+		/// <summary>
+		/// Saves the QuoteConfig to quotes.xml
+		/// </summary>
 		private void SaveQuoteConfig()
 		{
-			if (this.Qf == null) QuoteFile.SaveToXml(QuotesConfigPath, new QuoteFile());
+			if (this.Qf == null) QuoteConfig.SaveToXml(QuotesConfigPath, new QuoteConfig());
 			else
 			{
-				QuoteFile.SaveToXml(ConfigPath + QuotesConfigPath, Qf);
+				QuoteConfig.SaveToXml(ConfigPath + QuotesConfigPath, Qf);
 				
 			}
 		}
 
+
+		/// <summary>
+		/// Load your QuoteConfig
+		/// Creates an empty QuoteConfig if none could be found.
+		/// </summary>
 		private void LoadQuoteConfig()
 		{
-			this.Qf = QuoteFile.LoadFromXml(QuotesConfigPath);
+			this.Qf = QuoteConfig.LoadFromXml(QuotesConfigPath);
 			if (this.Qf == null)
 			{
 				SaveQuoteConfig();
@@ -178,29 +202,44 @@ namespace Maoubot_GUI
 			}
 		}
 
-		// TwitchChatBot Methods
-
-		/// <summary>
-		/// Creates the TCB object and adds events
-		/// </summary>
-		private void CreateTwitchChatBot()
+		public void SaveMaoubotConfig()
 		{
-			this.Tcb = new TwitchChatBot();
-			this.Tcb.LoginCompleted += (s, e) =>
+			if (this.Bf == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
+			else
 			{
-				Tcb.JoinChannel(Cf.Channel);
-			};
 
-			this.Tcb.MessageReceived += Tcb_MessageReceived;
-			this.Tcb.CommandExecute += Tcb_CommandExecute;
+
+
+				BotConfig.SaveToXml(MaoubotConfigPath, Bf);
+			}
 		}
 
-		// Execute a command
+		public void LoadMaoubotConfig()
+		{
+			this.Bf = BotConfig.LoadFromXml(MaoubotConfigPath);
+			if (this.Bf == null)
+			{
+				SaveMaoubotConfig();
+				LoadMaoubotConfig();
+			}
+		}
+		#endregion
+		#region TCB Events
+		/// <summary>
+		/// Executes the commands
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Tcb_CommandExecute(object sender, CommandExecuteEventArgs e)
 		{
 			//throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Fires when any message is received.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Tcb_MessageReceived(object sender, MessageReceivedEventArgs e)
 		{
 			if (e.MessageType == MessageType.Ping)
@@ -218,9 +257,19 @@ namespace Maoubot_GUI
 			} else if (e.MessageType == MessageType.Server)
 			{
 				LogDebugWriteLine("{0}", e.RawMessage);
+			} else
+			{
+				LogWriteLine("[UNKNOWN]: {0} -> {1}", e.MessageType, e.RawMessage);
 			}
 		}
-
+		#endregion
+		#region FormComponent Events
+		/// <summary>
+		/// Connects the bot with the specified settings. 
+		/// What else?
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonConnect_Click(object sender, EventArgs e)
 		{
 			SaveTwitchConfig();
@@ -232,21 +281,36 @@ namespace Maoubot_GUI
 
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Disconnects and stops the bot.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void buttonDisconnect_Click(object sender, EventArgs e)
 		{
 			Tcb.Stop();
 			Tcb.PartChannel();
-
 		}
 
+		/// <summary>
+		/// Saves the TwitchConfig
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonConfigSave_Click(object sender, EventArgs e)
 		{
 			SaveTwitchConfig();
 		}
 
+		/// <summary>
+		/// Loads the TwitchConfig
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonConfigLoad_Click(object sender, EventArgs e)
 		{
 			LoadTwitchConfig();
 		}
+		#endregion
 	}
 }

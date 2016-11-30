@@ -9,12 +9,12 @@ using TwitchSharp.Utilities;
 
 namespace Maoubot_GUI.Xml
 {
-	public class QuoteFile : XmlManager
+	public class QuoteConfig : XmlManager
 	{
 
 		public String[] Quotes;
 
-		public QuoteFile()
+		public QuoteConfig()
 			: base()
 		{
 			Init();
@@ -34,7 +34,7 @@ namespace Maoubot_GUI.Xml
 			}
 		}
 
-		public static new QuoteFile LoadFromXml(string FilePath)
+		public static new QuoteConfig LoadFromXml(string FilePath)
 		{
 
 			try
@@ -42,8 +42,8 @@ namespace Maoubot_GUI.Xml
 				// XXX		Make this method return a subclass depending on the inheritance
 				using (StreamReader reader = new StreamReader(FilePath))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(QuoteFile));
-					return (QuoteFile)xmlSerializer.Deserialize(reader);
+					XmlSerializer xmlSerializer = new XmlSerializer(typeof(QuoteConfig));
+					return (QuoteConfig)xmlSerializer.Deserialize(reader);
 				}
 			}
 			catch (Exception ex)
