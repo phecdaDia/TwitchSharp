@@ -13,30 +13,82 @@ namespace TwitchSharp
 {
     public class TwitchChatBot
     {
+		/// <summary>
+		/// Hostname address for Twitchchat
+		/// </summary>
         public readonly String HOST = "irc.twitch.tv";
+		/// <summary>
+		/// Hostname port for Twitchchat
+		/// </summary>
         public readonly UInt16 PORT = 6667;
 
+		/// <summary>
+		/// TCP connection
+		/// </summary>
         private TcpClient TcpClient;
+		/// <summary>
+		/// Reading messages
+		/// </summary>
         private StreamReader InputStream;
+		/// <summary>
+		/// Sending messages
+		/// </summary>
         private StreamWriter OutputStream;
 
+		/// <summary>
+		/// Nickname set by the user
+		/// </summary>
         public String Nick;
+		/// <summary>
+		/// OAuth set by the user. Kept private for privacy.
+		/// </summary>
         private String OAuth;
-        private String Channel;
-        private List<String> Channels = new List<string>();
+		/// <summary>
+		/// Currently connected channel
+		/// </summary>
+        public String Channel;
 
-        public bool Active = true;
+		/// <summary>
+		/// Is the bot currently running?
+		/// </summary>
+        public bool Active = false;
+		/// <summary>
+		/// Is connected to a channel.
+		/// </summary>
+		public bool InChannel
+		{
+			get { return !String.IsNullOrEmpty(Channel); }
+		}
 
-        public char CommandChar = '!';
+		/// <summary>
+		/// Char that a message has to begin with so the CommandExecuteEventHandler fires
+		/// </summary>
+		public char CommandChar = '!';
 
         // Events
+		/// <summary>
+		/// Event that fires after successful login
+		/// </summary>
         public event LoginCompletedEventHandler LoginCompleted;
+		/// <summary>
+		/// Event that fires when any message is received
+		/// </summary>
         public event MessageReceivedEventHandler MessageReceived;
+		/// <summary>
+		/// Event that fires when the bot joins a channel
+		/// </summary>
         public event ChannelJoinedEventHandler ChannelJoined;
+		/// <summary>
+		/// Event that fires when we disconnect from a channel
+		/// </summary>
         public event ChannelPartEventHandler ChannelPart;
+		/// <summary>
+		/// Event that fires when a message starting with the CommandChar is received.
+		/// MessageReceiveEvent also fires.
+		/// </summary>
         public event CommandExecuteEventHandler CommandExecute;
 
-        public delegate void LoginCompletedEventHandler(object sender, LoginCompletedEventArgs e);
+		public delegate void LoginCompletedEventHandler(object sender, LoginCompletedEventArgs e);
         public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
         public delegate void ChannelJoinedEventHandler(object sender, ChannelJoinedEventArgs e);
         public delegate void ChannelPartEventHandler(object sender, ChannelPartEventArgs e);
@@ -54,7 +106,7 @@ namespace TwitchSharp
         /// <param name="oAuth">oAuth token</param>
         public TwitchChatBot(String Nick, String OAuth)
         {
-            
+            // all nicks are lowercase
             this.Nick = Nick.ToLower();
             this.OAuth = OAuth;
         }
@@ -91,31 +143,48 @@ namespace TwitchSharp
         /// </summary>
         public void Run()
         {
+			// if the bot is already active, don't do anything.
+			if (Active) return;
+
+			// the bot is now running. set Active to true.
             this.Active = true;
+			// Create a new TcpClient
             TcpClient = new TcpClient(HOST, PORT);
 
             // I/O
+			// Get the InputStream to receive messages
             InputStream = new StreamReader(this.TcpClient.GetStream());
+			// Get the OutputStream to send messages
             OutputStream = new StreamWriter(this.TcpClient.GetStream());
 
             // Login
+			//
+			// Twitch login format:
+			//		PASS OAuth
+			//		NICK Nick
+			//		USER 
             OutputStream.WriteLine("PASS {0}", OAuth);
             OutputStream.WriteLine("NICK {0}", Nick);
             OutputStream.WriteLine("USER {0} 8 * :{0}", Nick);
+			// Send everything.
             OutputStream.Flush();
 
+			// Login is completed. Fire the event
             OnLoginCompleted(new LoginCompletedEventArgs(Nick, OAuth));
 
             // Start Read Loop
+			// We start a new thread for reading.
             ReadThread = new Thread(() =>
             {
                 while (Active)
                 {
+					// Read the latest message
                     String Message = ReadMessage();
 
-                    //Console.WriteLine(ReadMessage());
+					// We received a message, fire the MessageReceived event
                     MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
                     OnMessageReceived(MREA);
+					// if the first char is
 					if (MREA?.Message?.FirstOrDefault() == CommandChar)
 					{
 						if (MREA?.MessageType == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
@@ -147,8 +216,11 @@ namespace TwitchSharp
         /// <param name="Channel">Channel</param>
         public void JoinChannel(String Channel)
         {
-            if (!String.IsNullOrEmpty(Channel)) this.PartChannel();
-
+			if (!String.IsNullOrEmpty(Channel))
+			{
+				Console.WriteLine("Unable to join multiple channels, disconnecting.");
+				this.PartChannel();
+			}
             Channel = Channel.ToLower();
             SendIrcMessage("JOIN #{0}", Channel);
 
@@ -166,8 +238,11 @@ namespace TwitchSharp
         /// <param name="Reason">Reason for part</param>
         public void PartChannel(String Reason = "")
         {
-            if (String.IsNullOrEmpty(this.Channel)) return;
-
+			if (String.IsNullOrEmpty(this.Channel))
+			{
+				Console.WriteLine("Unable to part channel: Not connected to any channel");
+				return;
+			}
             Channel = Channel.ToLower();
             OnChannelPart(new ChannelPartEventArgs(Channel, Reason));
                
@@ -176,7 +251,7 @@ namespace TwitchSharp
             Console.WriteLine("Parted channel {0}: {1}", Channel, Reason);
 
             this.Channel = String.Empty;
-        }
+		}
 
         /// <summary>
         /// Sends a basic IRC Message to the Server
@@ -185,6 +260,11 @@ namespace TwitchSharp
         /// <param name="args">Format</param>
         public void SendIrcMessage(String Message, params object[] args)
         {
+			if (OutputStream == null)
+			{
+				Console.WriteLine("Unable to send IRC Message: Outputstream is null");
+				return;
+			}
             OutputStream.WriteLine(Message, args);
             OutputStream.Flush();
             Console.WriteLine("Send IRC Message\t{0}", String.Format(Message, args));
@@ -240,10 +320,10 @@ namespace TwitchSharp
         /// <param name="args"></param>
         public void SendWhisperMessage(String User, String Message, params object[] args)
         {
-            if (Channels.Count > 0)
-            {
+			if (!String.IsNullOrWhiteSpace(this.Channel))
+			{
                 String t_ = String.Format(".w {0} {1}", User, Message);
-                SendEscapedChatMessage(Channels[0], t_, args);
+                SendEscapedChatMessage(this.Channel, t_, args);
             }
         }
 

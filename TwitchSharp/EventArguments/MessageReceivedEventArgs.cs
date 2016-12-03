@@ -27,6 +27,7 @@ namespace TwitchSharp.EventArguments
         public MessageReceivedEventArgs(String Message)
         {
             this.RawMessage = Message;
+			Console.WriteLine(RawMessage);
 
             String[] s1 = Message.Split(' ');
             if (Message.StartsWith(@"PING "))
@@ -56,10 +57,10 @@ namespace TwitchSharp.EventArguments
 
                 
                 this.Nick = s1[0].Split('!').First().Substring(1);
-				if (this.Nick == "twitchnotify")
-				{
-					this.MessageType = MessageType.Notification;
-				}
+				//if (this.Nick == "twitchnotify")
+				//{
+				//	this.MessageType = MessageType.Notification;
+				//}
                 this.Channel = s1[2].Substring(1);
                 this.Host = s1[0].Split('@').Last();
             }
