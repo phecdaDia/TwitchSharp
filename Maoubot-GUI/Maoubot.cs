@@ -270,14 +270,20 @@ namespace Maoubot_GUI
 			}
 			else if (e.MessageType == MessageType.Chat || e.MessageType == MessageType.Whisper)
 			{
-				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				if (e.Nick == "twitchnotify")
+				{
+					LogDebugWriteLine("[NOTIFY] {0}", e.Message);
+				} else
+				{
+					LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				}
 			}
 			else if (e.MessageType == MessageType.Notification)
 			{
-				LogWriteLine("[NOTIFY] {0}", e.Message);
+				LogDebugWriteLine("[NOTIFY] {0}", e.Message);
 			} else if (e.MessageType == MessageType.Server)
 			{
-				LogDebugWriteLine("{0}", e.RawMessage);
+				LogDebugWriteLine("[SERVER] {0}", e.RawMessage);
 			} else
 			{
 				LogWriteLine("[UNKNOWN]: {0} -> {1}", e.MessageType, e.RawMessage);
