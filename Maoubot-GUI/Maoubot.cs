@@ -312,5 +312,13 @@ namespace Maoubot_GUI
 			LoadTwitchConfig();
 		}
 		#endregion
+
+		private void textBoxMessage_KeyPress(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+
+			}
+		}
 	}
 }
