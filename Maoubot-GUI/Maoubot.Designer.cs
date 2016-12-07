@@ -46,7 +46,7 @@
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.Chatbox = new System.Windows.Forms.TextBox();
 			this.textBoxMessage = new System.Windows.Forms.TextBox();
-			this.buttonMessageSend = new System.Windows.Forms.Button();
+			this.buttonSendMessage = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -69,7 +69,7 @@
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 588F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 612F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(884, 612);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
@@ -120,8 +120,8 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.Debugbox);
-			this.splitContainer1.Size = new System.Drawing.Size(330, 550);
-			this.splitContainer1.SplitterDistance = 143;
+			this.splitContainer1.Size = new System.Drawing.Size(330, 574);
+			this.splitContainer1.SplitterDistance = 150;
 			this.splitContainer1.TabIndex = 11;
 			// 
 			// buttonConnect
@@ -223,12 +223,12 @@
 			this.Debugbox.Name = "Debugbox";
 			this.Debugbox.ReadOnly = true;
 			this.Debugbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Debugbox.Size = new System.Drawing.Size(330, 403);
+			this.Debugbox.Size = new System.Drawing.Size(330, 420);
 			this.Debugbox.TabIndex = 11;
 			// 
 			// tabPage2
 			// 
-			this.tabPage2.Controls.Add(this.buttonMessageSend);
+			this.tabPage2.Controls.Add(this.buttonSendMessage);
 			this.tabPage2.Controls.Add(this.textBoxMessage);
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
@@ -253,18 +253,19 @@
 			// 
 			this.textBoxMessage.Location = new System.Drawing.Point(7, 7);
 			this.textBoxMessage.Name = "textBoxMessage";
-			this.textBoxMessage.Size = new System.Drawing.Size(242, 20);
+			this.textBoxMessage.Size = new System.Drawing.Size(265, 20);
 			this.textBoxMessage.TabIndex = 0;
-			this.textBoxMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMessage_KeyPress);
+			this.textBoxMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxMessage_KeyDown);
 			// 
-			// buttonMessageSend
+			// buttonSendMessage
 			// 
-			this.buttonMessageSend.Location = new System.Drawing.Point(255, 7);
-			this.buttonMessageSend.Name = "buttonMessageSend";
-			this.buttonMessageSend.Size = new System.Drawing.Size(75, 23);
-			this.buttonMessageSend.TabIndex = 1;
-			this.buttonMessageSend.Text = "Send";
-			this.buttonMessageSend.UseVisualStyleBackColor = true;
+			this.buttonSendMessage.Location = new System.Drawing.Point(278, 7);
+			this.buttonSendMessage.Name = "buttonSendMessage";
+			this.buttonSendMessage.Size = new System.Drawing.Size(52, 23);
+			this.buttonSendMessage.TabIndex = 1;
+			this.buttonSendMessage.Text = "Send";
+			this.buttonSendMessage.UseVisualStyleBackColor = true;
+			this.buttonSendMessage.Click += new System.EventHandler(this.buttonSendMessage_Click);
 			// 
 			// Maoubot
 			// 
@@ -309,7 +310,7 @@
 		private System.Windows.Forms.Button buttonConfigSave;
 		private System.Windows.Forms.TextBox Debugbox;
 		private System.Windows.Forms.TabPage tabPage2;
-		private System.Windows.Forms.Button buttonMessageSend;
+		private System.Windows.Forms.Button buttonSendMessage;
 		private System.Windows.Forms.TextBox textBoxMessage;
 	}
 }

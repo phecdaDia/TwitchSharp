@@ -43,6 +43,7 @@ namespace Maoubot_GUI
 			AllocConsole(); // Console for debugging usage.
 
 			this.Load += LoadForm;
+			this.FormClosing += ClosingForm;
 
 
 		}
@@ -55,6 +56,7 @@ namespace Maoubot_GUI
 			this.Tcb = new TwitchChatBot();
 			this.Tcb.LoginCompleted += (s, e) =>
 			{
+				Tcb.ReceiveWhispers();
 				Tcb.JoinChannel(Cf.Channel);
 			};
 
@@ -75,6 +77,15 @@ namespace Maoubot_GUI
 			LoadQuoteConfig();
 			CreateTwitchChatBot();
 		}
+
+		private void ClosingForm(object sender, EventArgs e)
+		{
+			if (Tcb.Active)
+			{
+				Tcb.Stop();
+				Tcb.PartChannel();
+			}
+		}
 		#endregion
 		#region Logging
 		/// <summary>
@@ -84,13 +95,16 @@ namespace Maoubot_GUI
 		private void LogWrite(String Message, params object[] format)
 		{
 			Message = String.Format(Message, format);
-			if (Chatbox.InvokeRequired)
+			if (!IsDisposed)
 			{
-				Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
-			}
-			else
-			{
-				Chatbox.AppendText(Message);
+				if (Chatbox.InvokeRequired)
+				{
+					Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
+				}
+				else
+				{
+					Chatbox.AppendText(Message);
+				}
 			}
 		}
 		
@@ -110,13 +124,16 @@ namespace Maoubot_GUI
 		private void LogDebugWrite(String Message, params object[] format)
 		{
 			Message = String.Format(Message, format);
-			if (Debugbox.InvokeRequired)
+			if (!IsDisposed)
 			{
-				Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
-			}
-			else
-			{
-				Debugbox.AppendText(Message);
+				if (Debugbox.InvokeRequired)
+				{
+					Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
+				}
+				else
+				{
+					Debugbox.AppendText(Message);
+				}
 			}
 		}
 		
@@ -134,17 +151,14 @@ namespace Maoubot_GUI
 		/// Saves the TwitchConfig to twitch.xml **XXX_TODO_XXX**
 		/// </summary>
 		/// <param name="ReadFromForm">Shall the config be updated from the form?</param>
-		private void SaveTwitchConfig(bool ReadFromForm = true)
+		private void SaveTwitchConfig()
 		{
 			if (this.Cf == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
 			else
 			{
-				if (ReadFromForm)
-				{
-					this.Cf.Nick = textBoxNickname.Text;
-					this.Cf.oAuth = textBoxOAuth.Text;
-					this.Cf.Channel = textBoxChannel.Text;
-				}
+				this.Cf.Nick = textBoxNickname.Text;
+				this.Cf.oAuth = textBoxOAuth.Text;
+				this.Cf.Channel = textBoxChannel.Text;
 
 				ConfigFile.SaveToXml(TwitchConfigPath, this.Cf);
 			}
@@ -202,6 +216,10 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Saves the BotConfig
+		/// Creates an empty BotConfig if none could be found
+		/// </summary>
 		public void SaveMaoubotConfig()
 		{
 			if (this.Bf == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
@@ -214,6 +232,9 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Loads the BotConfig
+		/// </summary>
 		public void LoadMaoubotConfig()
 		{
 			this.Bf = BotConfig.LoadFromXml(MaoubotConfigPath);
@@ -249,14 +270,20 @@ namespace Maoubot_GUI
 			}
 			else if (e.MessageType == MessageType.Chat || e.MessageType == MessageType.Whisper)
 			{
-				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				if (e.Nick == "twitchnotify")
+				{
+					LogDebugWriteLine("[NOTIFY] {0}", e.Message);
+				} else
+				{
+					LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				}
 			}
 			else if (e.MessageType == MessageType.Notification)
 			{
-				LogWriteLine("[NOTIFY] {0}", e.Message);
+				LogDebugWriteLine("[NOTIFY] {0}", e.Message);
 			} else if (e.MessageType == MessageType.Server)
 			{
-				LogDebugWriteLine("{0}", e.RawMessage);
+				LogDebugWriteLine("[SERVER] {0}", e.RawMessage);
 			} else
 			{
 				LogWriteLine("[UNKNOWN]: {0} -> {1}", e.MessageType, e.RawMessage);
@@ -272,12 +299,18 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void buttonConnect_Click(object sender, EventArgs e)
 		{
-			SaveTwitchConfig();
+			if (!Tcb.Active)
+			{
+				SaveTwitchConfig();
 
-			Tcb.setNick(Cf.Nick);
-			Tcb.setOAuth(Cf.oAuth);
+				Tcb.setNick(Cf.Nick);
+				Tcb.setOAuth(Cf.oAuth);
 
-			Tcb.Run();
+				Tcb.Run();
+			} else
+			{
+				Tcb.JoinChannel(textBoxChannel.Text);
+			}
 
 		}
 
@@ -288,7 +321,7 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void buttonDisconnect_Click(object sender, EventArgs e)
 		{
-			Tcb.Stop();
+			//Tcb.Stop();
 			Tcb.PartChannel();
 		}
 
@@ -313,12 +346,23 @@ namespace Maoubot_GUI
 		}
 		#endregion
 
-		private void textBoxMessage_KeyPress(object sender, KeyEventArgs e)
+		private void textBoxMessage_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Enter)
 			{
-
+				String Message = textBoxMessage.Text;
+				textBoxMessage.Text = "";
+				if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
+				LogWriteLine("{0}: {1}", Tcb.Nick, Message);
 			}
+		}
+
+		private void buttonSendMessage_Click(object sender, EventArgs e)
+		{
+			String Message = textBoxMessage.Text;
+			textBoxMessage.Text = "";
+			if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
+			LogWriteLine("{0}: {1}", Tcb.Nick, Message);
 		}
 	}
 }
