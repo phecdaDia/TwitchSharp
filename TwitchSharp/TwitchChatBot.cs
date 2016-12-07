@@ -93,7 +93,7 @@ namespace TwitchSharp
         public delegate void ChannelJoinedEventHandler(object sender, ChannelJoinedEventArgs e);
         public delegate void ChannelPartEventHandler(object sender, ChannelPartEventArgs e);
         public delegate void CommandExecuteEventHandler(object sender, CommandExecuteEventArgs e);
-
+		
         private Thread ReadThread;
 
 
@@ -178,17 +178,23 @@ namespace TwitchSharp
             {
                 while (Active)
                 {
-					// Read the latest message
-                    String Message = ReadMessage();
-
-					// We received a message, fire the MessageReceived event
-                    MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
-                    OnMessageReceived(MREA);
-					// if the first char is
-					if (MREA?.Message?.FirstOrDefault() == CommandChar)
+					try
 					{
-						if (MREA?.MessageType == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
-						else if (MREA?.MessageType == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
+						// Read the latest message
+						String Message = ReadMessage();
+
+						// We received a message, fire the MessageReceived event
+						MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
+						OnMessageReceived(MREA);
+						// if the first char is
+						if (MREA?.Message?.FirstOrDefault() == CommandChar)
+						{
+							if (MREA?.MessageType == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
+							else if (MREA?.MessageType == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
+						}
+					} catch (Exception)
+					{
+						// An error occured / Stream closed?
 					}
 
 				}
@@ -199,14 +205,20 @@ namespace TwitchSharp
 
         /// <summary>
         /// Stops the bot
-		/// Call PartChannel() after
         /// </summary>
         public void Stop()
         {
             Active = false;
-            
-            
-        }
+            if (InChannel)
+			{
+				PartChannel();
+			}
+
+			InputStream.Close();
+			OutputStream.Close();
+			TcpClient.Close();
+
+		}
 
         /// <summary>
         /// Join a channel
