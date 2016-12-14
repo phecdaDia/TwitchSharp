@@ -93,7 +93,7 @@ namespace TwitchSharp
         public delegate void ChannelJoinedEventHandler(object sender, ChannelJoinedEventArgs e);
         public delegate void ChannelPartEventHandler(object sender, ChannelPartEventArgs e);
         public delegate void CommandExecuteEventHandler(object sender, CommandExecuteEventArgs e);
-
+		
         private Thread ReadThread;
 
 
@@ -178,18 +178,18 @@ namespace TwitchSharp
             {
                 while (Active)
                 {
-					// Read the latest message
-                    String Message = ReadMessage();
+						// Read the latest message
+						String Message = ReadMessage();
 
-					// We received a message, fire the MessageReceived event
-                    MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
-                    OnMessageReceived(MREA);
-					// if the first char is
-					if (MREA?.Message?.FirstOrDefault() == CommandChar)
-					{
-						if (MREA?.MessageType == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
-						else if (MREA?.MessageType == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
-					}
+						// We received a message, fire the MessageReceived event
+						MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
+						OnMessageReceived(MREA);
+						// if the first char is
+						if (MREA?.Message?.FirstOrDefault() == CommandChar)
+						{
+							if (MREA?.MessageType == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
+							else if (MREA?.MessageType == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
+						}
 
 				}
             });
@@ -206,8 +206,8 @@ namespace TwitchSharp
             Active = false;
 			InputStream?.Close();
 			OutputStream?.Close();
-            
-        }
+
+		}
 
         /// <summary>
         /// Join a channel
@@ -342,7 +342,7 @@ namespace TwitchSharp
 			{
 				return String.Empty;
 			}
-		}
+        }
 
 		/// <summary>
 		/// Use this in order to allow receivage of whispers.
