@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace TwitchSharp.Utilities
 {
+
+	[DataContract(IsReference = true)]
 	public abstract class XmlManager
 	{
 		public XmlManager()
@@ -21,10 +26,10 @@ namespace TwitchSharp.Utilities
 			try
 			{
 				new FileInfo(FilePath).Directory.Create();
-				using (StreamWriter writer = new StreamWriter(FilePath))
+				using (FileStream writer = File.Create(FilePath))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(SourceObject.GetType());
-					xmlSerializer.Serialize(writer, SourceObject);
+					DataContractSerializer xmlSerializer = new DataContractSerializer(SourceObject.GetType());
+					xmlSerializer.WriteObject(writer, SourceObject);
 				}
 			}
 			catch (Exception ex)
@@ -39,17 +44,17 @@ namespace TwitchSharp.Utilities
 			
 			try
 			{
-				// XXX		Make this method return a subclass depending on the inheritance
-				using (StreamReader reader = new StreamReader(FilePath))
+				using (FileStream stream = File.OpenRead(FilePath))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(XmlManager));
-					return (XmlManager)xmlSerializer.Deserialize(reader);
+					DataContractSerializer xmlSerializer = new DataContractSerializer(MethodBase.GetCurrentMethod().DeclaringType);
+					var asd = xmlSerializer.ReadObject(stream);
+                    return (XmlManager)asd;
 				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-
+				//throw ex;
 				return null;
 			}
 		}

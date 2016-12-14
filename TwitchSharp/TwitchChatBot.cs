@@ -204,7 +204,8 @@ namespace TwitchSharp
         public void Stop()
         {
             Active = false;
-            
+			InputStream?.Close();
+			OutputStream?.Close();
             
         }
 
@@ -333,8 +334,15 @@ namespace TwitchSharp
         /// <returns>Message</returns>
         public String ReadMessage()
         {
-            return InputStream.ReadLine();
-        }
+			try
+			{
+				return InputStream?.ReadLine() ?? String.Empty;
+			}
+			catch (Exception)
+			{
+				return String.Empty;
+			}
+		}
 
 		/// <summary>
 		/// Use this in order to allow receivage of whispers.

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -9,10 +11,11 @@ using TwitchSharp.Utilities;
 
 namespace Maoubot_GUI.Xml
 {
+	[DataContract(IsReference = true)]
 	public class QuoteConfig : XmlManager
 	{
-
-		public String[] Quotes;
+		[DataMember]
+		public String[] Quotes { get; set; }
 
 		public QuoteConfig()
 			: base()
@@ -34,25 +37,21 @@ namespace Maoubot_GUI.Xml
 			}
 		}
 
-		public static new QuoteConfig LoadFromXml(string FilePath)
+		public new static QuoteConfig LoadFromXml(string FilePath)
 		{
 
 			try
 			{
-				// XXX		Make this method return a subclass depending on the inheritance
-				using (StreamReader reader = new StreamReader(FilePath))
+				using (FileStream stream = File.OpenRead(FilePath))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(QuoteConfig));
-					return (QuoteConfig)xmlSerializer.Deserialize(reader);
+					DataContractSerializer xmlSerializer = new DataContractSerializer(MethodBase.GetCurrentMethod().DeclaringType);
+					return (QuoteConfig)xmlSerializer.ReadObject(stream);
 				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
 				//throw ex;
-				Console.WriteLine(File.Exists(FilePath) ? String.Join("\n", File.ReadAllLines(FilePath)) : "No File Found!");
-				//Console.WriteLine(ex.Message);
-
 				return null;
 			}
 		}

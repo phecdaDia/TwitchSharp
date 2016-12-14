@@ -1,4 +1,5 @@
-﻿using Maoubot_GUI.Xml;
+﻿using Maoubot_GUI.Component;
+using Maoubot_GUI.Xml;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -75,16 +76,15 @@ namespace Maoubot_GUI
 		{
 			LoadTwitchConfig();
 			LoadQuoteConfig();
+			LoadMaoubotConfig();
 			CreateTwitchChatBot();
 		}
 
 		private void ClosingForm(object sender, EventArgs e)
 		{
-			if (Tcb.Active)
-			{
-				Tcb.Stop();
-				Tcb.PartChannel();
-			}
+			Tcb?.Stop();
+			
+
 		}
 		#endregion
 		#region Logging
@@ -225,9 +225,6 @@ namespace Maoubot_GUI
 			if (this.Bf == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
 			else
 			{
-
-
-
 				BotConfig.SaveToXml(MaoubotConfigPath, Bf);
 			}
 		}
@@ -240,6 +237,8 @@ namespace Maoubot_GUI
 			this.Bf = BotConfig.LoadFromXml(MaoubotConfigPath);
 			if (this.Bf == null)
 			{
+
+				Console.ReadLine();
 				SaveMaoubotConfig();
 				LoadMaoubotConfig();
 			}
@@ -253,7 +252,37 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void Tcb_CommandExecute(object sender, CommandExecuteEventArgs e)
 		{
-			//throw new NotImplementedException();
+			// TextCommands. 
+			foreach(TextCommand tc in Bf.TextCommands)
+			{
+				if (tc.Command == e.Command)
+				{
+					Tcb.SendChatMessage(tc.Format(e));
+					return;
+				}
+			}
+
+			if (e.Command == "cmdadd")
+			{
+				if (e.CommandArgs.Length >= 2)
+				{
+					String c = String.Empty;
+					for (int i=0; i<e.CommandArgs.Length; i++)
+					{
+						c += e.CommandArgs[i];
+						c += " ";
+					}
+
+					TextCommand k = new TextCommand(e.CommandArgs[0], c);
+					Bf.AddCommand(k);
+					Tcb.SendChatMessage("%s: Added command %s!", e.Nick, e.CommandArgs[0]);
+					SaveMaoubotConfig();
+				} else
+				{
+					Tcb.SendChatMessage("%s: [USAGE] %scmdadd <command> <text>", e.Nick, Bf.CommandPrefix);
+				}
+			}
+
 		}
 
 		/// <summary>

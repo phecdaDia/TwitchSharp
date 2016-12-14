@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -9,10 +11,17 @@ using TwitchSharp.Utilities;
 
 namespace TwitchSharp.Utilities
 {
+	[DataContract(IsReference = true)]
 	public class ConfigFile : XmlManager
 	{
-		public String Nick, oAuth, Channel;
-		public String[] Moderators;
+		[DataMember]
+		public String Nick { get; set; }
+		[DataMember]
+		public String oAuth { get; set; }
+		[DataMember]
+		public String Channel { get; set; }
+		[DataMember]
+		public String[] Moderators { get; set; }
 
 		private bool Valid = true;
 
@@ -53,25 +62,21 @@ namespace TwitchSharp.Utilities
 			}
 		}
 
-		public static new ConfigFile LoadFromXml(string FilePath)
+		public new static ConfigFile LoadFromXml(string FilePath)
 		{
 
 			try
 			{
-				// XXX		Make this method return a subclass depending on the inheritance
-				using (StreamReader reader = new StreamReader(FilePath))
+				using (FileStream stream = File.OpenRead(FilePath))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(ConfigFile));
-					return (ConfigFile)xmlSerializer.Deserialize(reader);
+					DataContractSerializer xmlSerializer = new DataContractSerializer(MethodBase.GetCurrentMethod().DeclaringType);
+					return (ConfigFile)xmlSerializer.ReadObject(stream);
 				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
 				//throw ex;
-				Console.WriteLine(File.Exists(FilePath) ? String.Join("\n",File.ReadAllLines(FilePath)) : "No File Found!" );
-				//Console.WriteLine(ex.Message);
-
 				return null;
 			}
 		}
