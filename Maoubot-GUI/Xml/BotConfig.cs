@@ -54,7 +54,6 @@ namespace Maoubot_GUI.Xml
 			catch (Exception ex)
 			{
 				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-				//throw ex;
 				return null;
 			}
 		}
