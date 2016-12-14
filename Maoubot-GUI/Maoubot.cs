@@ -97,15 +97,15 @@ namespace Maoubot_GUI
 			Message = String.Format(Message, format);
 			if (!IsDisposed)
 			{
-				if (Chatbox.InvokeRequired)
-				{
-					Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
-				}
-				else
-				{
-					Chatbox.AppendText(Message);
-				}
+			if (Chatbox.InvokeRequired)
+			{
+				Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
 			}
+			else
+			{
+				Chatbox.AppendText(Message);
+			}
+		}
 		}
 		
 		/// <summary>
@@ -126,15 +126,15 @@ namespace Maoubot_GUI
 			Message = String.Format(Message, format);
 			if (!IsDisposed)
 			{
-				if (Debugbox.InvokeRequired)
-				{
-					Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
-				}
-				else
-				{
-					Debugbox.AppendText(Message);
-				}
+			if (Debugbox.InvokeRequired)
+			{
+				Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
 			}
+			else
+			{
+				Debugbox.AppendText(Message);
+			}
+		}
 		}
 		
 		/// <summary>
@@ -156,9 +156,9 @@ namespace Maoubot_GUI
 			if (this.Cf == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
 			else
 			{
-				this.Cf.Nick = textBoxNickname.Text;
-				this.Cf.oAuth = textBoxOAuth.Text;
-				this.Cf.Channel = textBoxChannel.Text;
+					this.Cf.Nick = textBoxNickname.Text;
+					this.Cf.oAuth = textBoxOAuth.Text;
+					this.Cf.Channel = textBoxChannel.Text;
 
 				ConfigFile.SaveToXml(TwitchConfigPath, this.Cf);
 			}
@@ -271,7 +271,7 @@ namespace Maoubot_GUI
 					{
 						c += e.CommandArgs[i];
 						c += " ";
-					}
+		}
 
 					TextCommand k = new TextCommand(e.CommandArgs[0], c);
 					Bf.AddCommand(k);
@@ -304,8 +304,8 @@ namespace Maoubot_GUI
 					LogDebugWriteLine("[NOTIFY] {0}", e.Message);
 				} else
 				{
-					LogWriteLine("{0}: {1}", e.Nick, e.Message);
-				}
+				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+			}
 			}
 			else if (e.MessageType == MessageType.Notification)
 			{
@@ -330,12 +330,12 @@ namespace Maoubot_GUI
 		{
 			if (!Tcb.Active)
 			{
-				SaveTwitchConfig();
+			SaveTwitchConfig();
 
-				Tcb.setNick(Cf.Nick);
-				Tcb.setOAuth(Cf.oAuth);
+			Tcb.setNick(Cf.Nick);
+			Tcb.setOAuth(Cf.oAuth);
 
-				Tcb.Run();
+			Tcb.Run();
 			} else
 			{
 				Tcb.JoinChannel(textBoxChannel.Text);
