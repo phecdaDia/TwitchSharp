@@ -102,7 +102,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(336, 580);
+			this.tabPage1.Size = new System.Drawing.Size(336, 556);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Login/Connect";
 			this.tabPage1.UseVisualStyleBackColor = true;

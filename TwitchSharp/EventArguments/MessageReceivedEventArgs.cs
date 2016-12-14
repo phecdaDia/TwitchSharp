@@ -60,6 +60,11 @@ namespace TwitchSharp.EventArguments
                 this.Nick = s1[0].Split('!').First().Substring(1);
 				this.Channel = s1[2].Substring(1);
                 this.Host = s1[0].Split('@').Last();
+
+				if (this.Message.StartsWith("The moderators of this room are: "))
+				{
+					this.MessageType = MessageType.ModeratorNotice;
+				}
             }
         }
     }
@@ -71,5 +76,6 @@ namespace TwitchSharp.EventArguments
         Ping = 2,
 		Whisper = 3,
 		Notification = 4,
+		ModeratorNotice = 5,
     }
 }
