@@ -48,9 +48,9 @@ namespace AntiPyramidsBot
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-				//throw ex;
-				Console.WriteLine(File.Exists(FilePath) ? String.Join("\n", File.ReadAllLines(FilePath)) : "No File Found!");
+				Console.WriteLine("Unable to load file\t{0}", FilePath);
+				Console.WriteLine(ex.Message);
+				//Console.WriteLine(File.Exists(FilePath) ? String.Join("\n", File.ReadAllLines(FilePath)) : "No File Found!");
 				//Console.WriteLine(ex.M);
 
 				return null;

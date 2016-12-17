@@ -75,8 +75,8 @@ namespace TwitchSharp.Utilities
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-				//throw ex;
+				Console.WriteLine("Unable to load file\t{0}", FilePath);
+				Console.WriteLine(ex.Message);
 				return null;
 			}
 		}

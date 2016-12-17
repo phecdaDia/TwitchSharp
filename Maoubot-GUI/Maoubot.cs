@@ -23,9 +23,9 @@ namespace Maoubot_GUI
 		private static readonly String QuotesConfigPath = ConfigPath + @"quotes.xml";
 		private static readonly String MaoubotConfigPath = ConfigPath + @"maoubot.xml";
 
-		private ConfigFile Cf;
-		private QuoteConfig Qf;
-		private BotConfig Bf;
+		private ConfigFile ConfigFile;
+		private QuoteConfig QuoteFile;
+		private BotConfig BotFile;
 
 		private TwitchChatBot Tcb;
 
@@ -58,7 +58,7 @@ namespace Maoubot_GUI
 			this.Tcb.LoginCompleted += (s, e) =>
 			{
 				Tcb.ReceiveWhispers();
-				Tcb.JoinChannel(Cf.Channel);
+				Tcb.JoinChannel(ConfigFile.Channel);
 			};
 
 			this.Tcb.MessageReceived += Tcb_MessageReceived;
@@ -77,13 +77,20 @@ namespace Maoubot_GUI
 			LoadTwitchConfig();
 			LoadQuoteConfig();
 			LoadMaoubotConfig();
+
+			RefreshAccounts();
+
 			CreateTwitchChatBot();
 		}
 
 		private void ClosingForm(object sender, EventArgs e)
 		{
 			Tcb?.Stop();
-			
+
+			// Save all configs
+			SaveTwitchConfig();
+			SaveQuoteConfig();
+			SaveMaoubotConfig();
 
 		}
 		#endregion
@@ -153,14 +160,14 @@ namespace Maoubot_GUI
 		/// <param name="ReadFromForm">Shall the config be updated from the form?</param>
 		private void SaveTwitchConfig()
 		{
-			if (this.Cf == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
+			if (this.ConfigFile == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
 			else
 			{
-					this.Cf.Nick = textBoxNickname.Text;
-					this.Cf.oAuth = textBoxOAuth.Text;
-					this.Cf.Channel = textBoxChannel.Text;
+					this.ConfigFile.Nick = textBoxNickname.Text;
+					this.ConfigFile.oAuth = textBoxOAuth.Text;
+					this.ConfigFile.Channel = textBoxChannel.Text;
 
-				ConfigFile.SaveToXml(TwitchConfigPath, this.Cf);
+				ConfigFile.SaveToXml(TwitchConfigPath, this.ConfigFile);
 			}
 		}
 
@@ -170,8 +177,8 @@ namespace Maoubot_GUI
 		/// </summary>
 		private void LoadTwitchConfig()
 		{
-			this.Cf = ConfigFile.LoadFromXml(TwitchConfigPath);
-			if (this.Cf == null)
+			this.ConfigFile = ConfigFile.LoadFromXml(TwitchConfigPath);
+			if (this.ConfigFile == null)
 			{
 				// Save an empty config file and load it
 				// Return to prevent recursion
@@ -181,9 +188,9 @@ namespace Maoubot_GUI
 			}
 			
 			// Load config to form
-			textBoxNickname.Text = Cf.Nick;
-			textBoxOAuth.Text = Cf.oAuth;
-			textBoxChannel.Text = Cf.Channel;
+			textBoxNickname.Text = ConfigFile.Nick;
+			textBoxOAuth.Text = ConfigFile.oAuth;
+			textBoxChannel.Text = ConfigFile.Channel;
 		}
 
 		// Quote Methods
@@ -193,10 +200,10 @@ namespace Maoubot_GUI
 		/// </summary>
 		private void SaveQuoteConfig()
 		{
-			if (this.Qf == null) QuoteConfig.SaveToXml(QuotesConfigPath, new QuoteConfig());
+			if (this.QuoteFile == null) QuoteConfig.SaveToXml(QuotesConfigPath, new QuoteConfig());
 			else
 			{
-				QuoteConfig.SaveToXml(ConfigPath + QuotesConfigPath, Qf);
+				QuoteConfig.SaveToXml(ConfigPath + QuotesConfigPath, QuoteFile);
 				
 			}
 		}
@@ -208,8 +215,8 @@ namespace Maoubot_GUI
 		/// </summary>
 		private void LoadQuoteConfig()
 		{
-			this.Qf = QuoteConfig.LoadFromXml(QuotesConfigPath);
-			if (this.Qf == null)
+			this.QuoteFile = QuoteConfig.LoadFromXml(QuotesConfigPath);
+			if (this.QuoteFile == null)
 			{
 				SaveQuoteConfig();
 				LoadQuoteConfig();
@@ -222,10 +229,10 @@ namespace Maoubot_GUI
 		/// </summary>
 		public void SaveMaoubotConfig()
 		{
-			if (this.Bf == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
+			if (this.BotFile == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
 			else
 			{
-				BotConfig.SaveToXml(MaoubotConfigPath, Bf);
+				BotConfig.SaveToXml(MaoubotConfigPath, BotFile);
 			}
 		}
 
@@ -234,8 +241,8 @@ namespace Maoubot_GUI
 		/// </summary>
 		public void LoadMaoubotConfig()
 		{
-			this.Bf = BotConfig.LoadFromXml(MaoubotConfigPath);
-			if (this.Bf == null)
+			this.BotFile = BotConfig.LoadFromXml(MaoubotConfigPath);
+			if (this.BotFile == null)
 			{
 
 				Console.ReadLine();
@@ -253,7 +260,7 @@ namespace Maoubot_GUI
 		private void Tcb_CommandExecute(object sender, CommandExecuteEventArgs e)
 		{
 			// TextCommands. 
-			foreach(TextCommand tc in Bf.TextCommands)
+			foreach(TextCommand tc in BotFile.TextCommands)
 			{
 				if (tc.Command == e.Command)
 				{
@@ -274,12 +281,12 @@ namespace Maoubot_GUI
 		}
 
 					TextCommand k = new TextCommand(e.CommandArgs[0], c);
-					Bf.AddCommand(k);
+					BotFile.AddCommand(k);
 					Tcb.SendChatMessage("%s: Added command %s!", e.Nick, e.CommandArgs[0]);
 					SaveMaoubotConfig();
 				} else
 				{
-					Tcb.SendChatMessage("%s: [USAGE] %scmdadd <command> <text>", e.Nick, Bf.CommandPrefix);
+					Tcb.SendChatMessage("%s: [USAGE] %scmdadd <command> <text>", e.Nick, BotFile.CommandPrefix);
 				}
 			}
 
@@ -331,12 +338,15 @@ namespace Maoubot_GUI
 		{
 			if (!Tcb.Active)
 			{
-			SaveTwitchConfig();
+				SaveTwitchConfig();
 
-			Tcb.setNick(Cf.Nick);
-			Tcb.setOAuth(Cf.oAuth);
+				Tcb.setNick(ConfigFile.Nick);
+				Tcb.setOAuth(ConfigFile.oAuth);
 
-			Tcb.Run();
+				// Add the account
+				AddAccount();
+
+				Tcb.Run();
 			} else
 			{
 				Tcb.JoinChannel(textBoxChannel.Text);
@@ -397,6 +407,90 @@ namespace Maoubot_GUI
 			textBoxMessage.Text = "";
 			if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
 			LogWriteLine("{0}: {1}", Tcb.Nick, Message);
+		}
+
+		private void buttonAccountsLoad_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				TwitchAccount k = BotFile.Accounts[comboBoxAccounts.SelectedIndex];
+
+				this.textBoxNickname.Text = k.Nick;
+				this.textBoxOAuth.Text = k.OAuth;
+
+			} catch (Exception) { }
+		}
+
+		private void buttonAccountsDelete_Click(object sender, EventArgs e)
+		{
+			BotFile.DeleteAccount(comboBoxAccounts.Text);
+			// refresh the combobox
+			RefreshAccounts();
+		}
+
+		private void AddAccount()
+		{
+			String Nick = textBoxNickname.Text;
+			String OAuth = textBoxOAuth.Text;
+
+			if (BotFile.GetAccountNames().Contains(Nick))
+			{
+				int pos = -1;
+				for (int i=0; i< BotFile.GetAccountNames().Length; i++)
+				{
+					if (BotFile.GetAccountNames()[i] == Nick)
+					{
+						pos = i;
+						break;
+					}
+				}
+				if (pos < 0) return;
+
+				// Update the oauth key
+				BotFile.Accounts[pos].OAuth = OAuth;
+				return;
+			} else
+			{
+				TwitchAccount t = new TwitchAccount(Nick, OAuth);
+				BotFile.AddAccount(t);
+				RefreshAccounts();
+			}
+		}
+
+		private void RefreshAccounts()
+		{
+			comboBoxAccounts.Items.Clear();
+			comboBoxAccounts.Items.AddRange(BotFile.GetAccountNames());
+		}
+
+		private void buttonTwitchConfigSave_Click(object sender, EventArgs e)
+		{
+			SaveTwitchConfig();
+		}
+
+		private void buttonTwitchConfigLoad_Click(object sender, EventArgs e)
+		{
+			LoadTwitchConfig();
+		}
+
+		private void buttonQuotesConfigSave_Click(object sender, EventArgs e)
+		{
+			SaveQuoteConfig();
+		}
+
+		private void buttonQuotesConfigLoad_Click(object sender, EventArgs e)
+		{
+			LoadQuoteConfig();
+		}
+
+		private void buttonMaouBotConfigSave_Click(object sender, EventArgs e)
+		{
+			SaveMaoubotConfig();
+		}
+
+		private void buttonMaouBotConfigLoad_Click(object sender, EventArgs e)
+		{
+			LoadMaoubotConfig();
 		}
 	}
 }

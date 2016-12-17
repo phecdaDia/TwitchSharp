@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\TextCommand.cs" />
+    <Compile Include="Component\TwitchAccount.cs" />
     <Compile Include="Maoubot.cs">
       <SubType>Form</SubType>
     </Compile>

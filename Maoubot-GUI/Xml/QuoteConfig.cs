@@ -27,13 +27,7 @@ namespace Maoubot_GUI.Xml
 		{
 			if (this.Quotes == null)
 			{
-				this.Quotes = new String[]
-				{
-					@"QUOTE_001",
-					@"QUOTE_002",
-					@"QUOTE_003",
-					@"QUOTE_004"
-				};
+				this.Quotes = new String[0];
 			}
 		}
 
@@ -50,8 +44,8 @@ namespace Maoubot_GUI.Xml
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-				//throw ex;
+				Console.WriteLine("Unable to load file\t{0}", FilePath);
+				Console.WriteLine(ex.Message);
 				return null;
 			}
 		}
