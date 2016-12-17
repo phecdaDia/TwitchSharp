@@ -34,7 +34,7 @@ namespace Maoubot_GUI.Xml
 			{
 				TextCommands = new TextCommand[]
 				{
-					new TextCommand("example", "this is an example %nick%!")
+
 				};
 			}
 		}
