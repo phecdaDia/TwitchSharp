@@ -267,7 +267,7 @@ namespace Maoubot_GUI
 				if (e.CommandArgs.Length >= 2)
 				{
 					String c = String.Empty;
-					for (int i=0; i<e.CommandArgs.Length; i++)
+					for (int i=1; i<e.CommandArgs.Length; i++)
 					{
 						c += e.CommandArgs[i];
 						c += " ";
@@ -302,10 +302,11 @@ namespace Maoubot_GUI
 				if (e.Nick == "twitchnotify")
 				{
 					LogDebugWriteLine("[NOTIFY] {0}", e.Message);
-				} else
+				}
+				else
 				{
-				LogWriteLine("{0}: {1}", e.Nick, e.Message);
-			}
+					LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				}
 			}
 			else if (e.MessageType == MessageType.Notification)
 			{
@@ -350,7 +351,11 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void buttonDisconnect_Click(object sender, EventArgs e)
 		{
-			//Tcb.Stop();
+			Tcb.Stop();
+		}
+
+		private void buttonPart_Click(object sender, EventArgs e)
+		{
 			Tcb.PartChannel();
 		}
 
