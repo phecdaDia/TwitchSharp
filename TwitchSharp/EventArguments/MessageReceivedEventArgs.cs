@@ -34,6 +34,9 @@ namespace TwitchSharp.EventArguments
 			user-type is either empty, mod, global_mod, admin or staff
 
 			@badges=subscriber/0,premium/1;color=#15497A;display-name=jc5ive1;emotes=;id=9070c710-b524-499c-af00-b785ed910faf;login=jc5ive1;mod=0;msg-id=resub;msg-param-months=6;room-id=20702886;subscriber=1;system-msg=jc5ive1\ssubscribed\sfor\s6\smonths\sin\sa\srow!;tmi-sent-ts=1482031770322;turbo=0;user-id=118126696;user-type= :tmi.twitch.tv USERNOTICE #carlsagan42
+		
+			Regex: ([\w\d\-]+=[\w\d\/\,a-f0-9\-\\#]*)
+			matches with every tag.
 		*/
 
 		public MessageType Type { get; }
@@ -78,6 +81,11 @@ namespace TwitchSharp.EventArguments
 					Tags.Add(TagExpressionSplit[0], TagExpressionSplit[1]);
 				}
 
+				if (String.IsNullOrWhiteSpace(this.Tags["display-name"]))
+				{
+					Tags["display-name"] = SpaceSplit[1].Substring(1).Split('!')[0];
+				}
+
 				if (SpaceSplit[2] == @"PRIVMSG")
 				{
 					this.Type = MessageType.Chat;
@@ -93,11 +101,21 @@ namespace TwitchSharp.EventArguments
 
 
 
-				} else if (SpaceSplit[2] == @"USERNOTICE")
+				}
+				else if (SpaceSplit[2] == @"USERSTATE")
+				{
+					this.Type = MessageType.Userstate;
+				}
+				else if (SpaceSplit[2] == @"ROOMSTATE")
+				{
+					this.Type = MessageType.Roomstate;
+				}
+				else if (SpaceSplit[2] == @"USERNOTICE")
 				{
 					this.Type = MessageType.Usernotice;
 					Console.WriteLine(RawMessage);
-				} else
+				}
+				else
 				{
 					this.Type = MessageType.Server;
 				}

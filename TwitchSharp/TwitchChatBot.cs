@@ -169,6 +169,9 @@ namespace TwitchSharp
 			// Send everything.
             OutputStream.Flush();
 
+			// implement the tag system
+			this.LoginCompleted += (s, e) => { UseTags(); };
+
 			// Login is completed. Fire the event
             OnLoginCompleted(new LoginCompletedEventArgs(Nick, OAuth));
 

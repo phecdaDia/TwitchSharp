@@ -58,7 +58,6 @@ namespace Maoubot_GUI
 			this.Tcb.LoginCompleted += (s, e) =>
 			{
 				Tcb.ReceiveWhispers();
-				Tcb.SendIrcMessage("CAP REQ :twitch.tv/tags");
 				Tcb.JoinChannel(ConfigFile.Channel);
 			};
 
@@ -305,10 +304,21 @@ namespace Maoubot_GUI
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
 				LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
-			} else if (e.Type == MessageType.Server)
+			}
+			else if (e.Type == MessageType.Server)
 			{
-				LogWriteLine("{0}", e.RawMessage);
-			} else if (e.Type == MessageType.Chat)
+				LogDebugWriteLine("{0}", e.RawMessage);
+			}
+			else if (e.Type == MessageType.Roomstate || e.Type == MessageType.Userstate)
+			{
+				return;
+				//foreach (String Tag in e.Tags.Keys)
+				//{
+				//	LogDebugWriteLine("{0}: {1}", Tag, e.Tags[Tag]);
+				//	Console.WriteLine("Writing tag to console...");
+				//} 
+			}
+			else if (e.Type == MessageType.Chat)
 			{
 				LogWriteLine("{0}: {1}", e.Nick, e.Message);
 			}
