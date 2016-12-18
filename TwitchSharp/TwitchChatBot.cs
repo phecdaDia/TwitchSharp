@@ -357,6 +357,14 @@ namespace TwitchSharp
 			SendIrcMessage(@"CAP REQ :twitch.tv/commands");
 		}
 
+		/// <summary>
+		/// Allows us to see tags, this needs to be properly implemented first!
+		/// </summary>
+		private void UseTags()
+		{
+			SendIrcMessage(@"CAP REQ :twitch.tv/tags");
+		}
+
         // Events
         protected virtual void OnLoginCompleted(LoginCompletedEventArgs e)
         {

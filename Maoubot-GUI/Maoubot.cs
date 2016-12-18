@@ -305,26 +305,12 @@ namespace Maoubot_GUI
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
 				LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
-			}
-			else if (e.Type == MessageType.Chat || e.Type == MessageType.Whisper)
-			{
-				//LogWriteLine("{0}: {1}", e.Nick, e.Message);
-			
-			}
-			else if (e.Type == MessageType.Notification)
-			{
-				LogDebugWriteLine("[NOTIFY] {0}", e.Message);
 			} else if (e.Type == MessageType.Server)
 			{
-				LogDebugWriteLine("[SERVER] {0}", e.RawMessage);
-				if (String.IsNullOrEmpty(e.RawMessage))
-				{
-					ClearChatlog();
-					ClearDebuglog();
-				}
-			} else
+				LogWriteLine("{0}", e.RawMessage);
+			} else if (e.Type == MessageType.Chat)
 			{
-				LogWriteLine("[UNKNOWN]: {0} -> {1}", e.Type, e.RawMessage);
+				LogWriteLine("{0}: {1}", e.Nick, e.Message);
 			}
 		}
 		#endregion
