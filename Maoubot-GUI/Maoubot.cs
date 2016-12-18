@@ -58,6 +58,7 @@ namespace Maoubot_GUI
 			this.Tcb.LoginCompleted += (s, e) =>
 			{
 				Tcb.ReceiveWhispers();
+				Tcb.SendIrcMessage("CAP REQ :twitch.tv/tags");
 				Tcb.JoinChannel(ConfigFile.Channel);
 			};
 
@@ -259,6 +260,7 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void Tcb_CommandExecute(object sender, CommandExecuteEventArgs e)
 		{
+			return;
 			// TextCommands. 
 			foreach(TextCommand tc in BotFile.TextCommands)
 			{
@@ -282,7 +284,7 @@ namespace Maoubot_GUI
 
 					TextCommand k = new TextCommand(e.CommandArgs[0], c);
 					BotFile.AddCommand(k);
-					Tcb.SendChatMessage("%s: Added command %s!", e.Nick, e.CommandArgs[0]);
+					Tcb.SendChatMessage("{0}: Added command {1}!", e.Nick, e.CommandArgs[0]);
 					SaveMaoubotConfig();
 				} else
 				{
@@ -306,7 +308,7 @@ namespace Maoubot_GUI
 			}
 			else if (e.Type == MessageType.Chat || e.Type == MessageType.Whisper)
 			{
-				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				//LogWriteLine("{0}: {1}", e.Nick, e.Message);
 			
 			}
 			else if (e.Type == MessageType.Notification)
