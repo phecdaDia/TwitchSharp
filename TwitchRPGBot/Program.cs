@@ -144,8 +144,8 @@ namespace TwitchRPGBot
 		
 		private static void Tcb_MessageReceived(object sender, MessageReceivedEventArgs e)
 		{
-			if (e.MessageType == MessageType.Server) Console.WriteLine(e.RawMessage);
-			else if (e.MessageType == MessageType.Ping)
+			if (e.Type == MessageType.Server) Console.WriteLine(e.RawMessage);
+			else if (e.Type == MessageType.Ping)
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
 				Tc.RefreshChatters();
@@ -171,10 +171,10 @@ namespace TwitchRPGBot
 					
 				}
 			}
-			else if (e.MessageType == MessageType.Chat || e.MessageType == MessageType.Whisper)
+			else if (e.Type == MessageType.Chat || e.Type == MessageType.Whisper)
 			{
 
-				Console.WriteLine("{0}\t: [{1}] {2}: {3}", e.MessageType, isModerator(e.Nick) ? "M" : "U", e.Nick, e.Message);
+				Console.WriteLine("{0}\t: [{1}] {2}: {3}", e.Type, isModerator(e.Nick) ? "M" : "U", e.Nick, e.Message);
 				if (e.Message.StartsWith("q!") && isModerator(e.Nick))
 				{
 					Tcb.SendEscapedChatMessage(e.Message.Substring(3));

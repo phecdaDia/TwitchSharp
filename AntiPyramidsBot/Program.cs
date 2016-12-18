@@ -60,9 +60,9 @@ namespace AntiPyramidsBot
 
 			Tcb.MessageReceived += (s, e) =>
 			{
-				if (e.MessageType == MessageType.Ping) Tcb.SendIrcMessage("PONG! {0}", Tcb.HOST);
+				if (e.Type == MessageType.Ping) Tcb.SendIrcMessage("PONG! {0}", Tcb.HOST);
 
-				if (e.MessageType != MessageType.Chat) return;
+				if (e.Type != MessageType.Chat) return;
 				Console.WriteLine("{0}: {1}", e.Nick, e.Message);
 				CurrentNick = e.Nick;
 				

@@ -82,9 +82,9 @@ namespace KubaBot
 
         private static void Tcb_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            if (e.MessageType == MessageType.Server) Console.WriteLine(e.RawMessage);
-            else if (e.MessageType == MessageType.Ping) Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
-            else if (e.MessageType == MessageType.Chat)
+            if (e.Type == MessageType.Server) Console.WriteLine(e.RawMessage);
+            else if (e.Type == MessageType.Ping) Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
+            else if (e.Type == MessageType.Chat)
             {
                 Console.WriteLine("[{0}] {1}: {2}", e.Channel, e.Nick, e.Message);
                 if (e.Message.StartsWith("q!") && e.Nick == "imthe666st")

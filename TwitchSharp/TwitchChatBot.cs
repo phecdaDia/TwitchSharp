@@ -189,8 +189,8 @@ namespace TwitchSharp
 					// if the first char is
 					if (MREA?.Message?.FirstOrDefault() == CommandChar)
 					{
-						if (MREA?.MessageType == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
-						else if (MREA?.MessageType == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
+						if (MREA?.Type == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
+						else if (MREA?.Type == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
 					}
 					} catch (Exception)
 					{
@@ -222,7 +222,7 @@ namespace TwitchSharp
         /// <param name="Channel">Channel</param>
         public void JoinChannel(String Channel)
         {
-			if (!String.IsNullOrEmpty(Channel))
+			if (InChannel)
 			{
 				Console.WriteLine("Unable to join multiple channels, disconnecting.");
 				this.PartChannel();

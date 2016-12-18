@@ -104,15 +104,15 @@ namespace Maoubot_GUI
 			Message = String.Format(Message, format);
 			if (!IsDisposed)
 			{
-			if (Chatbox.InvokeRequired)
-			{
-				Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
+				if (Chatbox.InvokeRequired)
+				{
+					Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
+				}
+				else
+				{
+					Chatbox.AppendText(Message);
+				}
 			}
-			else
-			{
-				Chatbox.AppendText(Message);
-			}
-		}
 		}
 		
 		/// <summary>
@@ -133,15 +133,15 @@ namespace Maoubot_GUI
 			Message = String.Format(Message, format);
 			if (!IsDisposed)
 			{
-			if (Debugbox.InvokeRequired)
-			{
-				Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
+				if (Debugbox.InvokeRequired)
+				{
+					Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
+				}
+				else
+				{
+					Debugbox.AppendText(Message);
+				}
 			}
-			else
-			{
-				Debugbox.AppendText(Message);
-			}
-		}
 		}
 		
 		/// <summary>
@@ -286,7 +286,7 @@ namespace Maoubot_GUI
 					SaveMaoubotConfig();
 				} else
 				{
-					Tcb.SendChatMessage("%s: [USAGE] %scmdadd <command> <text>", e.Nick, BotFile.CommandPrefix);
+					Tcb.SendChatMessage("{0}: [USAGE] {1}cmdadd <command> <text>", e.Nick, BotFile.CommandPrefix);
 				}
 			}
 
@@ -299,31 +299,30 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void Tcb_MessageReceived(object sender, MessageReceivedEventArgs e)
 		{
-			if (e.MessageType == MessageType.Ping)
+			if (e.Type == MessageType.Ping)
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
 				LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
 			}
-			else if (e.MessageType == MessageType.Chat || e.MessageType == MessageType.Whisper)
+			else if (e.Type == MessageType.Chat || e.Type == MessageType.Whisper)
 			{
-				if (e.Nick == "twitchnotify")
-				{
-					LogDebugWriteLine("[NOTIFY] {0}", e.Message);
-				}
-				else
-				{
-					LogWriteLine("{0}: {1}", e.Nick, e.Message);
-				}
+				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+			
 			}
-			else if (e.MessageType == MessageType.Notification)
+			else if (e.Type == MessageType.Notification)
 			{
 				LogDebugWriteLine("[NOTIFY] {0}", e.Message);
-			} else if (e.MessageType == MessageType.Server)
+			} else if (e.Type == MessageType.Server)
 			{
 				LogDebugWriteLine("[SERVER] {0}", e.RawMessage);
+				if (String.IsNullOrEmpty(e.RawMessage))
+				{
+					ClearChatlog();
+					ClearDebuglog();
+				}
 			} else
 			{
-				LogWriteLine("[UNKNOWN]: {0} -> {1}", e.MessageType, e.RawMessage);
+				LogWriteLine("[UNKNOWN]: {0} -> {1}", e.Type, e.RawMessage);
 			}
 		}
 		#endregion
@@ -362,11 +361,15 @@ namespace Maoubot_GUI
 		private void buttonDisconnect_Click(object sender, EventArgs e)
 		{
 			Tcb.Stop();
+			ClearChatlog();
+			ClearDebuglog();
 		}
 
 		private void buttonPart_Click(object sender, EventArgs e)
 		{
 			Tcb.PartChannel();
+			ClearChatlog();
+			ClearDebuglog();
 		}
 
 		/// <summary>
@@ -457,10 +460,14 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Refreshes the combobox to select the accounts.
+		/// </summary>
 		private void RefreshAccounts()
 		{
 			comboBoxAccounts.Items.Clear();
 			comboBoxAccounts.Items.AddRange(BotFile.GetAccountNames());
+			comboBoxAccounts.SelectedIndex = 0;
 		}
 
 		private void buttonTwitchConfigSave_Click(object sender, EventArgs e)
@@ -491,6 +498,38 @@ namespace Maoubot_GUI
 		private void buttonMaouBotConfigLoad_Click(object sender, EventArgs e)
 		{
 			LoadMaoubotConfig();
+		}
+
+		/// <summary>
+		/// clears the chatbox.
+		/// </summary>
+		private void ClearChatlog()
+		{
+			if (Chatbox.IsDisposed) return;
+			if (Chatbox.InvokeRequired)
+			{
+				Chatbox.Invoke(new Action(() => { Chatbox.Clear(); }));
+			}
+			else
+			{
+				Chatbox.Clear();
+			}
+		}
+
+		/// <summary>
+		/// clears the debugbox
+		/// </summary>
+		private void ClearDebuglog()
+		{
+			if (Debugbox.IsDisposed) return;
+			if (Debugbox.InvokeRequired)
+			{
+				Debugbox.Invoke(new Action(() => { Debugbox.Clear(); }));
+			}
+			else
+			{
+				Debugbox.Clear();
+			}
 		}
 	}
 }
