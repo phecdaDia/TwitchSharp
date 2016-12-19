@@ -170,10 +170,10 @@ namespace TwitchSharp
             OutputStream.Flush();
 
 			// implement the tag system
-			this.LoginCompleted += (s, e) => { UseTags(); };
+			UseTags();
 
 			// Login is completed. Fire the event
-            OnLoginCompleted(new LoginCompletedEventArgs(Nick, OAuth));
+			OnLoginCompleted(new LoginCompletedEventArgs(Nick, OAuth));
 
             // Start Read Loop
 			// We start a new thread for reading.
@@ -195,8 +195,11 @@ namespace TwitchSharp
 						if (MREA?.Type == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
 						else if (MREA?.Type == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
 					}
-					} catch (Exception)
+					} catch (Exception ex)
 					{
+						Console.WriteLine(ex.Message);
+						Console.WriteLine(ex.StackTrace);
+						//Console.WriteLine("ReadThread Error");
 						// An error occured / Stream closed?
 					}
 
@@ -348,6 +351,7 @@ namespace TwitchSharp
 			}
 			catch (Exception)
 			{
+				Console.WriteLine("ReadMessage() Error");
 				return String.Empty;
 			}
         }

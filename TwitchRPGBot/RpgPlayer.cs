@@ -9,7 +9,7 @@ using TwitchSharp.Utilities;
 
 namespace TwitchRPGBot
 {
-	public class RpgPlayer : XmlManager
+	public class RpgPlayer : XmlManager<RpgPlayer>
 	{
 		public uint Level, Exp;
 		public String Class;
@@ -33,31 +33,6 @@ namespace TwitchRPGBot
 			this.Class = "DUMMY";
 			this.TwitchNick = "DUMMY";
 
-		}
-
-
-
-		public static new RpgPlayer LoadFromXml(string FilePath)
-		{
-
-			try
-			{
-				// XXX		Make this method return a subclass depending on the inheritance
-				using (StreamReader reader = new StreamReader(FilePath))
-				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(RpgPlayer));
-					return (RpgPlayer)xmlSerializer.Deserialize(reader);
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-				//throw ex;
-				Console.WriteLine(File.Exists(FilePath) ? String.Join("\n", File.ReadAllLines(FilePath)) : "No File Found!");
-				Console.WriteLine(ex.Message);
-
-				return null;
-			}
 		}
 
 		public void AddExp(uint Amount)

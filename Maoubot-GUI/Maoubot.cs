@@ -221,6 +221,7 @@ namespace Maoubot_GUI
 			{
 				SaveQuoteConfig();
 				LoadQuoteConfig();
+				return;
 			}
 		}
 
@@ -233,6 +234,10 @@ namespace Maoubot_GUI
 			if (this.BotFile == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
 			else
 			{
+				BotFile.EnableSubMessage = this.checkBoxEnableSubMessage.Checked;
+				BotFile.SubMessageNew = this.textBoxSubMessageNew.Text;
+				BotFile.SubMessageResub = this.textBoxSubMessageResub.Text;
+
 				BotConfig.SaveToXml(MaoubotConfigPath, BotFile);
 			}
 		}
@@ -245,11 +250,14 @@ namespace Maoubot_GUI
 			this.BotFile = BotConfig.LoadFromXml(MaoubotConfigPath);
 			if (this.BotFile == null)
 			{
-
-				Console.ReadLine();
 				SaveMaoubotConfig();
 				LoadMaoubotConfig();
+				return;
 			}
+
+			this.checkBoxEnableSubMessage.Checked = BotFile.EnableSubMessage;
+			this.textBoxSubMessageNew.Text = BotFile.SubMessageNew;
+			this.textBoxSubMessageResub.Text = BotFile.SubMessageResub;
 		}
 		#endregion
 		#region TCB Events
@@ -260,7 +268,7 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void Tcb_CommandExecute(object sender, CommandExecuteEventArgs e)
 		{
-			return;
+			if (!BotFile.EnableCommands) return;
 			// TextCommands. 
 			foreach(TextCommand tc in BotFile.TextCommands)
 			{
@@ -313,38 +321,34 @@ namespace Maoubot_GUI
 			}
 			else if (e.Type == MessageType.Roomstate || e.Type == MessageType.Userstate)
 			{
-				//Console.WriteLine("{0}", e.RawMessage);
 				return;
-				//foreach (String Tag in e.Tags.Keys)
-				//{
-				//	LogDebugWriteLine("{0}: {1}", Tag, e.Tags[Tag]);
-				//	Console.WriteLine("Writing tag to console...");
-				//} 
 			}
 			else if (e.Type == MessageType.Usernotice)
 			{
-				Console.WriteLine("{0}", e.RawMessage);
-				LogDebugWriteLine("{0} just {1}!", e.Nick, (e.Tags["msg-id"] == "resub") ? String.Format("resubbed for {0} months!", e.Tags["msg-param-months"]) : "subscribed!");
-				Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
-				Thread.Sleep(5000);
-				Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
-				Thread.Sleep(5000);
-				Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+				//Console.WriteLine("{0}", e.RawMessage);
+				LogDebugWriteLine("{0} just resubbed for {1} months!", e.Nick, e.Tags["msg-param-months"]);
+
+				if (!BotFile.EnableSubMessage) return;
+
+				String Msg = this.BotFile.SubMessageResub;
+				Msg = Msg.Replace("%name%", e.Nick);
+				Msg = Msg.Replace("%months%", e.Tags["msg-param-months"]);
+
+				Tcb.SendChatMessage(Msg);
+
 			}
 			else if (e.Type == MessageType.Chat)
 			{
-				if (e.RawMessage.Contains("twitchnotify"))
+				if (e.IsSubMessage)
 				{
-					LogDebugWriteLine("Nick: "+e.Nick);
-				}
-				if (e.Nick == "twitchnotify")
-				{
-					LogDebugWriteLine("{0}", e.Message);
-					Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
-					Thread.Sleep(5000);
-					Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
-					Thread.Sleep(5000);
-					Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+					LogDebugWriteLine("{0} just subscribed!", e.Nick);
+
+					if (!BotFile.EnableSubMessage) return;
+
+					String Msg = this.BotFile.SubMessageNew;
+					Msg = Msg.Replace("%name%", e.Nick);
+
+					Tcb.SendChatMessage(Msg);
 				}
 				else
 				{
@@ -366,6 +370,11 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void buttonConnect_Click(object sender, EventArgs e)
 		{
+			if (Tcb == null)
+			{
+				CreateTwitchChatBot();
+            }
+
 			if (!Tcb.Active)
 			{
 				SaveTwitchConfig();
@@ -377,6 +386,12 @@ namespace Maoubot_GUI
 				AddAccount();
 
 				Tcb.Run();
+
+				textBoxNickname.Enabled = false;
+				textBoxOAuth.Enabled = false;
+				textBoxChannel.Enabled = false;
+
+				comboBoxAccounts.Enabled = false;
 			} else
 			{
 				Tcb.JoinChannel(textBoxChannel.Text);
@@ -394,13 +409,25 @@ namespace Maoubot_GUI
 			Tcb.Stop();
 			ClearChatlog();
 			ClearDebuglog();
+
+			textBoxNickname.Enabled = true;
+			textBoxOAuth.Enabled = true;
+			textBoxChannel.Enabled = true;
+
+			comboBoxAccounts.Enabled = true;
 		}
 
+		/// <summary>
+		/// Parts from the channel
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonPart_Click(object sender, EventArgs e)
 		{
 			Tcb.PartChannel();
 			ClearChatlog();
 			ClearDebuglog();
+			textBoxChannel.Enabled = true;
 		}
 
 		/// <summary>

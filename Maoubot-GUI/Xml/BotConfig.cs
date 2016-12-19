@@ -13,7 +13,7 @@ using TwitchSharp.Utilities;
 namespace Maoubot_GUI.Xml
 {
 	[DataContract(IsReference = true)]
-	public class BotConfig : XmlManager
+	public class BotConfig : XmlManager<BotConfig>
 	{
 		[DataMember]
 		public String CommandPrefix { get; set; }
@@ -21,6 +21,14 @@ namespace Maoubot_GUI.Xml
 		public TextCommand[] TextCommands { get; set; }
 		[DataMember]
 		public TwitchAccount[] Accounts { get; set; }
+		[DataMember]
+		public Boolean EnableSubMessage { get; set; }
+		[DataMember]
+		public String SubMessageNew { get; set; }
+		[DataMember]
+		public String SubMessageResub { get; set; }
+		[DataMember]
+		public Boolean EnableCommands { get; set; }
 
 		public BotConfig()
 			: base()
@@ -40,26 +48,9 @@ namespace Maoubot_GUI.Xml
 			{
 				Accounts = new TwitchAccount[0];
 			}
-		}
+			if (String.IsNullOrEmpty(SubMessageNew)) SubMessageNew = @"Thank you for the sub %name%! <3";
+			if (String.IsNullOrEmpty(SubMessageResub)) SubMessageResub = @"Thank you for the %months% sub, %name%! <3";
 
-		public new static BotConfig LoadFromXml(string FilePath)
-		{
-
-			try
-			{
-				using (FileStream stream = File.OpenRead(FilePath))
-				{
-					DataContractSerializer xmlSerializer = new DataContractSerializer(MethodBase.GetCurrentMethod().DeclaringType);
-					var asd = xmlSerializer.ReadObject(stream);
-					return (BotConfig)asd;
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Unable to load file\t{0}", FilePath);
-				Console.WriteLine(ex.Message);
-				return null;
-			}
 		}
 
 		// Commands

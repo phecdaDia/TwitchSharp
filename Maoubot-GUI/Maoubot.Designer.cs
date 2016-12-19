@@ -57,6 +57,14 @@
 			this.buttonSendMessage = new System.Windows.Forms.Button();
 			this.textBoxMessage = new System.Windows.Forms.TextBox();
 			this.Chatbox = new System.Windows.Forms.TextBox();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.checkBoxEnableSubMessage = new System.Windows.Forms.CheckBox();
+			this.textBoxSubMessageNew = new System.Windows.Forms.TextBox();
+			this.textBoxSubMessageResub = new System.Windows.Forms.TextBox();
+			this.button1 = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -65,6 +73,8 @@
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
+			this.panel1.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -282,6 +292,7 @@
 			// 
 			// tabPage2
 			// 
+			this.tabPage2.Controls.Add(this.panel1);
 			this.tabPage2.Controls.Add(this.buttonMaouBotConfigLoad);
 			this.tabPage2.Controls.Add(this.buttonMaouBotConfigSave);
 			this.tabPage2.Controls.Add(this.buttonQuotesConfigLoad);
@@ -388,6 +399,111 @@
 			this.Chatbox.Size = new System.Drawing.Size(528, 606);
 			this.Chatbox.TabIndex = 0;
 			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.button1);
+			this.panel1.Controls.Add(this.tableLayoutPanel2);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panel1.Location = new System.Drawing.Point(3, 117);
+			this.panel1.Margin = new System.Windows.Forms.Padding(0);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(330, 460);
+			this.panel1.TabIndex = 8;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Controls.Add(this.textBoxSubMessageResub, 1, 2);
+			this.tableLayoutPanel2.Controls.Add(this.label5, 0, 2);
+			this.tableLayoutPanel2.Controls.Add(this.label4, 0, 1);
+			this.tableLayoutPanel2.Controls.Add(this.checkBoxEnableSubMessage, 1, 0);
+			this.tableLayoutPanel2.Controls.Add(this.textBoxSubMessageNew, 1, 1);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 4;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(330, 437);
+			this.tableLayoutPanel2.TabIndex = 0;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label4.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(1, 28);
+			this.label4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(100, 20);
+			this.label4.TabIndex = 0;
+			this.label4.Text = "Sub Message";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label5.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Location = new System.Drawing.Point(1, 52);
+			this.label5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(100, 20);
+			this.label5.TabIndex = 1;
+			this.label5.Text = "Resub Message";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxEnableSubMessage
+			// 
+			this.checkBoxEnableSubMessage.AutoSize = true;
+			this.checkBoxEnableSubMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.checkBoxEnableSubMessage.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.checkBoxEnableSubMessage.Location = new System.Drawing.Point(105, 4);
+			this.checkBoxEnableSubMessage.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
+			this.checkBoxEnableSubMessage.Name = "checkBoxEnableSubMessage";
+			this.checkBoxEnableSubMessage.Size = new System.Drawing.Size(224, 20);
+			this.checkBoxEnableSubMessage.TabIndex = 2;
+			this.checkBoxEnableSubMessage.Text = "Enable Sub/Resub Messages";
+			this.checkBoxEnableSubMessage.UseVisualStyleBackColor = true;
+			// 
+			// textBoxSubMessageNew
+			// 
+			this.textBoxSubMessageNew.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxSubMessageNew.Location = new System.Drawing.Point(102, 28);
+			this.textBoxSubMessageNew.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.textBoxSubMessageNew.Name = "textBoxSubMessageNew";
+			this.textBoxSubMessageNew.Size = new System.Drawing.Size(227, 20);
+			this.textBoxSubMessageNew.TabIndex = 3;
+			this.textBoxSubMessageNew.Text = "**SUB_MESSAGE**";
+			// 
+			// textBoxSubMessageResub
+			// 
+			this.textBoxSubMessageResub.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxSubMessageResub.Location = new System.Drawing.Point(102, 52);
+			this.textBoxSubMessageResub.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.textBoxSubMessageResub.Name = "textBoxSubMessageResub";
+			this.textBoxSubMessageResub.Size = new System.Drawing.Size(227, 20);
+			this.textBoxSubMessageResub.TabIndex = 4;
+			this.textBoxSubMessageResub.Text = "**RESUB_MESSAGE**";
+			// 
+			// button1
+			// 
+			this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.button1.Location = new System.Drawing.Point(0, 437);
+			this.button1.Margin = new System.Windows.Forms.Padding(0);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(330, 23);
+			this.button1.TabIndex = 1;
+			this.button1.Text = "Apply / Save";
+			this.button1.UseVisualStyleBackColor = true;
+			// 
 			// Maoubot
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -408,6 +524,9 @@
 			this.splitContainer1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
+			this.panel1.ResumeLayout(false);
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -443,6 +562,14 @@
 		private System.Windows.Forms.Button buttonQuotesConfigSave;
 		private System.Windows.Forms.Button buttonTwitchConfigLoad;
 		private System.Windows.Forms.Button buttonTwitchConfigSave;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox textBoxSubMessageResub;
+		private System.Windows.Forms.CheckBox checkBoxEnableSubMessage;
+		private System.Windows.Forms.TextBox textBoxSubMessageNew;
+		private System.Windows.Forms.Button button1;
 	}
 }
 

@@ -9,7 +9,7 @@ using TwitchSharp.Utilities;
 
 namespace TwitchRPGBot
 {
-	public class ConfigFile : XmlManager
+	public class ConfigFile : XmlManager<ConfigFile>
 	{
 		public String Nick, oAuth, Channel;
 		public String[] Moderators, Players;
@@ -39,31 +39,6 @@ namespace TwitchRPGBot
 			if (Players == null)
 			{
 				Players = new String[0];
-			}
-		}
-
-
-
-		public static new ConfigFile LoadFromXml(string FilePath)
-		{
-
-			try
-			{
-				// XXX		Make this method return a subclass depending on the inheritance
-				using (StreamReader reader = new StreamReader(FilePath))
-				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(ConfigFile));
-					return (ConfigFile)xmlSerializer.Deserialize(reader);
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Unable to load file\n\t{0}", FilePath);
-				//throw ex;
-				Console.WriteLine(File.Exists(FilePath) ? String.Join("\n",File.ReadAllLines(FilePath)) : "No File Found!" );
-				Console.WriteLine(ex.Message);
-
-				return null;
 			}
 		}
 	}

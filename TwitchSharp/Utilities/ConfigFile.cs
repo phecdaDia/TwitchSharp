@@ -12,7 +12,7 @@ using TwitchSharp.Utilities;
 namespace TwitchSharp.Utilities
 {
 	[DataContract(IsReference = true)]
-	public class ConfigFile : XmlManager
+	public class ConfigFile : XmlManager<ConfigFile>
 	{
 		[DataMember]
 		public String Nick { get; set; }
@@ -59,25 +59,6 @@ namespace TwitchSharp.Utilities
 					@"DUMMY_USER3"
 				};
 				Valid = false;
-			}
-		}
-
-		public new static ConfigFile LoadFromXml(string FilePath)
-		{
-
-			try
-			{
-				using (FileStream stream = File.OpenRead(FilePath))
-				{
-					DataContractSerializer xmlSerializer = new DataContractSerializer(MethodBase.GetCurrentMethod().DeclaringType);
-					return (ConfigFile)xmlSerializer.ReadObject(stream);
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Unable to load file\t{0}", FilePath);
-				Console.WriteLine(ex.Message);
-				return null;
 			}
 		}
 

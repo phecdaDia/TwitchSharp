@@ -12,7 +12,7 @@ using TwitchSharp.Utilities;
 namespace Maoubot_GUI.Xml
 {
 	[DataContract(IsReference = true)]
-	public class QuoteConfig : XmlManager
+	public class QuoteConfig : XmlManager<QuoteConfig>
 	{
 		[DataMember]
 		public String[] Quotes { get; set; }

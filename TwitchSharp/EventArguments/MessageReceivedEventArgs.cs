@@ -61,27 +61,37 @@ namespace TwitchSharp.EventArguments
 
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
 
+		public Boolean IsSubMessage { get; }
+
 		public MessageReceivedEventArgs(String Message)
 		{
 			//Console.WriteLine(Message);
 			this.Tags = new Dictionary<string, string>();
 			this.RawMessage = Message;
 			this.Type = MessageType.UNDEFINED;
+			this.IsSubMessage = false;
 
             if (Message.StartsWith(@"PING"))
 			{
 				this.Type = MessageType.Ping;
 				//return;
-			} else
+			}
+			else if (Message.StartsWith(@":tmi.twitch.tv"))
 			{
+				this.Type = MessageType.Server;
+				return;
+			}
+			else
+			{
+
 				String[] SpaceSplit = Message.Split(' ');
-
-				//Console.WriteLine("{0}: {2} | {1}", UsesTags, Message, SpaceSplit.Length);
-				//Console.WriteLine(SpaceSplit[(UsesTags) ? 2 : 1]);
-				// stuff
+				if (SpaceSplit.Length < ((UsesTags) ? 3 : 2))
+				{
+					this.Type = MessageType.Server;
+					return;
+				}
 				this.Channel = SpaceSplit[(UsesTags) ? 3 : 2].Substring(1);
-
-				//Console.WriteLine(1);c
+				
 				// Tags
 				if (UsesTags)
 				{
@@ -90,27 +100,34 @@ namespace TwitchSharp.EventArguments
 					foreach (String TagExpression in TagSplit)
 					{
 						String[] TagExpressionSplit = TagExpression.Split('=');
-						//Console.WriteLine("TAG: {0}: {1}", TagExpressionSplit[0], TagExpressionSplit[1]);
 						Tags.Add(TagExpressionSplit[0], TagExpressionSplit[1]);
 					}
 				}
-				//Console.WriteLine(2);
-
-				if (Tags.ContainsKey("display-name"))
+				String t_;
+				Tags.TryGetValue("display-name", out t_);
+				if (!Tags.ContainsKey("display-name") || String.IsNullOrWhiteSpace(t_))
 				{
-					if (String.IsNullOrWhiteSpace(Tags["display-name"]))
+					if (SpaceSplit[0].Contains(":twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv"))
 					{
-						String RegexMatch = new Regex(@":([A-Za-z0-9\_\-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;
-						Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();
+						IsSubMessage = true;
+						Tags["display-name"] = SpaceSplit[3].Substring(1);
+					}
+					else
+					{
+						String RegexMatch = new Regex(@":([A-Za-z0-9_-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;
+						if (!String.IsNullOrEmpty(RegexMatch))
+							Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();
+						else
+							Tags["display-name"] = "**NO_NAME**";
 					}
 				}
-				//Console.WriteLine(3);
-				if (SpaceSplit[2] == @"PRIVMSG")
+				if (SpaceSplit[(UsesTags) ? 2 : 1] == @"PRIVMSG")
 				{
 					this.Type = MessageType.Chat;
+					
 
 					String m = String.Empty;
-					for (int i=4; i<SpaceSplit.Length; i++)
+					for (int i= (UsesTags) ? 4 : 3; i<SpaceSplit.Length; i++)
 					{
 						m += SpaceSplit[i];
 						if (i < SpaceSplit.Length - 1) m += " ";
@@ -132,7 +149,22 @@ namespace TwitchSharp.EventArguments
 				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"USERNOTICE")
 				{
 					this.Type = MessageType.Usernotice;
-					Console.WriteLine(RawMessage);
+					//Console.WriteLine(RawMessage);
+				}
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"CLEARCHAT")
+				{
+					this.Type = MessageType.Clearchat;
+					//Console.WriteLine(RawMessage);
+				}
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"JOIN")
+				{
+					this.Type = MessageType.Join;
+					//Console.WriteLine(RawMessage);
+				}
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"PART")
+				{
+					this.Type = MessageType.Part;
+					//Console.WriteLine(RawMessage);
 				}
 				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"WHISPER")
 				{
@@ -169,5 +201,8 @@ namespace TwitchSharp.EventArguments
 		Usernotice = 5,
 		Userstate = 6,
 		Roomstate = 7,
-    }
+		Clearchat = 8,
+		Join = 9,
+		Part = 10,
+	}
 }
