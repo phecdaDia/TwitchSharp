@@ -1,39 +1,9 @@
 
 Todo for the week 19.12.2016 to 25.12.2016
 
-Monday		19.12.2016:
-	Project management, scheduling.
-	Allowed to reschedule if needed.
-	Estimate of 6-8 hours of work / day.
-	Total of 30-40 hour week.
-
-	Change TAG CAP REQ
-	Add Maoubot
-	Check if projects work
-
-	Subhelper, test if current implementation via regex works.
-	+---------------------------------------------------------------------------------------------------------------+
-	|																												|
-	|	String RegexMatch = new Regex(@":([A-Za-z0-9\_\-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;		|
-	|	Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();									|
-	|																												|
-	+---------------------------------------------------------------------------------------------------------------+
-	Config enable/disable + Checkbox. Add this to Maoubot config, Use a splitter? Or just add a checkbox panel or whatever it's called
-		checkedlistbox
-	Add "custom message box".
-
-	MAYBE add a new tabcontrol with 0,0,0,0 margin in Maoubot config? 
-	General, Subscription, ??
-		- deciede.
-
-	Start working on XmlManager
-
-	COMMIT CODE!
 Thuesday	20.12.2016:
-	XmlManager,
-	test if Subhelper implementation works, since we have to test this specific case. Adjust code if needed.
 
-	Textbox modification.
+	TextCommand modification.
 	Add Textcommand subregister?
 	Look into permissions, add this to TwitchSharp.MessageReceivedEventArgs
 
@@ -49,6 +19,7 @@ Thursday	22.12.2016:
 	Day off? Deciede on monday.
 Friday		23.12.2016:
 	Implement quotes if there's time left. 
+	Check if projects work
 Saturday	24.12.2016:
 	Finish your work, polish
 	commit stuff and PR into master, then prob. rebranch from Phecda to work on the road trip if I want to.
@@ -91,7 +62,7 @@ Maoubot-GUI:
 			%color%		Users color
 			%role%		Users role(s)? Not sure if that's useful.. 
 	
-	Standart commands, 
+	Standard commands, 
 		quotes? :D
 
 	Subscription helper:
