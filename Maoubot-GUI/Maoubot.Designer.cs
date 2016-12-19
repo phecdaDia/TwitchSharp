@@ -32,6 +32,9 @@
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.buttonAccountsDelete = new System.Windows.Forms.Button();
+			this.buttonAccountsLoad = new System.Windows.Forms.Button();
+			this.comboBoxAccounts = new System.Windows.Forms.ComboBox();
 			this.buttonPart = new System.Windows.Forms.Button();
 			this.buttonConnect = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
@@ -45,18 +48,15 @@
 			this.buttonConfigSave = new System.Windows.Forms.Button();
 			this.Debugbox = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.buttonMaouBotConfigLoad = new System.Windows.Forms.Button();
+			this.buttonMaouBotConfigSave = new System.Windows.Forms.Button();
+			this.buttonQuotesConfigLoad = new System.Windows.Forms.Button();
+			this.buttonQuotesConfigSave = new System.Windows.Forms.Button();
+			this.buttonTwitchConfigLoad = new System.Windows.Forms.Button();
+			this.buttonTwitchConfigSave = new System.Windows.Forms.Button();
 			this.buttonSendMessage = new System.Windows.Forms.Button();
 			this.textBoxMessage = new System.Windows.Forms.TextBox();
 			this.Chatbox = new System.Windows.Forms.TextBox();
-			this.comboBoxAccounts = new System.Windows.Forms.ComboBox();
-			this.buttonAccountsLoad = new System.Windows.Forms.Button();
-			this.buttonAccountsDelete = new System.Windows.Forms.Button();
-			this.buttonTwitchConfigSave = new System.Windows.Forms.Button();
-			this.buttonTwitchConfigLoad = new System.Windows.Forms.Button();
-			this.buttonQuotesConfigLoad = new System.Windows.Forms.Button();
-			this.buttonQuotesConfigSave = new System.Windows.Forms.Button();
-			this.buttonMaouBotConfigLoad = new System.Windows.Forms.Button();
-			this.buttonMaouBotConfigSave = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -137,6 +137,35 @@
 			this.splitContainer1.Size = new System.Drawing.Size(330, 574);
 			this.splitContainer1.SplitterDistance = 170;
 			this.splitContainer1.TabIndex = 11;
+			// 
+			// buttonAccountsDelete
+			// 
+			this.buttonAccountsDelete.Location = new System.Drawing.Point(253, 81);
+			this.buttonAccountsDelete.Name = "buttonAccountsDelete";
+			this.buttonAccountsDelete.Size = new System.Drawing.Size(77, 23);
+			this.buttonAccountsDelete.TabIndex = 14;
+			this.buttonAccountsDelete.Text = "Delete";
+			this.buttonAccountsDelete.UseVisualStyleBackColor = true;
+			this.buttonAccountsDelete.Click += new System.EventHandler(this.buttonAccountsDelete_Click);
+			// 
+			// buttonAccountsLoad
+			// 
+			this.buttonAccountsLoad.Location = new System.Drawing.Point(172, 81);
+			this.buttonAccountsLoad.Name = "buttonAccountsLoad";
+			this.buttonAccountsLoad.Size = new System.Drawing.Size(77, 23);
+			this.buttonAccountsLoad.TabIndex = 13;
+			this.buttonAccountsLoad.Text = "Load";
+			this.buttonAccountsLoad.UseVisualStyleBackColor = true;
+			this.buttonAccountsLoad.Click += new System.EventHandler(this.buttonAccountsLoad_Click);
+			// 
+			// comboBoxAccounts
+			// 
+			this.comboBoxAccounts.FormattingEnabled = true;
+			this.comboBoxAccounts.Location = new System.Drawing.Point(9, 83);
+			this.comboBoxAccounts.Name = "comboBoxAccounts";
+			this.comboBoxAccounts.Size = new System.Drawing.Size(155, 21);
+			this.comboBoxAccounts.TabIndex = 12;
+			this.comboBoxAccounts.Text = "NO ACCOUNTS";
 			// 
 			// buttonPart
 			// 
@@ -242,6 +271,7 @@
 			// Debugbox
 			// 
 			this.Debugbox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Debugbox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Debugbox.Location = new System.Drawing.Point(0, 0);
 			this.Debugbox.Multiline = true;
 			this.Debugbox.Name = "Debugbox";
@@ -268,83 +298,25 @@
 			this.tabPage2.Text = "Maoubot Config";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
-			// buttonSendMessage
+			// buttonMaouBotConfigLoad
 			// 
-			this.buttonSendMessage.Location = new System.Drawing.Point(278, 7);
-			this.buttonSendMessage.Name = "buttonSendMessage";
-			this.buttonSendMessage.Size = new System.Drawing.Size(52, 23);
-			this.buttonSendMessage.TabIndex = 1;
-			this.buttonSendMessage.Text = "Send";
-			this.buttonSendMessage.UseVisualStyleBackColor = true;
-			this.buttonSendMessage.Click += new System.EventHandler(this.buttonSendMessage_Click);
+			this.buttonMaouBotConfigLoad.Location = new System.Drawing.Point(170, 91);
+			this.buttonMaouBotConfigLoad.Name = "buttonMaouBotConfigLoad";
+			this.buttonMaouBotConfigLoad.Size = new System.Drawing.Size(160, 23);
+			this.buttonMaouBotConfigLoad.TabIndex = 7;
+			this.buttonMaouBotConfigLoad.Text = "Load MaoubotConfig";
+			this.buttonMaouBotConfigLoad.UseVisualStyleBackColor = true;
+			this.buttonMaouBotConfigLoad.Click += new System.EventHandler(this.buttonMaouBotConfigLoad_Click);
 			// 
-			// textBoxMessage
+			// buttonMaouBotConfigSave
 			// 
-			this.textBoxMessage.Location = new System.Drawing.Point(7, 7);
-			this.textBoxMessage.Name = "textBoxMessage";
-			this.textBoxMessage.Size = new System.Drawing.Size(265, 20);
-			this.textBoxMessage.TabIndex = 0;
-			this.textBoxMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxMessage_KeyDown);
-			// 
-			// Chatbox
-			// 
-			this.Chatbox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.Chatbox.Location = new System.Drawing.Point(3, 3);
-			this.Chatbox.Multiline = true;
-			this.Chatbox.Name = "Chatbox";
-			this.Chatbox.ReadOnly = true;
-			this.Chatbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Chatbox.Size = new System.Drawing.Size(528, 606);
-			this.Chatbox.TabIndex = 0;
-			// 
-			// comboBoxAccounts
-			// 
-			this.comboBoxAccounts.FormattingEnabled = true;
-			this.comboBoxAccounts.Location = new System.Drawing.Point(9, 83);
-			this.comboBoxAccounts.Name = "comboBoxAccounts";
-			this.comboBoxAccounts.Size = new System.Drawing.Size(155, 21);
-			this.comboBoxAccounts.TabIndex = 12;
-			this.comboBoxAccounts.Text = "NO ACCOUNTS";
-			// 
-			// buttonAccountsLoad
-			// 
-			this.buttonAccountsLoad.Location = new System.Drawing.Point(172, 81);
-			this.buttonAccountsLoad.Name = "buttonAccountsLoad";
-			this.buttonAccountsLoad.Size = new System.Drawing.Size(77, 23);
-			this.buttonAccountsLoad.TabIndex = 13;
-			this.buttonAccountsLoad.Text = "Load";
-			this.buttonAccountsLoad.UseVisualStyleBackColor = true;
-			this.buttonAccountsLoad.Click += new System.EventHandler(this.buttonAccountsLoad_Click);
-			// 
-			// buttonAccountsDelete
-			// 
-			this.buttonAccountsDelete.Location = new System.Drawing.Point(253, 81);
-			this.buttonAccountsDelete.Name = "buttonAccountsDelete";
-			this.buttonAccountsDelete.Size = new System.Drawing.Size(77, 23);
-			this.buttonAccountsDelete.TabIndex = 14;
-			this.buttonAccountsDelete.Text = "Delete";
-			this.buttonAccountsDelete.UseVisualStyleBackColor = true;
-			this.buttonAccountsDelete.Click += new System.EventHandler(this.buttonAccountsDelete_Click);
-			// 
-			// buttonTwitchConfigSave
-			// 
-			this.buttonTwitchConfigSave.Location = new System.Drawing.Point(7, 33);
-			this.buttonTwitchConfigSave.Name = "buttonTwitchConfigSave";
-			this.buttonTwitchConfigSave.Size = new System.Drawing.Size(160, 23);
-			this.buttonTwitchConfigSave.TabIndex = 2;
-			this.buttonTwitchConfigSave.Text = "Save TwitchConfig";
-			this.buttonTwitchConfigSave.UseVisualStyleBackColor = true;
-			this.buttonTwitchConfigSave.Click += new System.EventHandler(this.buttonTwitchConfigSave_Click);
-			// 
-			// buttonTwitchConfigLoad
-			// 
-			this.buttonTwitchConfigLoad.Location = new System.Drawing.Point(170, 33);
-			this.buttonTwitchConfigLoad.Name = "buttonTwitchConfigLoad";
-			this.buttonTwitchConfigLoad.Size = new System.Drawing.Size(160, 23);
-			this.buttonTwitchConfigLoad.TabIndex = 3;
-			this.buttonTwitchConfigLoad.Text = "Load TwitchConfig";
-			this.buttonTwitchConfigLoad.UseVisualStyleBackColor = true;
-			this.buttonTwitchConfigLoad.Click += new System.EventHandler(this.buttonTwitchConfigLoad_Click);
+			this.buttonMaouBotConfigSave.Location = new System.Drawing.Point(7, 91);
+			this.buttonMaouBotConfigSave.Name = "buttonMaouBotConfigSave";
+			this.buttonMaouBotConfigSave.Size = new System.Drawing.Size(160, 23);
+			this.buttonMaouBotConfigSave.TabIndex = 6;
+			this.buttonMaouBotConfigSave.Text = "Save MaoubotConfig";
+			this.buttonMaouBotConfigSave.UseVisualStyleBackColor = true;
+			this.buttonMaouBotConfigSave.Click += new System.EventHandler(this.buttonMaouBotConfigSave_Click);
 			// 
 			// buttonQuotesConfigLoad
 			// 
@@ -366,25 +338,55 @@
 			this.buttonQuotesConfigSave.UseVisualStyleBackColor = true;
 			this.buttonQuotesConfigSave.Click += new System.EventHandler(this.buttonQuotesConfigSave_Click);
 			// 
-			// buttonMaouBotConfigLoad
+			// buttonTwitchConfigLoad
 			// 
-			this.buttonMaouBotConfigLoad.Location = new System.Drawing.Point(170, 91);
-			this.buttonMaouBotConfigLoad.Name = "buttonMaouBotConfigLoad";
-			this.buttonMaouBotConfigLoad.Size = new System.Drawing.Size(160, 23);
-			this.buttonMaouBotConfigLoad.TabIndex = 7;
-			this.buttonMaouBotConfigLoad.Text = "Load MaoubotConfig";
-			this.buttonMaouBotConfigLoad.UseVisualStyleBackColor = true;
-			this.buttonMaouBotConfigLoad.Click += new System.EventHandler(this.buttonMaouBotConfigLoad_Click);
+			this.buttonTwitchConfigLoad.Location = new System.Drawing.Point(170, 33);
+			this.buttonTwitchConfigLoad.Name = "buttonTwitchConfigLoad";
+			this.buttonTwitchConfigLoad.Size = new System.Drawing.Size(160, 23);
+			this.buttonTwitchConfigLoad.TabIndex = 3;
+			this.buttonTwitchConfigLoad.Text = "Load TwitchConfig";
+			this.buttonTwitchConfigLoad.UseVisualStyleBackColor = true;
+			this.buttonTwitchConfigLoad.Click += new System.EventHandler(this.buttonTwitchConfigLoad_Click);
 			// 
-			// buttonMaouBotConfigSave
+			// buttonTwitchConfigSave
 			// 
-			this.buttonMaouBotConfigSave.Location = new System.Drawing.Point(7, 91);
-			this.buttonMaouBotConfigSave.Name = "buttonMaouBotConfigSave";
-			this.buttonMaouBotConfigSave.Size = new System.Drawing.Size(160, 23);
-			this.buttonMaouBotConfigSave.TabIndex = 6;
-			this.buttonMaouBotConfigSave.Text = "Save MaoubotConfig";
-			this.buttonMaouBotConfigSave.UseVisualStyleBackColor = true;
-			this.buttonMaouBotConfigSave.Click += new System.EventHandler(this.buttonMaouBotConfigSave_Click);
+			this.buttonTwitchConfigSave.Location = new System.Drawing.Point(7, 33);
+			this.buttonTwitchConfigSave.Name = "buttonTwitchConfigSave";
+			this.buttonTwitchConfigSave.Size = new System.Drawing.Size(160, 23);
+			this.buttonTwitchConfigSave.TabIndex = 2;
+			this.buttonTwitchConfigSave.Text = "Save TwitchConfig";
+			this.buttonTwitchConfigSave.UseVisualStyleBackColor = true;
+			this.buttonTwitchConfigSave.Click += new System.EventHandler(this.buttonTwitchConfigSave_Click);
+			// 
+			// buttonSendMessage
+			// 
+			this.buttonSendMessage.Location = new System.Drawing.Point(278, 7);
+			this.buttonSendMessage.Name = "buttonSendMessage";
+			this.buttonSendMessage.Size = new System.Drawing.Size(52, 23);
+			this.buttonSendMessage.TabIndex = 1;
+			this.buttonSendMessage.Text = "Send";
+			this.buttonSendMessage.UseVisualStyleBackColor = true;
+			this.buttonSendMessage.Click += new System.EventHandler(this.buttonSendMessage_Click);
+			// 
+			// textBoxMessage
+			// 
+			this.textBoxMessage.Location = new System.Drawing.Point(7, 7);
+			this.textBoxMessage.Name = "textBoxMessage";
+			this.textBoxMessage.Size = new System.Drawing.Size(265, 20);
+			this.textBoxMessage.TabIndex = 0;
+			this.textBoxMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxMessage_KeyDown);
+			// 
+			// Chatbox
+			// 
+			this.Chatbox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Chatbox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Chatbox.Location = new System.Drawing.Point(3, 3);
+			this.Chatbox.Multiline = true;
+			this.Chatbox.Name = "Chatbox";
+			this.Chatbox.ReadOnly = true;
+			this.Chatbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.Chatbox.Size = new System.Drawing.Size(528, 606);
+			this.Chatbox.TabIndex = 0;
 			// 
 			// Maoubot
 			// 

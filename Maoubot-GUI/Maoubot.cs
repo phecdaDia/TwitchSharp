@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TwitchSharp;
@@ -303,14 +304,16 @@ namespace Maoubot_GUI
 			if (e.Type == MessageType.Ping)
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
-				LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
+				//LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
 			}
 			else if (e.Type == MessageType.Server)
 			{
-				LogDebugWriteLine("{0}", e.RawMessage);
+				Console.WriteLine("{0}", e.RawMessage);
+				return;
 			}
 			else if (e.Type == MessageType.Roomstate || e.Type == MessageType.Userstate)
 			{
+				//Console.WriteLine("{0}", e.RawMessage);
 				return;
 				//foreach (String Tag in e.Tags.Keys)
 				//{
@@ -318,9 +321,39 @@ namespace Maoubot_GUI
 				//	Console.WriteLine("Writing tag to console...");
 				//} 
 			}
+			else if (e.Type == MessageType.Usernotice)
+			{
+				Console.WriteLine("{0}", e.RawMessage);
+				LogDebugWriteLine("{0} just {1}!", e.Nick, (e.Tags["msg-id"] == "resub") ? String.Format("resubbed for {0} months!", e.Tags["msg-param-months"]) : "subscribed!");
+				Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+				Thread.Sleep(5000);
+				Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+				Thread.Sleep(5000);
+				Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+			}
 			else if (e.Type == MessageType.Chat)
 			{
-				LogWriteLine("{0}: {1}", e.Nick, e.Message);
+				if (e.RawMessage.Contains("twitchnotify"))
+				{
+					LogDebugWriteLine("Nick: "+e.Nick);
+				}
+				if (e.Nick == "twitchnotify")
+				{
+					LogDebugWriteLine("{0}", e.Message);
+					Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+					Thread.Sleep(5000);
+					Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+					Thread.Sleep(5000);
+					Tcb.SendChatMessage("galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE galacticHYPE ");
+				}
+				else
+				{
+					LogWriteLine("[{2}] {0}: {1}", e.Nick, e.Message, e.Tags["color"]);
+
+				}
+			} else if (e.Type == MessageType.Whisper)
+			{
+				LogWriteLine("[{2}] {0}: {1}", e.Nick, e.Message, e.Tags["color"]);
 			}
 		}
 		#endregion

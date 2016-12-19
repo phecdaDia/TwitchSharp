@@ -1,0 +1,102 @@
+
+Todo for the week 19.12.2016 to 25.12.2016
+
+Monday		19.12.2016:
+	Project management, scheduling.
+	Allowed to reschedule if needed.
+	Estimate of 6-8 hours of work / day.
+	Total of 30-40 hour week.
+
+	Change TAG CAP REQ
+	Add Maoubot
+	Check if projects work
+
+	Subhelper, test if current implementation via regex works.
+	+---------------------------------------------------------------------------------------------------------------+
+	|																												|
+	|	String RegexMatch = new Regex(@":([A-Za-z0-9\_\-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;		|
+	|	Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();									|
+	|																												|
+	+---------------------------------------------------------------------------------------------------------------+
+	Config enable/disable + Checkbox. Add this to Maoubot config, Use a splitter? Or just add a checkbox panel or whatever it's called
+		checkedlistbox
+	Add "custom message box".
+
+	MAYBE add a new tabcontrol with 0,0,0,0 margin in Maoubot config? 
+	General, Subscription, ??
+		- deciede.
+
+	Start working on XmlManager
+
+	COMMIT CODE!
+Thuesday	20.12.2016:
+	XmlManager,
+	test if Subhelper implementation works, since we have to test this specific case. Adjust code if needed.
+
+	Textbox modification.
+	Add Textcommand subregister?
+	Look into permissions, add this to TwitchSharp.MessageReceivedEventArgs
+
+	Start working on migrating the configs to the new system. 
+Wednesday	21.12.2016:
+	Finish yesterdays work.
+
+	Implement permissions
+	Implement timeout
+
+	Allow it to serialize [DataMember()]
+Thursday	22.12.2016:
+	Day off? Deciede on monday.
+Friday		23.12.2016:
+	Implement quotes if there's time left. 
+Saturday	24.12.2016:
+	Finish your work, polish
+	commit stuff and PR into master, then prob. rebranch from Phecda to work on the road trip if I want to.
+Sunday		25.12.2016:
+	Day off
+
+
+General:
+	Add maoubot to my local accounts collection. 
+	Test if all projects still work with the TAG change.
+		YES: be happy
+		NO:	Either delete the project or fix it. (prob. deleting would be better, since there is so much useless stuff...)
+	Move stuff to github issues? Maybe even use github projects?
+		Not really usefull for now, since only I am currently working on this project. Maybe later.
+
+TwitchSharp:
+	Create a new XmlManager that allows the user to pass the current type as class argument. 
+		XmlManager<T_> xml = new XmlManager<T_>
+	Move the TAG CAP REQ before joining a channel.
+
+
+Maoubot-GUI:
+	TextCommands:
+		Add combobox to select textcommands,
+		allow changing, deleting and executing.
+		add textbox and an "add" button to add new textcommand without doing it via chat.
+		Maybe display a ? icon for the variables people can use.
+
+		Permissions?
+			USER -> SUB -> MOD -> BROADCASTER
+			+ would stop spam, not sure if I should add a cooldown system thoo. 
+				implement it into the Textcommand class?
+				mods+ would ignore this timeout.
+				staff, gmod, count as mods.
+				admins count as broadcaster.
+
+		Variables:
+			%nick%		Users nickname
+			%time%		current time.
+			%color%		Users color
+			%role%		Users role(s)? Not sure if that's useful.. 
+	
+	Standart commands, 
+		quotes? :D
+
+	Subscription helper:
+		Enable/Disable checkbox -> Config
+		Define a custom message, without changing the code. Make sure to add a \s after the message so twitch allows the "spam"
+
+	
+

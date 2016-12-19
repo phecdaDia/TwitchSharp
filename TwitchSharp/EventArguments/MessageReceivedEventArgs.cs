@@ -34,7 +34,11 @@ namespace TwitchSharp.EventArguments
 			user-type is either empty, mod, global_mod, admin or staff
 
 			@badges=subscriber/0,premium/1;color=#15497A;display-name=jc5ive1;emotes=;id=9070c710-b524-499c-af00-b785ed910faf;login=jc5ive1;mod=0;msg-id=resub;msg-param-months=6;room-id=20702886;subscriber=1;system-msg=jc5ive1\ssubscribed\sfor\s6\smonths\sin\sa\srow!;tmi-sent-ts=1482031770322;turbo=0;user-id=118126696;user-type= :tmi.twitch.tv USERNOTICE #carlsagan42
-		
+			
+			:twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv PRIVMSG #360chrism :Samuel9797 just subscribed with Twitch Prime!
+
+			Maybe add a "starts with @" -> has tags. Let's do this chrisGrin
+
 			Regex: ([\w\d\-]+=[\w\d\/\,a-f0-9\-\\#]*)
 			matches with every tag.
 		*/
@@ -55,9 +59,11 @@ namespace TwitchSharp.EventArguments
 		public Boolean IsTurbo { get { return Tags["turbo"] == "1"; } }
 		public Boolean IsModerator { get { return Tags["mod"] == "1"; } }
 
+		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
+
 		public MessageReceivedEventArgs(String Message)
 		{
-			//Console.WriteLine("Starting to evaluate message...");
+			//Console.WriteLine(Message);
 			this.Tags = new Dictionary<string, string>();
 			this.RawMessage = Message;
 			this.Type = MessageType.UNDEFINED;
@@ -65,27 +71,40 @@ namespace TwitchSharp.EventArguments
             if (Message.StartsWith(@"PING"))
 			{
 				this.Type = MessageType.Ping;
-				return;
+				//return;
 			} else
 			{
 				String[] SpaceSplit = Message.Split(' ');
+
+				//Console.WriteLine("{0}: {2} | {1}", UsesTags, Message, SpaceSplit.Length);
+				//Console.WriteLine(SpaceSplit[(UsesTags) ? 2 : 1]);
 				// stuff
-				this.Channel = SpaceSplit[3].Substring(1);
+				this.Channel = SpaceSplit[(UsesTags) ? 3 : 2].Substring(1);
 
+				//Console.WriteLine(1);c
 				// Tags
-				String[] TagSplit = SpaceSplit[0].Substring(1).Split(';');
-				foreach (String TagExpression in TagSplit)
+				if (UsesTags)
 				{
-					String[] TagExpressionSplit = TagExpression.Split('=');
-					//Console.WriteLine("TAG: {0}: {1}", TagExpressionSplit[0], TagExpressionSplit[1]);
-					Tags.Add(TagExpressionSplit[0], TagExpressionSplit[1]);
-				}
 
-				if (String.IsNullOrWhiteSpace(this.Tags["display-name"]))
+					String[] TagSplit = SpaceSplit[0].Substring(1).Split(';');
+					foreach (String TagExpression in TagSplit)
+					{
+						String[] TagExpressionSplit = TagExpression.Split('=');
+						//Console.WriteLine("TAG: {0}: {1}", TagExpressionSplit[0], TagExpressionSplit[1]);
+						Tags.Add(TagExpressionSplit[0], TagExpressionSplit[1]);
+					}
+				}
+				//Console.WriteLine(2);
+
+				if (Tags.ContainsKey("display-name"))
 				{
-					Tags["display-name"] = SpaceSplit[1].Substring(1).Split('!')[0];
+					if (String.IsNullOrWhiteSpace(Tags["display-name"]))
+					{
+						String RegexMatch = new Regex(@":([A-Za-z0-9\_\-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;
+						Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();
+					}
 				}
-
+				//Console.WriteLine(3);
 				if (SpaceSplit[2] == @"PRIVMSG")
 				{
 					this.Type = MessageType.Chat;
@@ -102,26 +121,40 @@ namespace TwitchSharp.EventArguments
 
 
 				}
-				else if (SpaceSplit[2] == @"USERSTATE")
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"USERSTATE")
 				{
 					this.Type = MessageType.Userstate;
 				}
-				else if (SpaceSplit[2] == @"ROOMSTATE")
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"ROOMSTATE")
 				{
 					this.Type = MessageType.Roomstate;
 				}
-				else if (SpaceSplit[2] == @"USERNOTICE")
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"USERNOTICE")
 				{
 					this.Type = MessageType.Usernotice;
 					Console.WriteLine(RawMessage);
 				}
+				else if (SpaceSplit[(UsesTags) ? 2 : 1] == @"WHISPER")
+				{
+					this.Type = MessageType.Whisper;
+
+					String m = String.Empty;
+					for (int i = 4; i < SpaceSplit.Length; i++)
+					{
+						m += SpaceSplit[i];
+						if (i < SpaceSplit.Length - 1) m += " ";
+					}
+
+					this.Message = m.Substring(1);
+
+				}
 				else
 				{
 					this.Type = MessageType.Server;
+					//Console.WriteLine(this.RawMessage);
+					//Console.WriteLine("asdf {0}", SpaceSplit[(UsesTags) ? 2 : 1]);
 				}
 			}
-
-			//Console.WriteLine("Finished, hope cthis works...");
 		}
 	}
 
