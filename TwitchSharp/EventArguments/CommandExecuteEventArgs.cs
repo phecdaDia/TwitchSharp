@@ -6,29 +6,18 @@ using System.Threading.Tasks;
 
 namespace TwitchSharp.EventArguments
 {
-    public class CommandExecuteEventArgs : EventArgs
+    public class CommandExecuteEventArgs : MessageReceivedEventArgs
     {
-        public String Channel { get; }
-        public String Nick { get; }
-        public String Command { get; }
-        public String[] CommandArgs { get; }
-        public String cArgs { get; }
-		
-		public bool Whisper { get; }
+		public String Command { get; }
+		public String[] CommandArgs { get; }
 
-        public CommandExecuteEventArgs(String Channel, String Nick, String Message, bool Whisper = false)
-        {
-
-            Message = Message.Substring(1);
-            this.Channel = Channel;
-			this.Whisper = Whisper;
-            this.Nick = Nick;
-            
-            List<String> MsgP = Message.Split(' ').ToList();
-            this.Command = MsgP[0];
-            MsgP.RemoveAt(0);
-            this.CommandArgs = MsgP.ToArray();
-            this.cArgs = String.Join(" ", this.CommandArgs);
-        }
+		public CommandExecuteEventArgs(String Message)
+			: base(Message)
+		{
+			this.Command = this.Message.Split(' ').FirstOrDefault().Substring(1);
+			List<String> t_ = this.Message.Split(' ').ToList();
+			t_.RemoveAt(0);
+			this.CommandArgs = t_.ToArray();
+		}
     }
 }

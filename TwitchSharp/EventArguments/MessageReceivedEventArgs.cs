@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TwitchSharp.Components;
 
 namespace TwitchSharp.EventArguments
 {
@@ -53,15 +54,17 @@ namespace TwitchSharp.EventArguments
 		public String Nick { get { return Tags["display-name"]; } }
 		public String Badges { get { return Tags["badges"]; } }
 
+		public String UserType { get { return Tags["user-type"]; } }
+
 		public UInt32 Color { get { return UInt32.Parse(Tags["color"]); } }
 
 		public Boolean IsSubscriber { get { return Tags["subscriber"] == "1"; } }
 		public Boolean IsTurbo { get { return Tags["turbo"] == "1"; } }
 		public Boolean IsModerator { get { return Tags["mod"] == "1"; } }
-
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
-
 		public Boolean IsSubMessage { get; }
+
+		public Permission Permission { get; }
 
 		public MessageReceivedEventArgs(String Message)
 		{
@@ -70,6 +73,7 @@ namespace TwitchSharp.EventArguments
 			this.RawMessage = Message;
 			this.Type = MessageType.UNDEFINED;
 			this.IsSubMessage = false;
+			this.Permission = Permission.Everybody;
 
             if (Message.StartsWith(@"PING"))
 			{
@@ -135,6 +139,22 @@ namespace TwitchSharp.EventArguments
 
 					this.Message = m.Substring(1);
 
+					// Setup Permission
+
+					if (IsSubscriber)
+					{
+						this.Permission = Permission.Subscriber;
+					}
+
+					if (IsModerator)
+					{
+						this.Permission = Permission.Moderator;
+					}
+
+					if (this.Nick == this.Channel)
+					{
+						this.Permission = Permission.Broadcaster;
+					}
 
 
 				}

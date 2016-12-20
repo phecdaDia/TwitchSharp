@@ -69,6 +69,41 @@ namespace Maoubot_GUI.Xml
 			TextCommands = a.ToArray();
 		}
 
+		public Boolean UpdateCommand(String Command, String Text)
+		{
+			foreach (TextCommand t in TextCommands)
+			{
+				if (t.Command == Command)
+				{
+					t.Output = Text;
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public Boolean DeleteCommand(String Command)
+		{
+			int Index = -1;
+			for (int i=0; i<TextCommands.Length; i++)
+			{
+				if (TextCommands[i].Command == Command)
+				{
+					Index = i;
+					break;
+				}
+			}
+			if (Index < 0)
+				return false;
+
+			List<TextCommand> t = TextCommands.ToList();
+			t.RemoveAt(Index);
+			return true;
+
+		}
+
+
+
 		// Accounts
 		public void AddAccount(String Nick, String OAuth)
 		{

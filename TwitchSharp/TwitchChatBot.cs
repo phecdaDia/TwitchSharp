@@ -192,8 +192,7 @@ namespace TwitchSharp
 					// if the first char is
 					if (MREA?.Message?.FirstOrDefault() == CommandChar)
 					{
-						if (MREA?.Type == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message));
-						else if (MREA?.Type == MessageType.Whisper) OnCommandExecute(new CommandExecuteEventArgs(MREA.Channel, MREA.Nick, MREA.Message, true));
+						if (MREA?.Type == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(Message));
 					}
 					} catch (Exception ex)
 					{

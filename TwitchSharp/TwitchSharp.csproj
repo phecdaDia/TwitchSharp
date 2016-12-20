@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\TwitchChat.cs" />
+    <Compile Include="Components\Permission.cs" />
     <Compile Include="EventArguments\ChannelJoinedEventArgs.cs" />
     <Compile Include="EventArguments\ChannelPartEventArgs.cs" />
     <Compile Include="EventArguments\CommandExecuteEventArgs.cs" />

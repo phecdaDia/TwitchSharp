@@ -48,23 +48,20 @@
 			this.buttonConfigSave = new System.Windows.Forms.Button();
 			this.Debugbox = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.buttonMaouBotConfigLoad = new System.Windows.Forms.Button();
-			this.buttonMaouBotConfigSave = new System.Windows.Forms.Button();
-			this.buttonQuotesConfigLoad = new System.Windows.Forms.Button();
-			this.buttonQuotesConfigSave = new System.Windows.Forms.Button();
-			this.buttonTwitchConfigLoad = new System.Windows.Forms.Button();
-			this.buttonTwitchConfigSave = new System.Windows.Forms.Button();
+			this.button1 = new System.Windows.Forms.Button();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.textBoxSubMessageResub = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.checkBoxEnableSubMessage = new System.Windows.Forms.CheckBox();
+			this.textBoxSubMessageNew = new System.Windows.Forms.TextBox();
 			this.buttonSendMessage = new System.Windows.Forms.Button();
 			this.textBoxMessage = new System.Windows.Forms.TextBox();
 			this.Chatbox = new System.Windows.Forms.TextBox();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.checkBox1 = new System.Windows.Forms.CheckBox();
+			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.checkBoxEnableSubMessage = new System.Windows.Forms.CheckBox();
-			this.textBoxSubMessageNew = new System.Windows.Forms.TextBox();
-			this.textBoxSubMessageResub = new System.Windows.Forms.TextBox();
-			this.button1 = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -73,8 +70,10 @@
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
-			this.panel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
+			this.tabPage3.SuspendLayout();
+			this.tableLayoutPanel3.SuspendLayout();
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -97,6 +96,7 @@
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(537, 3);
 			this.tabControl1.Name = "tabControl1";
@@ -292,15 +292,7 @@
 			// 
 			// tabPage2
 			// 
-			this.tabPage2.Controls.Add(this.panel1);
-			this.tabPage2.Controls.Add(this.buttonMaouBotConfigLoad);
-			this.tabPage2.Controls.Add(this.buttonMaouBotConfigSave);
-			this.tabPage2.Controls.Add(this.buttonQuotesConfigLoad);
-			this.tabPage2.Controls.Add(this.buttonQuotesConfigSave);
-			this.tabPage2.Controls.Add(this.buttonTwitchConfigLoad);
-			this.tabPage2.Controls.Add(this.buttonTwitchConfigSave);
-			this.tabPage2.Controls.Add(this.buttonSendMessage);
-			this.tabPage2.Controls.Add(this.textBoxMessage);
+			this.tabPage2.Controls.Add(this.tableLayoutPanel3);
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -309,106 +301,15 @@
 			this.tabPage2.Text = "Maoubot Config";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
-			// buttonMaouBotConfigLoad
+			// button1
 			// 
-			this.buttonMaouBotConfigLoad.Location = new System.Drawing.Point(170, 91);
-			this.buttonMaouBotConfigLoad.Name = "buttonMaouBotConfigLoad";
-			this.buttonMaouBotConfigLoad.Size = new System.Drawing.Size(160, 23);
-			this.buttonMaouBotConfigLoad.TabIndex = 7;
-			this.buttonMaouBotConfigLoad.Text = "Load MaoubotConfig";
-			this.buttonMaouBotConfigLoad.UseVisualStyleBackColor = true;
-			this.buttonMaouBotConfigLoad.Click += new System.EventHandler(this.buttonMaouBotConfigLoad_Click);
-			// 
-			// buttonMaouBotConfigSave
-			// 
-			this.buttonMaouBotConfigSave.Location = new System.Drawing.Point(7, 91);
-			this.buttonMaouBotConfigSave.Name = "buttonMaouBotConfigSave";
-			this.buttonMaouBotConfigSave.Size = new System.Drawing.Size(160, 23);
-			this.buttonMaouBotConfigSave.TabIndex = 6;
-			this.buttonMaouBotConfigSave.Text = "Save MaoubotConfig";
-			this.buttonMaouBotConfigSave.UseVisualStyleBackColor = true;
-			this.buttonMaouBotConfigSave.Click += new System.EventHandler(this.buttonMaouBotConfigSave_Click);
-			// 
-			// buttonQuotesConfigLoad
-			// 
-			this.buttonQuotesConfigLoad.Location = new System.Drawing.Point(170, 62);
-			this.buttonQuotesConfigLoad.Name = "buttonQuotesConfigLoad";
-			this.buttonQuotesConfigLoad.Size = new System.Drawing.Size(160, 23);
-			this.buttonQuotesConfigLoad.TabIndex = 5;
-			this.buttonQuotesConfigLoad.Text = "Load QuotesConfig";
-			this.buttonQuotesConfigLoad.UseVisualStyleBackColor = true;
-			this.buttonQuotesConfigLoad.Click += new System.EventHandler(this.buttonQuotesConfigLoad_Click);
-			// 
-			// buttonQuotesConfigSave
-			// 
-			this.buttonQuotesConfigSave.Location = new System.Drawing.Point(7, 62);
-			this.buttonQuotesConfigSave.Name = "buttonQuotesConfigSave";
-			this.buttonQuotesConfigSave.Size = new System.Drawing.Size(160, 23);
-			this.buttonQuotesConfigSave.TabIndex = 4;
-			this.buttonQuotesConfigSave.Text = "Save QuotesConfig";
-			this.buttonQuotesConfigSave.UseVisualStyleBackColor = true;
-			this.buttonQuotesConfigSave.Click += new System.EventHandler(this.buttonQuotesConfigSave_Click);
-			// 
-			// buttonTwitchConfigLoad
-			// 
-			this.buttonTwitchConfigLoad.Location = new System.Drawing.Point(170, 33);
-			this.buttonTwitchConfigLoad.Name = "buttonTwitchConfigLoad";
-			this.buttonTwitchConfigLoad.Size = new System.Drawing.Size(160, 23);
-			this.buttonTwitchConfigLoad.TabIndex = 3;
-			this.buttonTwitchConfigLoad.Text = "Load TwitchConfig";
-			this.buttonTwitchConfigLoad.UseVisualStyleBackColor = true;
-			this.buttonTwitchConfigLoad.Click += new System.EventHandler(this.buttonTwitchConfigLoad_Click);
-			// 
-			// buttonTwitchConfigSave
-			// 
-			this.buttonTwitchConfigSave.Location = new System.Drawing.Point(7, 33);
-			this.buttonTwitchConfigSave.Name = "buttonTwitchConfigSave";
-			this.buttonTwitchConfigSave.Size = new System.Drawing.Size(160, 23);
-			this.buttonTwitchConfigSave.TabIndex = 2;
-			this.buttonTwitchConfigSave.Text = "Save TwitchConfig";
-			this.buttonTwitchConfigSave.UseVisualStyleBackColor = true;
-			this.buttonTwitchConfigSave.Click += new System.EventHandler(this.buttonTwitchConfigSave_Click);
-			// 
-			// buttonSendMessage
-			// 
-			this.buttonSendMessage.Location = new System.Drawing.Point(278, 7);
-			this.buttonSendMessage.Name = "buttonSendMessage";
-			this.buttonSendMessage.Size = new System.Drawing.Size(52, 23);
-			this.buttonSendMessage.TabIndex = 1;
-			this.buttonSendMessage.Text = "Send";
-			this.buttonSendMessage.UseVisualStyleBackColor = true;
-			this.buttonSendMessage.Click += new System.EventHandler(this.buttonSendMessage_Click);
-			// 
-			// textBoxMessage
-			// 
-			this.textBoxMessage.Location = new System.Drawing.Point(7, 7);
-			this.textBoxMessage.Name = "textBoxMessage";
-			this.textBoxMessage.Size = new System.Drawing.Size(265, 20);
-			this.textBoxMessage.TabIndex = 0;
-			this.textBoxMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxMessage_KeyDown);
-			// 
-			// Chatbox
-			// 
-			this.Chatbox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.Chatbox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Chatbox.Location = new System.Drawing.Point(3, 3);
-			this.Chatbox.Multiline = true;
-			this.Chatbox.Name = "Chatbox";
-			this.Chatbox.ReadOnly = true;
-			this.Chatbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Chatbox.Size = new System.Drawing.Size(528, 606);
-			this.Chatbox.TabIndex = 0;
-			// 
-			// panel1
-			// 
-			this.panel1.Controls.Add(this.button1);
-			this.panel1.Controls.Add(this.tableLayoutPanel2);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel1.Location = new System.Drawing.Point(3, 117);
-			this.panel1.Margin = new System.Windows.Forms.Padding(0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(330, 460);
-			this.panel1.TabIndex = 8;
+			this.button1.Location = new System.Drawing.Point(0, 549);
+			this.button1.Margin = new System.Windows.Forms.Padding(0);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(330, 23);
+			this.button1.TabIndex = 1;
+			this.button1.Text = "Apply / Save";
+			this.button1.UseVisualStyleBackColor = true;
 			// 
 			// tableLayoutPanel2
 			// 
@@ -421,9 +322,9 @@
 			this.tableLayoutPanel2.Controls.Add(this.label4, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.checkBoxEnableSubMessage, 1, 0);
 			this.tableLayoutPanel2.Controls.Add(this.textBoxSubMessageNew, 1, 1);
-			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 23);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
@@ -431,21 +332,18 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(330, 437);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(330, 526);
 			this.tableLayoutPanel2.TabIndex = 0;
 			// 
-			// label4
+			// textBoxSubMessageResub
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label4.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(1, 28);
-			this.label4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(100, 20);
-			this.label4.TabIndex = 0;
-			this.label4.Text = "Sub Message";
-			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxSubMessageResub.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxSubMessageResub.Location = new System.Drawing.Point(102, 52);
+			this.textBoxSubMessageResub.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.textBoxSubMessageResub.Name = "textBoxSubMessageResub";
+			this.textBoxSubMessageResub.Size = new System.Drawing.Size(227, 20);
+			this.textBoxSubMessageResub.TabIndex = 4;
+			this.textBoxSubMessageResub.Text = "**RESUB_MESSAGE**";
 			// 
 			// label5
 			// 
@@ -459,6 +357,19 @@
 			this.label5.TabIndex = 1;
 			this.label5.Text = "Resub Message";
 			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label4.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(1, 28);
+			this.label4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(100, 20);
+			this.label4.TabIndex = 0;
+			this.label4.Text = "Sub Message";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// checkBoxEnableSubMessage
 			// 
@@ -483,26 +394,86 @@
 			this.textBoxSubMessageNew.TabIndex = 3;
 			this.textBoxSubMessageNew.Text = "**SUB_MESSAGE**";
 			// 
-			// textBoxSubMessageResub
+			// buttonSendMessage
 			// 
-			this.textBoxSubMessageResub.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textBoxSubMessageResub.Location = new System.Drawing.Point(102, 52);
-			this.textBoxSubMessageResub.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-			this.textBoxSubMessageResub.Name = "textBoxSubMessageResub";
-			this.textBoxSubMessageResub.Size = new System.Drawing.Size(227, 20);
-			this.textBoxSubMessageResub.TabIndex = 4;
-			this.textBoxSubMessageResub.Text = "**RESUB_MESSAGE**";
+			this.buttonSendMessage.Dock = System.Windows.Forms.DockStyle.Right;
+			this.buttonSendMessage.Location = new System.Drawing.Point(278, 0);
+			this.buttonSendMessage.Name = "buttonSendMessage";
+			this.buttonSendMessage.Size = new System.Drawing.Size(52, 20);
+			this.buttonSendMessage.TabIndex = 1;
+			this.buttonSendMessage.Text = "Send";
+			this.buttonSendMessage.UseVisualStyleBackColor = true;
+			this.buttonSendMessage.Click += new System.EventHandler(this.buttonSendMessage_Click);
 			// 
-			// button1
+			// textBoxMessage
 			// 
-			this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.button1.Location = new System.Drawing.Point(0, 437);
-			this.button1.Margin = new System.Windows.Forms.Padding(0);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(330, 23);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "Apply / Save";
-			this.button1.UseVisualStyleBackColor = true;
+			this.textBoxMessage.Dock = System.Windows.Forms.DockStyle.Left;
+			this.textBoxMessage.Location = new System.Drawing.Point(0, 0);
+			this.textBoxMessage.Name = "textBoxMessage";
+			this.textBoxMessage.Size = new System.Drawing.Size(272, 20);
+			this.textBoxMessage.TabIndex = 0;
+			this.textBoxMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxMessage_KeyDown);
+			// 
+			// Chatbox
+			// 
+			this.Chatbox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Chatbox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Chatbox.Location = new System.Drawing.Point(3, 3);
+			this.Chatbox.Multiline = true;
+			this.Chatbox.Name = "Chatbox";
+			this.Chatbox.ReadOnly = true;
+			this.Chatbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.Chatbox.Size = new System.Drawing.Size(528, 606);
+			this.Chatbox.TabIndex = 0;
+			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.checkBox1);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(336, 580);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Commands";
+			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// checkBox1
+			// 
+			this.checkBox1.AutoSize = true;
+			this.checkBox1.Location = new System.Drawing.Point(3, 3);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(113, 17);
+			this.checkBox1.TabIndex = 0;
+			this.checkBox1.Text = "Enable commands";
+			this.checkBox1.UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel3
+			// 
+			this.tableLayoutPanel3.ColumnCount = 1;
+			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel2, 0, 1);
+			this.tableLayoutPanel3.Controls.Add(this.button1, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.panel1, 0, 0);
+			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+			this.tableLayoutPanel3.RowCount = 3;
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(330, 574);
+			this.tableLayoutPanel3.TabIndex = 3;
+			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.textBoxMessage);
+			this.panel1.Controls.Add(this.buttonSendMessage);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(0, 0);
+			this.panel1.Margin = new System.Windows.Forms.Padding(0);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(330, 20);
+			this.panel1.TabIndex = 2;
 			// 
 			// Maoubot
 			// 
@@ -523,10 +494,13 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
-			this.tabPage2.PerformLayout();
-			this.panel1.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel2.PerformLayout();
+			this.tabPage3.ResumeLayout(false);
+			this.tabPage3.PerformLayout();
+			this.tableLayoutPanel3.ResumeLayout(false);
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -556,13 +530,6 @@
 		private System.Windows.Forms.Button buttonAccountsDelete;
 		private System.Windows.Forms.Button buttonAccountsLoad;
 		private System.Windows.Forms.ComboBox comboBoxAccounts;
-		private System.Windows.Forms.Button buttonMaouBotConfigLoad;
-		private System.Windows.Forms.Button buttonMaouBotConfigSave;
-		private System.Windows.Forms.Button buttonQuotesConfigLoad;
-		private System.Windows.Forms.Button buttonQuotesConfigSave;
-		private System.Windows.Forms.Button buttonTwitchConfigLoad;
-		private System.Windows.Forms.Button buttonTwitchConfigSave;
-		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
@@ -570,6 +537,10 @@
 		private System.Windows.Forms.CheckBox checkBoxEnableSubMessage;
 		private System.Windows.Forms.TextBox textBoxSubMessageNew;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.TabPage tabPage3;
+		private System.Windows.Forms.CheckBox checkBox1;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+		private System.Windows.Forms.Panel panel1;
 	}
 }
 

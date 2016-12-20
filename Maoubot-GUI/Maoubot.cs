@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TwitchSharp;
+using TwitchSharp.Components;
 using TwitchSharp.EventArguments;
 using TwitchSharp.Utilities;
 
@@ -238,6 +239,8 @@ namespace Maoubot_GUI
 				BotFile.SubMessageNew = this.textBoxSubMessageNew.Text;
 				BotFile.SubMessageResub = this.textBoxSubMessageResub.Text;
 
+				BotFile.EnableCommands = this.checkBox1.Checked;
+
 				BotConfig.SaveToXml(MaoubotConfigPath, BotFile);
 			}
 		}
@@ -258,6 +261,8 @@ namespace Maoubot_GUI
 			this.checkBoxEnableSubMessage.Checked = BotFile.EnableSubMessage;
 			this.textBoxSubMessageNew.Text = BotFile.SubMessageNew;
 			this.textBoxSubMessageResub.Text = BotFile.SubMessageResub;
+
+			this.checkBox1.Checked = BotFile.EnableCommands;
 		}
 		#endregion
 		#region TCB Events
@@ -274,29 +279,76 @@ namespace Maoubot_GUI
 			{
 				if (tc.Command == e.Command)
 				{
+					if (tc.MayExecute(e.Permission))
 					Tcb.SendChatMessage(tc.Format(e));
 					return;
 				}
 			}
 
-			if (e.Command == "cmdadd")
+			if (e.Command == "command" && e.Permission >= Permission.Moderator)
 			{
-				if (e.CommandArgs.Length >= 2)
+				if (e.CommandArgs.Length >= 1)
 				{
-					String c = String.Empty;
-					for (int i=1; i<e.CommandArgs.Length; i++)
-					{
-						c += e.CommandArgs[i];
-						c += " ";
-		}
+					String SubCommand = e.CommandArgs[0];
 
-					TextCommand k = new TextCommand(e.CommandArgs[0], c);
-					BotFile.AddCommand(k);
-					Tcb.SendChatMessage("{0}: Added command {1}!", e.Nick, e.CommandArgs[0]);
-					SaveMaoubotConfig();
+					if (SubCommand == "add")
+					{
+						if (e.CommandArgs.Length >= 3)
+						{
+							String Command = e.CommandArgs[1];
+							String Text = String.Empty;
+							List<String> t_ = e.CommandArgs.ToList();
+							t_.RemoveAt(0);     // remove the "add"-subcommand
+							t_.RemoveAt(0);     // remove the caller
+							Text = String.Join(" ", t_);
+
+							// Check if the command already exists..
+							if (BotFile.UpdateCommand(Command, Text))
+							{
+
+								Tcb.SendChatMessage("{0}: Command updated.", e.Nick);
+								return;
+							}
+
+							BotFile.AddCommand(Command, Text);
+							Tcb.SendChatMessage("{0}: Added command", e.Nick);
+							return;
+						} else
+						{
+							Tcb.SendChatMessage("{0}: Usage: {1}commands add <Command> <Text>", e.Nick, BotFile.CommandPrefix);
+							return;
+						}
+					}
+					else if (SubCommand == "delete")
+					{
+						if (e.CommandArgs.Length >= 2)
+						{
+							String Command = e.CommandArgs[1];
+							if (BotFile.DeleteCommand(Command)) {
+								Tcb.SendChatMessage("{0}: Command deleted", e.Nick);
+								return;
+							} 
+							else
+							{
+								Tcb.SendChatMessage("{0}: Command not found!", e.Nick);
+								return;
+							}
+						}
+						else
+						{
+							Tcb.SendChatMessage("{0}: Usage: {1}commands delete <Command>", e.Nick, BotFile.CommandPrefix);
+							return;
+						}
+					}
+					else
+					{
+
+						return;
+					}
 				} else
 				{
-					Tcb.SendChatMessage("{0}: [USAGE] {1}cmdadd <command> <text>", e.Nick, BotFile.CommandPrefix);
+					Tcb.SendChatMessage("{0}: Available subcommands: add", e.Nick);
+					return;
 				}
 			}
 
@@ -352,7 +404,26 @@ namespace Maoubot_GUI
 				}
 				else
 				{
-					LogWriteLine("[{2}] {0}: {1}", e.Nick, e.Message, e.Tags["color"]);
+					String Types = String.Empty;
+					//Console.Write(String.Join(" ", e.UserType)+" ");
+
+					List<String> t_ = new List<String>();
+					if (!String.IsNullOrEmpty(e.UserType)) t_.Add(e.UserType);
+					if (e.IsSubscriber) t_.Add("subscriber");
+
+					//Console.Write(t_.Count);
+
+					for (int i=0; i<t_.Count; i++)
+					{
+						Types += t_[i].ToUpper().FirstOrDefault();
+						if (i < t_.Count - 1) Types += " ";
+					}
+
+					if (t_.Count == 0) Types = "U";
+
+					Console.WriteLine(e.Permission);
+
+					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
 
 				}
 			} else if (e.Type == MessageType.Whisper)
@@ -526,36 +597,6 @@ namespace Maoubot_GUI
 			comboBoxAccounts.Items.Clear();
 			comboBoxAccounts.Items.AddRange(BotFile.GetAccountNames());
 			comboBoxAccounts.SelectedIndex = 0;
-		}
-
-		private void buttonTwitchConfigSave_Click(object sender, EventArgs e)
-		{
-			SaveTwitchConfig();
-		}
-
-		private void buttonTwitchConfigLoad_Click(object sender, EventArgs e)
-		{
-			LoadTwitchConfig();
-		}
-
-		private void buttonQuotesConfigSave_Click(object sender, EventArgs e)
-		{
-			SaveQuoteConfig();
-		}
-
-		private void buttonQuotesConfigLoad_Click(object sender, EventArgs e)
-		{
-			LoadQuoteConfig();
-		}
-
-		private void buttonMaouBotConfigSave_Click(object sender, EventArgs e)
-		{
-			SaveMaoubotConfig();
-		}
-
-		private void buttonMaouBotConfigLoad_Click(object sender, EventArgs e)
-		{
-			LoadMaoubotConfig();
 		}
 
 		/// <summary>
