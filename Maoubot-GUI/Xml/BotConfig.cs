@@ -82,6 +82,21 @@ namespace Maoubot_GUI.Xml
 			return false;
 		}
 
+		public Boolean UpdateCommand(TextCommand tc)
+		{
+			foreach (TextCommand t in TextCommands)
+			{
+				if (t.Command == tc.Command)
+				{
+					t.Output = tc.Output;
+					t.Permission = tc.Permission;
+					t.CommandTimeout = tc.CommandTimeout;
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public Boolean DeleteCommand(String Command)
 		{
 			int Index = -1;
@@ -98,6 +113,8 @@ namespace Maoubot_GUI.Xml
 
 			List<TextCommand> t = TextCommands.ToList();
 			t.RemoveAt(Index);
+			TextCommands = t.ToArray();
+			Console.WriteLine("Removed " + Index);
 			return true;
 
 		}

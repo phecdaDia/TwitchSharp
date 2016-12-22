@@ -49,7 +49,7 @@ namespace Maoubot_GUI.Component
 		{
 			if (p >= this.Permission)
 			{
-				if ((DateTime.Now - LastExecution).TotalSeconds > CommandTimeout)
+				if (p >= Permission.Moderator || (DateTime.Now - LastExecution).TotalSeconds > CommandTimeout)
 				{
 					this.LastExecution = DateTime.Now;
 					return true;

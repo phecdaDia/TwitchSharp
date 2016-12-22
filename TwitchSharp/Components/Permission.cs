@@ -16,6 +16,7 @@ namespace TwitchSharp.Components
 		//Subscriber24 = 5,
 		Moderator = 2,
 		Broadcaster = 3,
+		Developer = 4,
 
 	}
 }

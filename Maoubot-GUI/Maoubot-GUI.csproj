@@ -47,8 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\ChatCommand.cs" />
+    <Compile Include="Component\Commands\Fun\BallCommand.cs" />
+    <Compile Include="Component\Commands\General\CommandCommand.cs" />
     <Compile Include="Component\TextCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
+    <Compile Include="Dialog\AbstractDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\TestDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\TextCommandDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Maoubot.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +102,7 @@
       <Name>TwitchSharp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
