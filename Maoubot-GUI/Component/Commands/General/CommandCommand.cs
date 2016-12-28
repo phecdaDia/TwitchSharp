@@ -43,6 +43,7 @@ namespace Maoubot_GUI.Component.Commands.General
 
 						mb.BotFile.AddCommand(Command, Text);
 						mb.Tcb.SendChatMessage("{0}: Added command", e.Nick);
+						mb.RefreshCommands();
 						return;
 					}
 					else
@@ -59,6 +60,7 @@ namespace Maoubot_GUI.Component.Commands.General
 						if (mb.BotFile.DeleteCommand(Command))
 						{
 							mb.Tcb.SendChatMessage("{0}: Command deleted", e.Nick);
+							mb.RefreshCommands();
 							return;
 						}
 						else
@@ -81,7 +83,7 @@ namespace Maoubot_GUI.Component.Commands.General
 			}
 			else
 			{
-				mb.Tcb.SendChatMessage("{0}: Available subcommands: add", e.Nick);
+				mb.Tcb.SendChatMessage("{0}: Available subcommands: add, delete", e.Nick);
 				return;
 			}
 		}

@@ -556,14 +556,14 @@ namespace Maoubot_GUI
 		/// <summary>
 		/// Refreshes the combobox to select the accounts.
 		/// </summary>
-		private void RefreshAccounts()
+		public void RefreshAccounts()
 		{
 			comboBoxAccounts.Items.Clear();
 			comboBoxAccounts.Items.AddRange(BotFile.GetAccountNames());
 			comboBoxAccounts.SelectedIndex = (comboBoxAccounts.Items.Count == 0) ? -1 : 0;
         }
 
-		private void RefreshCommands()
+		public void RefreshCommands()
 		{
 			comboBoxTextCommands.Items.Clear();
 

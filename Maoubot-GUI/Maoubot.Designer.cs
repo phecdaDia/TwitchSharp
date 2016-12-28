@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Maoubot));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.Chatbox = new System.Windows.Forms.TextBox();
 			this.panel3 = new System.Windows.Forms.Panel();
@@ -64,15 +65,15 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
 			this.checkBoxEnableCommands = new System.Windows.Forms.CheckBox();
-			this.tabPage4 = new System.Windows.Forms.TabPage();
-			this.buttonRandomColor = new System.Windows.Forms.Button();
 			this.tabControl2 = new System.Windows.Forms.TabControl();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
-			this.comboBoxTextCommands = new System.Windows.Forms.ComboBox();
-			this.buttonTextCommandEdit = new System.Windows.Forms.Button();
-			this.buttonTextCommandDelete = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
 			this.buttonTextCommandAdd = new System.Windows.Forms.Button();
+			this.buttonTextCommandDelete = new System.Windows.Forms.Button();
+			this.buttonTextCommandEdit = new System.Windows.Forms.Button();
+			this.comboBoxTextCommands = new System.Windows.Forms.ComboBox();
+			this.tabPage4 = new System.Windows.Forms.TabPage();
+			this.button3 = new System.Windows.Forms.Button();
+			this.buttonRandomColor = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -87,9 +88,9 @@
 			this.panel1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
-			this.tabPage4.SuspendLayout();
 			this.tabControl2.SuspendLayout();
 			this.tabPage5.SuspendLayout();
+			this.tabPage4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -523,27 +524,6 @@
 			this.checkBoxEnableCommands.Text = "Enable commands";
 			this.checkBoxEnableCommands.UseVisualStyleBackColor = true;
 			// 
-			// tabPage4
-			// 
-			this.tabPage4.Controls.Add(this.button3);
-			this.tabPage4.Controls.Add(this.buttonRandomColor);
-			this.tabPage4.Location = new System.Drawing.Point(4, 22);
-			this.tabPage4.Name = "tabPage4";
-			this.tabPage4.Size = new System.Drawing.Size(342, 558);
-			this.tabPage4.TabIndex = 3;
-			this.tabPage4.Text = "Fun";
-			this.tabPage4.UseVisualStyleBackColor = true;
-			// 
-			// buttonRandomColor
-			// 
-			this.buttonRandomColor.Location = new System.Drawing.Point(33, 12);
-			this.buttonRandomColor.Name = "buttonRandomColor";
-			this.buttonRandomColor.Size = new System.Drawing.Size(75, 23);
-			this.buttonRandomColor.TabIndex = 0;
-			this.buttonRandomColor.Text = "button1";
-			this.buttonRandomColor.UseVisualStyleBackColor = true;
-			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
-			// 
 			// tabControl2
 			// 
 			this.tabControl2.Controls.Add(this.tabPage5);
@@ -569,26 +549,15 @@
 			this.tabPage5.Text = "TextCommands";
 			this.tabPage5.UseVisualStyleBackColor = true;
 			// 
-			// comboBoxTextCommands
+			// buttonTextCommandAdd
 			// 
-			this.comboBoxTextCommands.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxTextCommands.FormattingEnabled = true;
-			this.comboBoxTextCommands.Items.AddRange(new object[] {
-            "NO_COMMANDS"});
-			this.comboBoxTextCommands.Location = new System.Drawing.Point(6, 6);
-			this.comboBoxTextCommands.Name = "comboBoxTextCommands";
-			this.comboBoxTextCommands.Size = new System.Drawing.Size(160, 21);
-			this.comboBoxTextCommands.TabIndex = 0;
-			// 
-			// buttonTextCommandEdit
-			// 
-			this.buttonTextCommandEdit.Location = new System.Drawing.Point(253, 6);
-			this.buttonTextCommandEdit.Name = "buttonTextCommandEdit";
-			this.buttonTextCommandEdit.Size = new System.Drawing.Size(75, 23);
-			this.buttonTextCommandEdit.TabIndex = 1;
-			this.buttonTextCommandEdit.Text = "Edit";
-			this.buttonTextCommandEdit.UseVisualStyleBackColor = true;
-			this.buttonTextCommandEdit.Click += new System.EventHandler(this.buttonTextCommandEdit_Click);
+			this.buttonTextCommandAdd.Location = new System.Drawing.Point(172, 35);
+			this.buttonTextCommandAdd.Name = "buttonTextCommandAdd";
+			this.buttonTextCommandAdd.Size = new System.Drawing.Size(156, 23);
+			this.buttonTextCommandAdd.TabIndex = 3;
+			this.buttonTextCommandAdd.Text = "Add new command";
+			this.buttonTextCommandAdd.UseVisualStyleBackColor = true;
+			this.buttonTextCommandAdd.Click += new System.EventHandler(this.buttonTextCommandAdd_Click);
 			// 
 			// buttonTextCommandDelete
 			// 
@@ -600,6 +569,38 @@
 			this.buttonTextCommandDelete.UseVisualStyleBackColor = true;
 			this.buttonTextCommandDelete.Click += new System.EventHandler(this.buttonTextCommandDelete_Click);
 			// 
+			// buttonTextCommandEdit
+			// 
+			this.buttonTextCommandEdit.Location = new System.Drawing.Point(253, 6);
+			this.buttonTextCommandEdit.Name = "buttonTextCommandEdit";
+			this.buttonTextCommandEdit.Size = new System.Drawing.Size(75, 23);
+			this.buttonTextCommandEdit.TabIndex = 1;
+			this.buttonTextCommandEdit.Text = "Edit";
+			this.buttonTextCommandEdit.UseVisualStyleBackColor = true;
+			this.buttonTextCommandEdit.Click += new System.EventHandler(this.buttonTextCommandEdit_Click);
+			// 
+			// comboBoxTextCommands
+			// 
+			this.comboBoxTextCommands.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxTextCommands.FormattingEnabled = true;
+			this.comboBoxTextCommands.Items.AddRange(new object[] {
+            "NO_COMMANDS"});
+			this.comboBoxTextCommands.Location = new System.Drawing.Point(6, 6);
+			this.comboBoxTextCommands.Name = "comboBoxTextCommands";
+			this.comboBoxTextCommands.Size = new System.Drawing.Size(160, 21);
+			this.comboBoxTextCommands.TabIndex = 0;
+			// 
+			// tabPage4
+			// 
+			this.tabPage4.Controls.Add(this.button3);
+			this.tabPage4.Controls.Add(this.buttonRandomColor);
+			this.tabPage4.Location = new System.Drawing.Point(4, 22);
+			this.tabPage4.Name = "tabPage4";
+			this.tabPage4.Size = new System.Drawing.Size(342, 558);
+			this.tabPage4.TabIndex = 3;
+			this.tabPage4.Text = "Fun";
+			this.tabPage4.UseVisualStyleBackColor = true;
+			// 
 			// button3
 			// 
 			this.button3.Location = new System.Drawing.Point(47, 71);
@@ -610,15 +611,15 @@
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
-			// buttonTextCommandAdd
+			// buttonRandomColor
 			// 
-			this.buttonTextCommandAdd.Location = new System.Drawing.Point(172, 35);
-			this.buttonTextCommandAdd.Name = "buttonTextCommandAdd";
-			this.buttonTextCommandAdd.Size = new System.Drawing.Size(156, 23);
-			this.buttonTextCommandAdd.TabIndex = 3;
-			this.buttonTextCommandAdd.Text = "Add new command";
-			this.buttonTextCommandAdd.UseVisualStyleBackColor = true;
-			this.buttonTextCommandAdd.Click += new System.EventHandler(this.buttonTextCommandAdd_Click);
+			this.buttonRandomColor.Location = new System.Drawing.Point(33, 12);
+			this.buttonRandomColor.Name = "buttonRandomColor";
+			this.buttonRandomColor.Size = new System.Drawing.Size(75, 23);
+			this.buttonRandomColor.TabIndex = 0;
+			this.buttonRandomColor.Text = "button1";
+			this.buttonRandomColor.UseVisualStyleBackColor = true;
+			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
 			// 
 			// Maoubot
 			// 
@@ -626,6 +627,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(884, 612);
 			this.Controls.Add(this.tableLayoutPanel1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Maoubot";
 			this.Text = "Maoubot-GUI";
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -648,9 +650,9 @@
 			this.tabPage3.ResumeLayout(false);
 			this.tableLayoutPanel4.ResumeLayout(false);
 			this.tableLayoutPanel4.PerformLayout();
-			this.tabPage4.ResumeLayout(false);
 			this.tabControl2.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
+			this.tabPage4.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
