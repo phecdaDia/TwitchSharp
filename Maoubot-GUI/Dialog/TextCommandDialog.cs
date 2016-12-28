@@ -1,4 +1,5 @@
 ﻿using Maoubot_GUI.Component;
+using Maoubot_GUI.Component.Commands;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

@@ -1,4 +1,5 @@
 ﻿using Maoubot_GUI.Component;
+using Maoubot_GUI.Component.Commands;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,16 @@ namespace Maoubot_GUI.Xml
 		public String SubMessageResub { get; set; }
 		[DataMember]
 		public Boolean EnableCommands { get; set; }
+
+
+		[DataMember]
+		public int ChatLines { get; set; }
+		[DataMember]
+		public int CheeredBits { get; set; }
+		[DataMember]
+		public int NewSubs { get; set; }
+		[DataMember]
+		public int Resubs { get; set; }
 
 		public BotConfig()
 			: base()

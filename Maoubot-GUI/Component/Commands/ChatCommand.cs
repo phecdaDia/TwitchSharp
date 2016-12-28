@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TwitchSharp.Components;
 using TwitchSharp.EventArguments;
 
-namespace Maoubot_GUI.Component
+namespace Maoubot_GUI.Component.Commands
 {
 	public abstract class ChatCommand
 	{
@@ -40,7 +40,7 @@ namespace Maoubot_GUI.Component
 			return false;
 		}
 
-		public abstract void Execute(Maoubot mb, CommandExecuteEventArgs e);
+		public abstract String Execute(Maoubot mb, CommandExecuteEventArgs e);
 
 
 	}

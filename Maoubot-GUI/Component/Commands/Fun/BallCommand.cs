@@ -40,17 +40,18 @@ namespace Maoubot_GUI.Component.Commands.Fun
 			: base ("8ball", 30, Permission.Subscriber)
 		{ }
 
-		public override void Execute(Maoubot mb, CommandExecuteEventArgs e)
+		public override String Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
-			if (!MayExecute(e.Permission)) return;
+			if (this.CommandPermission >= Permission.Subscriber) return "This command is not available in whisper mode";
+
+			if (!MayExecute(e.Permission)) return String.Empty;
 			if (e.CommandArgs.Length == 0)
 			{
-				mb.Tcb.SendChatMessage("{0}: You have to ask a question...", e.Nick);
-				return;
+				return String.Format("{0}: You have to ask a question...", e.Nick);
 			}
 
 			Random r = new Random();
-			mb.Tcb.SendChatMessage("{0}: {1}", e.Nick, BallMessages[r.Next(BallMessages.Length)]);
+			return String.Format("{0}: {1}", e.Nick, BallMessages[r.Next(BallMessages.Length)]);
 		}
 	}
 }

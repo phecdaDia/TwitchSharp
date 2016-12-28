@@ -56,14 +56,21 @@ namespace TwitchSharp.EventArguments
 
 		public String UserType { get { return Tags["user-type"]; } }
 
+		public Int32 Bits { get
+			{
+				return IsCheer ? Int32.Parse(Tags["bits"]) : 0;
+			}
+		}
+
 		public UInt32 Color { get { return UInt32.Parse(Tags["color"]); } }
 
-		public Boolean IsSubscriber { get { return Tags["subscriber"] == "1"; } }
-		public Boolean IsTurbo { get { return Tags["turbo"] == "1"; } }
-		public Boolean IsModerator { get { return Tags["mod"] == "1"; } }
+		public Boolean IsSubscriber { get { return Tags.ContainsKey("subscriber") ? Tags["subscriber"] == "1" : false; } }
+		public Boolean IsTurbo { get { return Tags.ContainsKey("turbo") ? Tags["turbo"] == "1" : false; } }
+		public Boolean IsModerator { get { return Tags.ContainsKey("mod") ? Tags["mod"] == "1" : false; } }
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
 		public Boolean IsSubMessage { get; }
 		public Boolean IsDeveloper { get; }
+		public Boolean IsCheer { get { return Tags.ContainsKey("bits"); } }
 
 		public Permission Permission { get; }
 

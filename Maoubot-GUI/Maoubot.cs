@@ -1,4 +1,5 @@
 ﻿using Maoubot_GUI.Component;
+using Maoubot_GUI.Component.Commands;
 using Maoubot_GUI.Component.Commands.Fun;
 using Maoubot_GUI.Component.Commands.General;
 using Maoubot_GUI.Dialog;
@@ -36,6 +37,8 @@ namespace Maoubot_GUI
 
 		private List<ChatCommand> Commands = new List<ChatCommand>();
 
+		private readonly Boolean OnlyAllowWhisperCommands = true;
+
 		[DllImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool AllocConsole();
@@ -60,6 +63,8 @@ namespace Maoubot_GUI
 
 			// FUN
 			Commands.Add(new BallCommand());
+			Commands.Add(new CheeredBitsCommand());
+			Commands.Add(new SubsCommand());
 		}
 
 		/// <summary>
@@ -95,6 +100,8 @@ namespace Maoubot_GUI
 			RefreshCommands();
 
 			CreateTwitchChatBot();
+
+			UpdateStats();
 		}
 
 		private void ClosingForm(object sender, EventArgs e)
@@ -120,14 +127,20 @@ namespace Maoubot_GUI
 			{
 				if (Chatbox.InvokeRequired)
 				{
-					Chatbox.Invoke(new Action(() => { Chatbox.AppendText(Message); }));
+					Chatbox.Invoke(new LogWriteDelegate(LogWrite), Message, format);
 				}
 				else
 				{
+					if (Chatbox.TextLength + Message.Length >= 0x80000) // overflow safety.
+					{
+						Chatbox.Text = Chatbox.Text.Substring(Message.Length);
+					}
+
 					Chatbox.AppendText(Message);
 				}
 			}
 		}
+		private delegate void LogWriteDelegate(String Message, params object[] format);
 		
 		/// <summary>
 		/// Append Message to the Chatbox and a newline.
@@ -149,15 +162,20 @@ namespace Maoubot_GUI
 			{
 				if (Debugbox.InvokeRequired)
 				{
-					Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
+					Debugbox.Invoke(new LogDebugWriteDelegate(LogDebugWrite), Message, format);
 				}
 				else
 				{
+					if (Debugbox.TextLength + Message.Length >= 0x80000) // overflow safety.
+					{
+						Debugbox.Text = Debugbox.Text.Substring(Message.Length);
+					}
 					Debugbox.AppendText(Message);
 				}
 			}
 		}
-		
+		private delegate void LogDebugWriteDelegate(String Message, params object[] format);
+
 		/// <summary>
 		/// Append Message to the Debugbox and a newline
 		/// </summary>
@@ -286,13 +304,23 @@ namespace Maoubot_GUI
 		private void Tcb_CommandExecute(object sender, CommandExecuteEventArgs e)
 		{
 			if (!BotFile.EnableCommands) return;
+
+			Boolean IsWhisper = e.Type == MessageType.Whisper;
+
+			if (!IsWhisper && OnlyAllowWhisperCommands) return;
+
+			Console.WriteLine("Executing {0}. Whisper: {1}", e.Command, IsWhisper);
+
 			// TextCommands. 
 			foreach(TextCommand tc in BotFile.TextCommands)
 			{
 				if (tc.Command == e.Command)
 				{
 					if (tc.MayExecute(e.Permission))
-					Tcb.SendChatMessage(tc.Format(e));
+					{
+						if (IsWhisper) Tcb.SendWhisperMessage(e.Nick, tc.Format(e));
+						else Tcb.SendChatMessage(tc.Format(e));
+					}
 					return;
 				}
 			}
@@ -301,7 +329,11 @@ namespace Maoubot_GUI
 			{
 				if (cc.Command == e.Command)
 				{
-					cc.Execute(this, e);
+					String Output = cc.Execute(this, e);
+					if (String.IsNullOrEmpty(Output)) return;
+
+					if (IsWhisper) Tcb.SendWhisperMessage(e.Nick, Output);
+					else Tcb.SendChatMessage(Output);
 					return;
 				}
 			}
@@ -332,7 +364,9 @@ namespace Maoubot_GUI
 			else if (e.Type == MessageType.Usernotice)
 			{
 				//Console.WriteLine("{0}", e.RawMessage);
-				LogDebugWriteLine("{0} just resubbed for {1} months!", e.Nick, e.Tags["msg-param-months"]);
+				LogDebugWriteLine("{0} just resubbed for {1} months! {2}", e.Nick, e.Tags["msg-param-months"], (++BotFile.Resubs)+ BotFile.NewSubs);
+
+				UpdateStats();
 
 				if (!BotFile.EnableSubMessage) return;
 
@@ -347,7 +381,9 @@ namespace Maoubot_GUI
 			{
 				if (e.IsSubMessage)
 				{
-					LogDebugWriteLine("{0} just subscribed!", e.Nick);
+					LogDebugWriteLine("{0} just subscribed! {1}", e.Nick, (++BotFile.NewSubs)+ BotFile.Resubs);
+
+					UpdateStats();
 
 					if (!BotFile.EnableSubMessage) return;
 
@@ -358,33 +394,56 @@ namespace Maoubot_GUI
 				}
 				else
 				{
-					String Types = String.Empty;
-					//Console.Write(String.Join(" ", e.UserType)+" ");
-
-					List<String> t_ = new List<String>();
-					if (e.IsDeveloper) t_.Add("Developer");
-					if (!String.IsNullOrEmpty(e.UserType)) t_.Add(e.UserType);
-					if (e.IsSubscriber) t_.Add("subscriber");
-
-					//Console.Write(t_.Count);
-
-					for (int i=0; i<t_.Count; i++)
-					{
-						Types += t_[i].ToUpper().FirstOrDefault();
-						if (i < t_.Count - 1) Types += " ";
-					}
-
-					if (t_.Count == 0) Types = "U";
-
-					Console.WriteLine(e.Permission);
-
+					String Types = CreatePermissionString(e);
 					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
 
+					if (e.IsCheer)
+					{
+						Console.WriteLine("Cheered bits: {0,6} -> {1}", e.Bits, BotFile.CheeredBits += e.Bits);
+						LogDebugWriteLine("{0} cheered {1} bits!", e.Nick, e.Bits);
+					}
+
+
+					// finish
+					BotFile.ChatLines++;
+					UpdateStats();
 				}
 			} else if (e.Type == MessageType.Whisper)
 			{
-				LogWriteLine("[{2}] {0}: {1}", e.Nick, e.Message, e.Tags["color"]);
+				String Types = CreatePermissionString(e);
+				LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
 			}
+		}
+
+		private String CreatePermissionString(MessageReceivedEventArgs e)
+		{
+
+			String Types = String.Empty;
+			//Console.Write(String.Join(" ", e.UserType)+" ");
+
+			// \b(cheer|kappa|kreygasm|swiftrage)([0-9]{1,4}0?)\b
+			// detect cheers.
+			//Console.WriteLine("EMOTES: {0}", e.Tags["emotes"]);
+
+			// Permission string for the console
+			List<String> t_ = new List<String>();
+			if (e.IsDeveloper) t_.Add("Developer");
+			if (!String.IsNullOrEmpty(e.UserType)) t_.Add(e.UserType);
+			if (e.IsSubscriber) t_.Add("subscriber");
+
+			//Console.Write(t_.Count);
+
+			for (int i = 0; i < t_.Count; i++)
+			{
+				Types += t_[i].ToUpper().FirstOrDefault();
+				if (i < t_.Count - 1) Types += " ";
+			}
+
+			if (t_.Count == 0) Types = "U";
+
+			return Types;
+
+			
 		}
 		#endregion
 		#region FormComponent Events
@@ -683,6 +742,27 @@ namespace Maoubot_GUI
 				}
 			}
 		}
+
+		private void UpdateStats()
+		{
+			if (labelCheerTest.InvokeRequired)
+			{
+				labelCheerTest.Invoke(new UpdateStatsDelegate(UpdateStats));
+				return;
+			}
+
+			String stats = String.Format(
+				"Total Chatlines: {0}" + Environment.NewLine +
+				Environment.NewLine +
+				"Total Newsubs: {1}" + Environment.NewLine +
+				"Total Resubs: {2}" + Environment.NewLine +
+				"Total cheered bits: {3}"
+			, BotFile.ChatLines, BotFile.NewSubs, BotFile.Resubs, BotFile.CheeredBits);
+
+			labelCheerTest.Text = stats;
+		}
+		private delegate void UpdateStatsDelegate();
+
 
 	}
 }

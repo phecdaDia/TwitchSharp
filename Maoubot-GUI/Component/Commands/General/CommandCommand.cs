@@ -14,9 +14,11 @@ namespace Maoubot_GUI.Component.Commands.General
 			: base ("command", 0, Permission.Moderator)
 		{ }
 
-		public override void Execute(Maoubot mb, CommandExecuteEventArgs e)
+		public override String Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
-			if (!MayExecute(e.Permission)) return;
+			if (this.CommandPermission >= Permission.Subscriber) return "This command is not available in whisper mode";
+
+			if (!MayExecute(e.Permission)) return String.Empty;
 
 			if (e.CommandArgs.Length >= 1)
 			{
@@ -36,20 +38,17 @@ namespace Maoubot_GUI.Component.Commands.General
 						// Check if the command already exists..
 						if (mb.BotFile.UpdateCommand(Command, Text))
 						{
-
-							mb.Tcb.SendChatMessage("{0}: Command updated.", e.Nick);
-							return;
+							
+							return String.Format("{0}: Command updated.", e.Nick);
 						}
 
 						mb.BotFile.AddCommand(Command, Text);
-						mb.Tcb.SendChatMessage("{0}: Added command", e.Nick);
 						mb.RefreshCommands();
-						return;
+						return String.Format("{0}: Added command", e.Nick);
 					}
 					else
 					{
-						mb.Tcb.SendChatMessage("{0}: Usage: {1}commands add <Command> <Text>", e.Nick, mb.BotFile.CommandPrefix);
-						return;
+						return String.Format("{0}: Usage: {1}commands add <Command> <Text>", e.Nick, mb.BotFile.CommandPrefix);
 					}
 				}
 				else if (SubCommand == "delete")
@@ -59,32 +58,27 @@ namespace Maoubot_GUI.Component.Commands.General
 						String Command = e.CommandArgs[1];
 						if (mb.BotFile.DeleteCommand(Command))
 						{
-							mb.Tcb.SendChatMessage("{0}: Command deleted", e.Nick);
 							mb.RefreshCommands();
-							return;
+							return String.Format("{0}: Command deleted", e.Nick);
 						}
 						else
 						{
-							mb.Tcb.SendChatMessage("{0}: Command not found!", e.Nick);
-							return;
+							return String.Format("{0}: Command not found!", e.Nick);
 						}
 					}
 					else
 					{
-						mb.Tcb.SendChatMessage("{0}: Usage: {1}commands delete <Command>", e.Nick, mb.BotFile.CommandPrefix);
-						return;
+						return String.Format("{0}: Usage: {1}commands delete <Command>", e.Nick, mb.BotFile.CommandPrefix);
 					}
 				}
 				else
 				{
-					mb.Tcb.SendChatMessage("{0}: Subcommand not found!", e.Nick);
-					return;
+					return String.Format("{0}: Subcommand not found!", e.Nick);
 				}
 			}
 			else
 			{
-				mb.Tcb.SendChatMessage("{0}: Available subcommands: add, delete", e.Nick);
-				return;
+				return String.Format("{0}: Available subcommands: add, delete", e.Nick);
 			}
 		}
 	}

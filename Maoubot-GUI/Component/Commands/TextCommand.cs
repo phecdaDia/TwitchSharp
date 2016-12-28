@@ -7,7 +7,7 @@ using TwitchSharp.EventArguments;
 using System.Runtime.Serialization;
 using TwitchSharp.Components;
 
-namespace Maoubot_GUI.Component
+namespace Maoubot_GUI.Component.Commands
 {
 	[DataContract(IsReference=true)]
 	public class TextCommand

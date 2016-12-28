@@ -51,7 +51,7 @@ namespace TwitchSharp
 		/// <summary>
 		/// Is the bot currently running?
 		/// </summary>
-        public bool Active = false;
+		public bool Active = false;
 		/// <summary>
 		/// Is connected to a channel.
 		/// </summary>
@@ -183,18 +183,19 @@ namespace TwitchSharp
                 {
 					try
 					{
-					// Read the latest message
-                    String Message = ReadMessage();
+						// Read the latest message
+						String Message = ReadMessage();
 
-					// We received a message, fire the MessageReceived event
-                    MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
-                    OnMessageReceived(MREA);
-					// if the first char is
-					if (MREA?.Message?.FirstOrDefault() == CommandChar)
-					{
-						if (MREA?.Type == MessageType.Chat) OnCommandExecute(new CommandExecuteEventArgs(Message));
+						// We received a message, fire the MessageReceived event
+						MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
+						OnMessageReceived(MREA);
+						// if the first char is
+						if (MREA?.Message?.FirstOrDefault() == CommandChar)
+						{
+							OnCommandExecute(new CommandExecuteEventArgs(Message));
+						}
 					}
-					} catch (Exception ex)
+					catch (Exception ex)
 					{
 						Console.WriteLine(ex.Message);
 						Console.WriteLine(ex.StackTrace);
@@ -331,10 +332,12 @@ namespace TwitchSharp
         /// <param name="args"></param>
         public void SendWhisperMessage(String User, String Message, params object[] args)
         {
+			Message = String.Format(Message, args);
+			Console.WriteLine("Trying to whisper: \"{0}\" to {1}", Message, User);
 			if (!String.IsNullOrWhiteSpace(this.Channel))
 			{
                 String t_ = String.Format(".w {0} {1}", User, Message);
-                SendEscapedChatMessage(this.Channel, t_, args);
+                SendEscapedChatMessage(t_, args);
             }
         }
 

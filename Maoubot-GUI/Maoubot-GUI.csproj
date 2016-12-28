@@ -47,10 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\ChatCommand.cs" />
+    <Compile Include="Component\Commands\ChatCommand.cs" />
     <Compile Include="Component\Commands\Fun\BallCommand.cs" />
+    <Compile Include="Component\Commands\Fun\CheeredBitsCommand.cs" />
+    <Compile Include="Component\Commands\Fun\SubsCommand.cs" />
     <Compile Include="Component\Commands\General\CommandCommand.cs" />
-    <Compile Include="Component\TextCommand.cs" />
+    <Compile Include="Component\Commands\TextCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
     <Compile Include="Dialog\AbstractDialog.cs">
       <SubType>Form</SubType>
