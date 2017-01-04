@@ -51,22 +51,22 @@ namespace TwitchSharp.EventArguments
 		public String Channel { get; }
 		public String RawMessage { get; }
 
-		public String Nick { get { return Tags["display-name"]; } }
-		public String Badges { get { return Tags["badges"]; } }
+		public String Nick { get { return GetSafeTag("display-name"); } }
+		public String Badges { get { return GetSafeTag("badges"); } }
 
-		public String UserType { get { return Tags["user-type"]; } }
+		public String UserType { get { return GetSafeTag("user-type"); } }
 
 		public Int32 Bits { get
 			{
-				return IsCheer ? Int32.Parse(Tags["bits"]) : 0;
+				return IsCheer ? Int32.Parse(GetSafeTag("bits")) : 0;
 			}
 		}
 
 		public UInt32 Color { get { return UInt32.Parse(Tags["color"]); } }
 
-		public Boolean IsSubscriber { get { return Tags.ContainsKey("subscriber") ? Tags["subscriber"] == "1" : false; } }
-		public Boolean IsTurbo { get { return Tags.ContainsKey("turbo") ? Tags["turbo"] == "1" : false; } }
-		public Boolean IsModerator { get { return Tags.ContainsKey("mod") ? Tags["mod"] == "1" : false; } }
+		public Boolean IsSubscriber { get { return GetSafeTag("subscriber") == "1"; } }
+		public Boolean IsTurbo { get { return GetSafeTag("turbo") == "1"; } }
+		public Boolean IsModerator { get { return GetSafeTag("mod") == "1"; } }
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
 		public Boolean IsSubMessage { get; }
 		public Boolean IsDeveloper { get; }
@@ -219,6 +219,18 @@ namespace TwitchSharp.EventArguments
 					//Console.WriteLine(this.RawMessage);
 					//Console.WriteLine("asdf {0}", SpaceSplit[(UsesTags) ? 2 : 1]);
 				}
+			}
+		}
+
+		public String GetSafeTag(String Tag)
+		{
+			if (Tags.ContainsKey(Tag))
+			{
+				return Tags[Tag];
+			}
+			else
+			{
+				return String.Empty;
 			}
 		}
 	}

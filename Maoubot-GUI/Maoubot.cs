@@ -63,8 +63,8 @@ namespace Maoubot_GUI
 
 			// FUN
 			Commands.Add(new BallCommand());
-			Commands.Add(new CheeredBitsCommand());
-			Commands.Add(new SubsCommand());
+			//Commands.Add(new CheeredBitsCommand());
+			//Commands.Add(new SubsCommand());
 		}
 
 		/// <summary>
@@ -104,6 +104,11 @@ namespace Maoubot_GUI
 			UpdateStats();
 		}
 
+		/// <summary>
+		/// Event called when the form is closing
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ClosingForm(object sender, EventArgs e)
 		{
 			Tcb?.Stop();
@@ -127,14 +132,10 @@ namespace Maoubot_GUI
 			{
 				if (Chatbox.InvokeRequired)
 				{
-					Chatbox.Invoke(new LogWriteDelegate(LogWrite), Message, format);
+					Chatbox.Invoke(new LogWriteDelegate(LogWrite), new object[] { Message, format });
 				}
 				else
 				{
-					if (Chatbox.TextLength + Message.Length >= 0x80000) // overflow safety.
-					{
-						Chatbox.Text = Chatbox.Text.Substring(Message.Length);
-					}
 
 					Chatbox.AppendText(Message);
 				}
@@ -162,14 +163,10 @@ namespace Maoubot_GUI
 			{
 				if (Debugbox.InvokeRequired)
 				{
-					Debugbox.Invoke(new LogDebugWriteDelegate(LogDebugWrite), Message, format);
+					Debugbox.Invoke(new LogDebugWriteDelegate(LogDebugWrite), new object[] { Message, format });
 				}
 				else
 				{
-					if (Debugbox.TextLength + Message.Length >= 0x80000) // overflow safety.
-					{
-						Debugbox.Text = Debugbox.Text.Substring(Message.Length);
-					}
 					Debugbox.AppendText(Message);
 				}
 			}
@@ -187,7 +184,7 @@ namespace Maoubot_GUI
 		#endregion
 		#region Config Save/Load
 		/// <summary>
-		/// Saves the TwitchConfig to twitch.xml **XXX_TODO_XXX**
+		/// Saves the TwitchConfig to twitch.xml
 		/// </summary>
 		/// <param name="ReadFromForm">Shall the config be updated from the form?</param>
 		private void SaveTwitchConfig()
@@ -350,6 +347,7 @@ namespace Maoubot_GUI
 			if (e.Type == MessageType.Ping)
 			{
 				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
+				SaveTwitchConfig();
 				//LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
 			}
 			else if (e.Type == MessageType.Server)
@@ -364,7 +362,7 @@ namespace Maoubot_GUI
 			else if (e.Type == MessageType.Usernotice)
 			{
 				//Console.WriteLine("{0}", e.RawMessage);
-				LogDebugWriteLine("{0} just resubbed for {1} months! {2}", e.Nick, e.Tags["msg-param-months"], (++BotFile.Resubs)+ BotFile.NewSubs);
+				LogDebugWriteLine("{0} just resubbed for {1} months! {2}", e.Nick, e.GetSafeTag("msg-param-months"), (++BotFile.Resubs)+ BotFile.NewSubs);
 
 				UpdateStats();
 
@@ -372,7 +370,7 @@ namespace Maoubot_GUI
 
 				String Msg = this.BotFile.SubMessageResub + " ";
 				Msg = Msg.Replace("%name%", e.Nick);
-				Msg = Msg.Replace("%months%", e.Tags["msg-param-months"]);
+				Msg = Msg.Replace("%months%", e.GetSafeTag("msg-param-months"));
 
 				Tcb.SendChatMessage(Msg);
 
@@ -415,6 +413,11 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Creates the Permission String for logging
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
 		private String CreatePermissionString(MessageReceivedEventArgs e)
 		{
 
@@ -485,6 +488,8 @@ namespace Maoubot_GUI
 			buttonAccountsLoad.Enabled = false;
 			buttonAccountsDelete.Enabled = false;
 
+			buttonConnect.Enabled = false;
+
 		}
 
 		/// <summary>
@@ -506,6 +511,8 @@ namespace Maoubot_GUI
 
 			buttonAccountsLoad.Enabled = true;
 			buttonAccountsDelete.Enabled = true;
+
+			buttonConnect.Enabled = true;
 		}
 
 		/// <summary>
@@ -522,6 +529,8 @@ namespace Maoubot_GUI
 
 			buttonAccountsLoad.Enabled = true;
 			buttonAccountsDelete.Enabled = true;
+
+			buttonConnect.Enabled = true;
 		}
 
 		/// <summary>
@@ -545,6 +554,12 @@ namespace Maoubot_GUI
 		}
 		#endregion
 
+		#region Not yet categorized
+		/// <summary>
+		/// Event called when any key is pressed on the textbox that's used to enter a message to send.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void textBoxMessage_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Enter)
@@ -556,6 +571,11 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Sends a message defined by the textboxMessage textbox
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonSendMessage_Click(object sender, EventArgs e)
 		{
 			String Message = textBoxMessage.Text;
@@ -564,6 +584,11 @@ namespace Maoubot_GUI
 			LogWriteLine("{0}: {1}", Tcb.Nick, Message);
 		}
 
+		/// <summary>
+		/// Tries to load an account. 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonAccountsLoad_Click(object sender, EventArgs e)
 		{
 			try
@@ -576,6 +601,12 @@ namespace Maoubot_GUI
 			} catch (Exception) { }
 		}
 
+		/// <summary>
+		/// Deletes the currently selected account
+		/// WARNING: There is no dialog to confirm.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonAccountsDelete_Click(object sender, EventArgs e)
 		{
 			BotFile.DeleteAccount(comboBoxAccounts.Text);
@@ -583,6 +614,9 @@ namespace Maoubot_GUI
 			RefreshAccounts();
 		}
 
+		/// <summary>
+		/// Adds a new account by the currently defined data
+		/// </summary>
 		private void AddAccount()
 		{
 			String Nick = textBoxNickname.Text;
@@ -622,6 +656,9 @@ namespace Maoubot_GUI
 			comboBoxAccounts.SelectedIndex = (comboBoxAccounts.Items.Count == 0) ? -1 : 0;
         }
 
+		/// <summary>
+		/// Refreshes all commands
+		/// </summary>
 		public void RefreshCommands()
 		{
 			comboBoxTextCommands.Items.Clear();
@@ -667,6 +704,11 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Sends a random color command
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonRandomColor_Click(object sender, EventArgs e)
 		{
 			if (Tcb != null)
@@ -678,6 +720,12 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// TextCommandDialog Test
+		/// WARNING: USELESS >:(
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void button3_Click(object sender, EventArgs e)
 		{
 			using (TextCommandDialog tcd = new TextCommandDialog(new TextCommand("EXAMPLE_COMMAND", "EXAMPLE_OUTPUT", Permission.Developer, 33)))
@@ -691,6 +739,12 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Deletes the current Dialog. 
+		/// WARNING: No confirmation dialog implemented.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonTextCommandDelete_Click(object sender, EventArgs e)
 		{
 			if (BotFile.DeleteCommand(comboBoxTextCommands.Text))
@@ -705,6 +759,11 @@ namespace Maoubot_GUI
 			SaveMaoubotConfig();
 		}
 
+		/// <summary>
+		/// Opens the TextCommandDialog to edit the current command
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonTextCommandEdit_Click(object sender, EventArgs e)
 		{
 			if (comboBoxTextCommands.SelectedIndex == -1)
@@ -727,6 +786,11 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Opens the TextCommandDialog to add a new command
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void buttonTextCommandAdd_Click(object sender, EventArgs e)
 		{
 			using (TextCommandDialog tcd = new TextCommandDialog())
@@ -743,6 +807,9 @@ namespace Maoubot_GUI
 			}
 		}
 
+		/// <summary>
+		/// Updates the Statslabel.
+		/// </summary>
 		private void UpdateStats()
 		{
 			if (labelCheerTest.InvokeRequired)
@@ -763,6 +830,20 @@ namespace Maoubot_GUI
 		}
 		private delegate void UpdateStatsDelegate();
 
+		/// <summary>
+		/// Sets all stats to 0 and refreshes them
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void buttonResetStats_Click(object sender, EventArgs e)
+		{
+			BotFile.ChatLines = 0;
+			BotFile.NewSubs = 0;
+			BotFile.Resubs = 0;
+			BotFile.CheeredBits = 0;
 
+			UpdateStats();
+		}
+		#endregion
 	}
 }

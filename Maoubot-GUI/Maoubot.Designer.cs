@@ -75,6 +75,7 @@
 			this.labelCheerTest = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
+			this.buttonResetStats = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -593,6 +594,7 @@
 			// 
 			// tabPage4
 			// 
+			this.tabPage4.Controls.Add(this.buttonResetStats);
 			this.tabPage4.Controls.Add(this.labelCheerTest);
 			this.tabPage4.Controls.Add(this.button3);
 			this.tabPage4.Controls.Add(this.buttonRandomColor);
@@ -631,6 +633,16 @@
 			this.buttonRandomColor.Text = "color";
 			this.buttonRandomColor.UseVisualStyleBackColor = true;
 			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
+			// 
+			// buttonResetStats
+			// 
+			this.buttonResetStats.Location = new System.Drawing.Point(6, 375);
+			this.buttonResetStats.Name = "buttonResetStats";
+			this.buttonResetStats.Size = new System.Drawing.Size(75, 23);
+			this.buttonResetStats.TabIndex = 3;
+			this.buttonResetStats.Text = "Reset Stats";
+			this.buttonResetStats.UseVisualStyleBackColor = true;
+			this.buttonResetStats.Click += new System.EventHandler(this.buttonResetStats_Click);
 			// 
 			// Maoubot
 			// 
@@ -716,6 +728,7 @@
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button buttonTextCommandAdd;
 		private System.Windows.Forms.Label labelCheerTest;
+		private System.Windows.Forms.Button buttonResetStats;
 	}
 }
 
