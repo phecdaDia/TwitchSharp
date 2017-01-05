@@ -109,7 +109,7 @@ namespace Maoubot_GUI
 
 			this.Tcb.MessageReceived += Tcb_MessageReceived;
 			this.Tcb.CommandExecute += Tcb_CommandExecute;
-			
+
 			this.Tcb.Verbose = IsInDebugMode;
 
 			// Add Coin system
