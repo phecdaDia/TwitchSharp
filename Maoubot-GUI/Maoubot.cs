@@ -42,7 +42,15 @@ namespace Maoubot_GUI
 
 		private List<ChatCommand> Commands = new List<ChatCommand>();
 
-		private readonly Boolean OnlyAllowWhisperCommands = true;
+		private readonly Boolean IsInDebugMode = true;
+
+
+		// Debugging only. 
+		// TODO: Remove this for release. (maybe?)
+		private String[] AllowedChannels = new string[]
+		{
+			@"imthe666st",
+		};
 
 		// TODO: Add method to remove console.
 		[DllImport("kernel32.dll", SetLastError = true)]
@@ -58,7 +66,7 @@ namespace Maoubot_GUI
 		{
 			InitializeComponent();
 			// TODO: Remove this before release
-			AllocConsole(); // Console for debugging usage.
+			if (IsInDebugMode) AllocConsole(); // Console for debugging usage.
 
 			this.Load += LoadForm;
 			this.FormClosing += ClosingForm;
@@ -69,6 +77,7 @@ namespace Maoubot_GUI
 
 			// GENERAL
 			Commands.Add(new CommandCommand());
+			Commands.Add(new QuoteCommand());
 
 			// FUN
 			Commands.Add(new BallCommand());
@@ -92,7 +101,7 @@ namespace Maoubot_GUI
 			this.Tcb.CommandExecute += Tcb_CommandExecute;
 
 			// TODO: Remove this before release
-			this.Tcb.Verbose = true;
+			this.Tcb.Verbose = IsInDebugMode;
 		}
 
 		#region FormEvents
@@ -318,11 +327,9 @@ namespace Maoubot_GUI
 		{
 			if (!BotFile.EnableCommands) return;
 
-			Boolean IsWhisper = e.Type == MessageType.Whisper;
+			//if (!IsWhisper && OnlyAllowWhisperCommands) return;
 
-			if (!IsWhisper && OnlyAllowWhisperCommands) return;
-
-			Console.WriteLine("Executing {0}. Whisper: {1}", e.Command, IsWhisper);
+			Console.WriteLine("Executing {0}. Whisper: {1}", e.Command, e.IsWhisper);
 
 			// TextCommands. 
 			foreach(TextCommand tc in BotFile.TextCommands)
@@ -331,7 +338,7 @@ namespace Maoubot_GUI
 				{
 					if (tc.MayExecute(e.Permission))
 					{
-						if (IsWhisper) Tcb.SendWhisperMessage(e.Nick, tc.Format(e));
+						if (e.IsWhisper) Tcb.SendWhisperMessage(e.Nick, tc.Format(e));
 						else Tcb.SendChatMessage(tc.Format(e));
 					}
 					return;
@@ -345,7 +352,7 @@ namespace Maoubot_GUI
 					String Output = cc.Execute(this, e);
 					if (String.IsNullOrEmpty(Output)) return;
 
-					if (IsWhisper) Tcb.SendWhisperMessage(e.Nick, Output);
+					if (e.IsWhisper) Tcb.SendWhisperMessage(e.Nick, Output);
 					else Tcb.SendChatMessage(Output);
 					return;
 				}
@@ -555,10 +562,6 @@ namespace Maoubot_GUI
 
 			buttonConnect.Enabled = true;
 		}
-
-		#endregion
-
-		#region Not yet categorized
 		/// <summary>
 		/// Event called when any key is pressed on the textbox that's used to enter a message to send.
 		/// </summary>
@@ -602,7 +605,8 @@ namespace Maoubot_GUI
 				this.textBoxNickname.Text = k.Nick;
 				this.textBoxOAuth.Text = k.OAuth;
 
-			} catch (Exception) { }
+			}
+			catch (Exception) { }
 		}
 
 		/// <summary>
@@ -617,6 +621,9 @@ namespace Maoubot_GUI
 			// refresh the combobox
 			RefreshAccounts();
 		}
+
+		#endregion
+		#region Not yet categorized
 
 		/// <summary>
 		/// Adds a new account by the currently defined data
@@ -848,11 +855,11 @@ namespace Maoubot_GUI
 
 			UpdateStats();
 		}
-		#endregion
 
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
 			SaveTwitchConfig();
 		}
+		#endregion
 	}
 }

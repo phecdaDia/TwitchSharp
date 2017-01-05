@@ -58,9 +58,6 @@
     <Compile Include="Dialog\AbstractDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialog\TestDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Dialog\TextCommandDialog.cs">
       <SubType>Form</SubType>
     </Compile>
