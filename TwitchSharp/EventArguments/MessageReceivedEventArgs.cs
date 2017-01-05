@@ -70,6 +70,7 @@ namespace TwitchSharp.EventArguments
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
 		public Boolean IsSubMessage { get; }
 		public Boolean IsDeveloper { get; }
+		public Boolean IsWhisper { get; }
 		public Boolean IsCheer { get { return Tags.ContainsKey("bits"); } }
 
 		public Permission Permission { get; }
@@ -135,10 +136,11 @@ namespace TwitchSharp.EventArguments
 				if (SpaceSplit[(UsesTags) ? 2 : 1] == @"PRIVMSG")
 				{
 					this.Type = MessageType.Chat;
-					
 
 					String m = String.Empty;
-					for (int i= (UsesTags) ? 4 : 3; i<SpaceSplit.Length; i++)
+					// TODO: Clean up this mess. 
+					// I'm sorry. -Phecda
+					for (int i= ((UsesTags) ? 4 : 3) ; i<SpaceSplit.Length; i++)
 					{
 						m += SpaceSplit[i];
 						if (i < SpaceSplit.Length - 1) m += " ";
@@ -146,6 +148,14 @@ namespace TwitchSharp.EventArguments
 
 					this.Message = m.Substring(1);
 
+
+					if (this.Message[0] == '\u0001')
+					{
+						Console.WriteLine("Yay?");
+						IsWhisper = true;
+						this.Message = this.Message.Substring(8);
+						this.Message = this.Message.Substring(0, this.Message.Length - 1);
+					}
 					// Setup Permission
 
 					if (IsSubscriber)

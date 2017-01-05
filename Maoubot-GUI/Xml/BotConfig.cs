@@ -30,8 +30,7 @@ namespace Maoubot_GUI.Xml
 		public String SubMessageResub { get; set; }
 		[DataMember]
 		public Boolean EnableCommands { get; set; }
-
-
+		
 		[DataMember]
 		public int ChatLines { get; set; }
 		[DataMember]
