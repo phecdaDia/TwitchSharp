@@ -399,6 +399,7 @@ namespace Maoubot_GUI
 						k += String.Format("{0} ", s);
 					}
 					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
+					TwitchEmoteBatch teb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
 					//LogWriteLine(e.RawMessage);
 
 					if (e.IsCheer)

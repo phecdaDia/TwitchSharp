@@ -138,8 +138,6 @@ namespace TwitchSharp.EventArguments
 					this.Type = MessageType.Chat;
 
 					String m = String.Empty;
-					// TODO: Clean up this mess. 
-					// I'm sorry. -Phecda
 					for (int i= ((UsesTags) ? 4 : 3) ; i<SpaceSplit.Length; i++)
 					{
 						m += SpaceSplit[i];
@@ -151,7 +149,7 @@ namespace TwitchSharp.EventArguments
 
 					if (this.Message[0] == '\u0001')
 					{
-						Console.WriteLine("Yay?");
+						//Console.WriteLine("Yay?");
 						IsWhisper = true;
 						this.Message = this.Message.Substring(8);
 						this.Message = this.Message.Substring(0, this.Message.Length - 1);
