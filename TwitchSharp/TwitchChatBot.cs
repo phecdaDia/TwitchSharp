@@ -53,6 +53,11 @@ namespace TwitchSharp
 		/// </summary>
 		public bool Active = false;
 		/// <summary>
+		/// Debug output
+		/// TALK TO ME! ;(
+		/// </summary>
+		public bool Verbose = false;
+		/// <summary>
 		/// Is connected to a channel.
 		/// </summary>
 		public bool InChannel
@@ -107,8 +112,8 @@ namespace TwitchSharp
         public TwitchChatBot(String Nick, String OAuth)
         {
             // all nicks are lowercase
-            this.Nick = Nick.ToLower();
-            this.OAuth = OAuth;
+            SetNick(Nick.ToLower());
+            SetOAuth(OAuth);
         }
 
 		/// <summary>
@@ -123,8 +128,9 @@ namespace TwitchSharp
 		/// Sets/Changes the nick.
 		/// </summary>
 		/// <param name="Nick"></param>
-		public void setNick(String Nick)
+		public void SetNick(String Nick)
 		{
+			if (Verbose) Console.WriteLine("Setting nick: {0}", Nick);
 			this.Nick = Nick.ToLower();
 		}
 
@@ -132,8 +138,9 @@ namespace TwitchSharp
 		/// Sets/Changes the oAuth key
 		/// </summary>
 		/// <param name="OAuth"></param>
-		public void setOAuth(String OAuth)
+		public void SetOAuth(String OAuth)
 		{
+			if (Verbose) Console.WriteLine("Setting oAuth: {0}", OAuth);
 			this.OAuth = OAuth;
 		}
 
@@ -143,31 +150,36 @@ namespace TwitchSharp
         /// </summary>
         public void Run()
         {
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			// if the bot is already active, don't do anything.
 			if (Active) return;
 
 			// the bot is now running. set Active to true.
             this.Active = true;
+			if (Verbose) Console.WriteLine("Creating TcpClient({0}, {1})", HOST, PORT);
 			// Create a new TcpClient
-            TcpClient = new TcpClient(HOST, PORT);
+			TcpClient = new TcpClient(HOST, PORT);
 
-            // I/O
+			// I/O
+			if (Verbose) Console.WriteLine("Creating I/O Streams");
 			// Get the InputStream to receive messages
-            InputStream = new StreamReader(this.TcpClient.GetStream());
+			InputStream = new StreamReader(this.TcpClient.GetStream());
 			// Get the OutputStream to send messages
             OutputStream = new StreamWriter(this.TcpClient.GetStream());
 
-            // Login
+			// Login
 			//
 			// Twitch login format:
 			//		PASS OAuth
 			//		NICK Nick
 			//		USER 
-            OutputStream.WriteLine("PASS {0}", OAuth);
+			if (Verbose) Console.Write("Logging in...");
+			OutputStream.WriteLine("PASS {0}", OAuth);
             OutputStream.WriteLine("NICK {0}", Nick);
             OutputStream.WriteLine("USER {0} 8 * :{0}", Nick);
 			// Send everything.
             OutputStream.Flush();
+			if (Verbose) Console.WriteLine("\tOK!");
 
 			// implement the tag system
 			UseTags();
@@ -175,9 +187,10 @@ namespace TwitchSharp
 			// Login is completed. Fire the event
 			OnLoginCompleted(new LoginCompletedEventArgs(Nick, OAuth));
 
-            // Start Read Loop
+			// Start Read Loop
 			// We start a new thread for reading.
-            ReadThread = new Thread(() =>
+			if (Verbose) Console.WriteLine("Creating ReadThread");
+			ReadThread = new Thread(() =>
             {
                 while (Active)
                 {
@@ -206,15 +219,17 @@ namespace TwitchSharp
 				}
             });
 
-            ReadThread.Start();
+			if (Verbose) Console.WriteLine("Starting ReadThread");
+			ReadThread.Start();
         }
 
         /// <summary>
         /// Stops the bot
         /// </summary>
         public void Stop()
-        {
-            Active = false;
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
+			Active = false;
 			InputStream?.Close();
 			OutputStream?.Close();
             
@@ -227,10 +242,11 @@ namespace TwitchSharp
         /// </summary>
         /// <param name="Channel">Channel</param>
         public void JoinChannel(String Channel)
-        {
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			if (InChannel)
 			{
-				Console.WriteLine("Unable to join multiple channels, disconnecting.");
+				if (Verbose) Console.WriteLine("Unable to join multiple channels, disconnecting.");
 				this.PartChannel();
 			}
             Channel = Channel.ToLower();
@@ -238,7 +254,7 @@ namespace TwitchSharp
 
             this.Channel = Channel;
 
-            Console.WriteLine("Joined channel #{0}", Channel);
+            if (Verbose) Console.WriteLine("Joined channel #{0}", Channel);
 
             // Fire Event OnChannelJoin
             OnChannelJoined(new ChannelJoinedEventArgs(Channel));
@@ -249,10 +265,11 @@ namespace TwitchSharp
         /// </summary>
         /// <param name="Reason">Reason for part</param>
         public void PartChannel(String Reason = "")
-        {
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			if (String.IsNullOrEmpty(this.Channel))
 			{
-				Console.WriteLine("Unable to part channel: Not connected to any channel");
+				if (Verbose) Console.WriteLine("Unable to part channel: Not connected to any channel");
 				return;
 			}
             Channel = Channel.ToLower();
@@ -260,7 +277,7 @@ namespace TwitchSharp
                
             SendIrcMessage("PART #{0}", Channel);
 
-            Console.WriteLine("Parted channel {0}: {1}", Channel, Reason);
+            if (Verbose) Console.WriteLine("Parted channel {0}: {1}", Channel, Reason);
 
             this.Channel = String.Empty;
 		}
@@ -271,15 +288,16 @@ namespace TwitchSharp
         /// <param name="Message">Message</param>
         /// <param name="args">Format</param>
         public void SendIrcMessage(String Message, params object[] args)
-        {
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			if (OutputStream == null)
 			{
-				Console.WriteLine("Unable to send IRC Message: Outputstream is null");
+				if (Verbose) Console.WriteLine("Unable to send IRC Message: Outputstream is null");
 				return;
 			}
             OutputStream.WriteLine(Message, args);
             OutputStream.Flush();
-            Console.WriteLine("Send IRC Message\t{0}", String.Format(Message, args));
+            if (Verbose) Console.WriteLine("Send IRC Message\t{0}", String.Format(Message, args));
         }
 
         /// <summary>
@@ -289,8 +307,9 @@ namespace TwitchSharp
         /// <param name="Message">Message</param>
         /// <param name="args">Format</param>
         public void SendChatMessage(String Message, params object[] args)
-        {
-            if (!String.IsNullOrEmpty(this.Channel))
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
+			if (!String.IsNullOrEmpty(this.Channel))
             {
                 Message = String.Format(Message, args);
 
@@ -302,25 +321,26 @@ namespace TwitchSharp
                 }
 
                 SendIrcMessage("PRIVMSG #{0} :{1}", Channel, Message);
-                Console.WriteLine("Send Chat Message\t{0}", Message);
+                if (Verbose) Console.WriteLine("Send Chat Message\t{0}", Message);
             } else
             {
-                Console.WriteLine("Unable to send message. [#{0}]", Channel);
+                if (Verbose) Console.WriteLine("Unable to send message. [#{0}]", Channel);
             }
         }
 
         public void SendEscapedChatMessage(String Message, params object[] args)
-        {
-            if (!String.IsNullOrWhiteSpace(this.Channel))
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
+			if (!String.IsNullOrWhiteSpace(this.Channel))
             {
                 Message = String.Format(Message, args);
 
                 SendIrcMessage("PRIVMSG #{0} :{1}", Channel, Message);
-                Console.WriteLine("Send EscapedChat Message\t{0}", Message);
+                if (Verbose) Console.WriteLine("Send EscapedChat Message\t{0}", Message);
             }
             else
             {
-                Console.WriteLine("Unable to send message. [#{0}]", Channel);
+                if (Verbose) Console.WriteLine("Unable to send message. [#{0}]", Channel);
             }
         }
 
@@ -331,9 +351,10 @@ namespace TwitchSharp
         /// <param name="Message"></param>
         /// <param name="args"></param>
         public void SendWhisperMessage(String User, String Message, params object[] args)
-        {
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			Message = String.Format(Message, args);
-			Console.WriteLine("Trying to whisper: \"{0}\" to {1}", Message, User);
+			if (Verbose) Console.WriteLine("Trying to whisper: \"{0}\" to {1}", Message, User);
 			if (!String.IsNullOrWhiteSpace(this.Channel))
 			{
                 String t_ = String.Format(".w {0} {1}", User, Message);
@@ -346,14 +367,15 @@ namespace TwitchSharp
         /// </summary>
         /// <returns>Message</returns>
         public String ReadMessage()
-        {
+		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			try
 			{
 				return InputStream?.ReadLine() ?? String.Empty;
 			}
 			catch (Exception)
 			{
-				Console.WriteLine("ReadMessage() Error");
+				if (Verbose) Console.WriteLine("ReadMessage() Error");
 				return String.Empty;
 			}
         }
@@ -363,6 +385,7 @@ namespace TwitchSharp
 		/// </summary>
 		public void ReceiveWhispers()
 		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			SendIrcMessage(@"CAP REQ :twitch.tv/commands");
 		}
 
@@ -371,6 +394,7 @@ namespace TwitchSharp
 		/// </summary>
 		private void UseTags()
 		{
+			if (Verbose) Console.WriteLine("Running '{0}'", System.Reflection.MethodBase.GetCurrentMethod().Name);
 			SendIrcMessage(@"CAP REQ :twitch.tv/tags");
 		}
 

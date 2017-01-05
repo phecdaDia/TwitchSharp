@@ -24,6 +24,11 @@ namespace Maoubot_GUI
 {
 	public partial class Maoubot : Form
 	{
+		// General Todos...
+
+		// IMPLEMENT: Quotes
+
+
 		public static readonly String ConfigPath = @"Config\";
 		public static readonly String TwitchConfigPath = ConfigPath + @"twitch.xml";
 		public static readonly String QuotesConfigPath = ConfigPath + @"quotes.xml";
@@ -39,6 +44,7 @@ namespace Maoubot_GUI
 
 		private readonly Boolean OnlyAllowWhisperCommands = true;
 
+		// TODO: Add method to remove console.
 		[DllImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool AllocConsole();
@@ -51,12 +57,15 @@ namespace Maoubot_GUI
 		public Maoubot()
 		{
 			InitializeComponent();
+			// TODO: Remove this before release
 			AllocConsole(); // Console for debugging usage.
 
 			this.Load += LoadForm;
 			this.FormClosing += ClosingForm;
 
 			// Add commands
+
+			// TODO: Add algorythm to load commands automatically
 
 			// GENERAL
 			Commands.Add(new CommandCommand());
@@ -81,9 +90,13 @@ namespace Maoubot_GUI
 
 			this.Tcb.MessageReceived += Tcb_MessageReceived;
 			this.Tcb.CommandExecute += Tcb_CommandExecute;
+
+			// TODO: Remove this before release
+			this.Tcb.Verbose = true;
 		}
 
 		#region FormEvents
+
 		/// <summary>
 		/// Load Event Method
 		/// Loads important assets ( Twitch.xml, etc )
@@ -119,8 +132,10 @@ namespace Maoubot_GUI
 			SaveMaoubotConfig();
 
 		}
+
 		#endregion
 		#region Logging
+
 		/// <summary>
 		/// Append Message to the Chatbox
 		/// </summary>
@@ -181,8 +196,10 @@ namespace Maoubot_GUI
 		{
 			LogDebugWrite(String.Format("{0}\n", Message), format);
 		}
+
 		#endregion
 		#region Config Save/Load
+
 		/// <summary>
 		/// Saves the TwitchConfig to twitch.xml
 		/// </summary>
@@ -222,8 +239,6 @@ namespace Maoubot_GUI
 			textBoxChannel.Text = ConfigFile.Channel;
 		}
 
-		// Quote Methods
-
 		/// <summary>
 		/// Saves the QuoteConfig to quotes.xml
 		/// </summary>
@@ -236,7 +251,6 @@ namespace Maoubot_GUI
 				
 			}
 		}
-
 
 		/// <summary>
 		/// Load your QuoteConfig
@@ -291,8 +305,10 @@ namespace Maoubot_GUI
 
 			this.checkBoxEnableCommands.Checked = BotFile.EnableCommands;
 		}
+
 		#endregion
 		#region TCB Events
+
 		/// <summary>
 		/// Executes the commands
 		/// </summary>
@@ -467,8 +483,8 @@ namespace Maoubot_GUI
 			{
 				SaveTwitchConfig();
 
-				Tcb.setNick(ConfigFile.Nick);
-				Tcb.setOAuth(ConfigFile.oAuth);
+				Tcb.SetNick(ConfigFile.Nick);
+				Tcb.SetOAuth(ConfigFile.oAuth);
 
 				// Add the account
 				AddAccount();
