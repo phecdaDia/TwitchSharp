@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\TwitchEmote.cs" />
+    <Compile Include="Components\TwitchEmoteBatch.cs" />
     <Compile Include="Components\Permission.cs" />
     <Compile Include="EventArguments\ChannelJoinedEventArgs.cs" />
     <Compile Include="EventArguments\ChannelPartEventArgs.cs" />

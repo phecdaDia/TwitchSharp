@@ -47,9 +47,7 @@
 			this.buttonDisconnect = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.textBoxOAuth = new System.Windows.Forms.TextBox();
-			this.buttonConfigLoad = new System.Windows.Forms.Button();
 			this.textBoxChannel = new System.Windows.Forms.TextBox();
-			this.buttonConfigSave = new System.Windows.Forms.Button();
 			this.Debugbox = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -72,10 +70,10 @@
 			this.buttonTextCommandEdit = new System.Windows.Forms.Button();
 			this.comboBoxTextCommands = new System.Windows.Forms.ComboBox();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
+			this.buttonResetStats = new System.Windows.Forms.Button();
 			this.labelCheerTest = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
-			this.buttonResetStats = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -135,6 +133,7 @@
 			// 
 			// buttonSave
 			// 
+			this.buttonSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.buttonSave.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.buttonSave.Location = new System.Drawing.Point(0, 584);
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(0);
@@ -143,7 +142,7 @@
 			this.buttonSave.TabIndex = 3;
 			this.buttonSave.Text = "Apply / Save";
 			this.buttonSave.UseVisualStyleBackColor = true;
-			this.buttonSave.Click += new System.EventHandler(this.buttonConfigSave_Click);
+			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
 			// 
 			// tabControl1
 			// 
@@ -191,16 +190,14 @@
 			this.splitContainer1.Panel1.Controls.Add(this.buttonDisconnect);
 			this.splitContainer1.Panel1.Controls.Add(this.label1);
 			this.splitContainer1.Panel1.Controls.Add(this.textBoxOAuth);
-			this.splitContainer1.Panel1.Controls.Add(this.buttonConfigLoad);
 			this.splitContainer1.Panel1.Controls.Add(this.textBoxChannel);
-			this.splitContainer1.Panel1.Controls.Add(this.buttonConfigSave);
-			this.splitContainer1.Panel1MinSize = 175;
+			this.splitContainer1.Panel1MinSize = 0;
 			// 
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.Debugbox);
 			this.splitContainer1.Size = new System.Drawing.Size(336, 552);
-			this.splitContainer1.SplitterDistance = 175;
+			this.splitContainer1.SplitterDistance = 140;
 			this.splitContainer1.TabIndex = 11;
 			// 
 			// buttonAccountsDelete
@@ -236,7 +233,7 @@
 			// 
 			// buttonPart
 			// 
-			this.buttonPart.Location = new System.Drawing.Point(172, 141);
+			this.buttonPart.Location = new System.Drawing.Point(172, 110);
 			this.buttonPart.Name = "buttonPart";
 			this.buttonPart.Size = new System.Drawing.Size(77, 25);
 			this.buttonPart.TabIndex = 11;
@@ -246,9 +243,9 @@
 			// 
 			// buttonConnect
 			// 
-			this.buttonConnect.Location = new System.Drawing.Point(9, 141);
+			this.buttonConnect.Location = new System.Drawing.Point(7, 110);
 			this.buttonConnect.Name = "buttonConnect";
-			this.buttonConnect.Size = new System.Drawing.Size(155, 25);
+			this.buttonConnect.Size = new System.Drawing.Size(157, 25);
 			this.buttonConnect.TabIndex = 1;
 			this.buttonConnect.Text = "Connect";
 			this.buttonConnect.UseVisualStyleBackColor = true;
@@ -282,9 +279,9 @@
 			// 
 			// buttonDisconnect
 			// 
-			this.buttonDisconnect.Location = new System.Drawing.Point(255, 141);
+			this.buttonDisconnect.Location = new System.Drawing.Point(253, 110);
 			this.buttonDisconnect.Name = "buttonDisconnect";
-			this.buttonDisconnect.Size = new System.Drawing.Size(72, 25);
+			this.buttonDisconnect.Size = new System.Drawing.Size(77, 25);
 			this.buttonDisconnect.TabIndex = 2;
 			this.buttonDisconnect.Text = "Disconnect";
 			this.buttonDisconnect.UseVisualStyleBackColor = true;
@@ -307,16 +304,6 @@
 			this.textBoxOAuth.TabIndex = 3;
 			this.textBoxOAuth.Text = "OAUTH_KEY";
 			// 
-			// buttonConfigLoad
-			// 
-			this.buttonConfigLoad.Location = new System.Drawing.Point(172, 110);
-			this.buttonConfigLoad.Name = "buttonConfigLoad";
-			this.buttonConfigLoad.Size = new System.Drawing.Size(155, 25);
-			this.buttonConfigLoad.TabIndex = 6;
-			this.buttonConfigLoad.Text = "Load Config";
-			this.buttonConfigLoad.UseVisualStyleBackColor = true;
-			this.buttonConfigLoad.Click += new System.EventHandler(this.buttonConfigLoad_Click);
-			// 
 			// textBoxChannel
 			// 
 			this.textBoxChannel.Location = new System.Drawing.Point(65, 57);
@@ -324,16 +311,6 @@
 			this.textBoxChannel.Size = new System.Drawing.Size(259, 20);
 			this.textBoxChannel.TabIndex = 4;
 			this.textBoxChannel.Text = "CHANNEL";
-			// 
-			// buttonConfigSave
-			// 
-			this.buttonConfigSave.Location = new System.Drawing.Point(9, 110);
-			this.buttonConfigSave.Name = "buttonConfigSave";
-			this.buttonConfigSave.Size = new System.Drawing.Size(155, 25);
-			this.buttonConfigSave.TabIndex = 5;
-			this.buttonConfigSave.Text = "Save Config";
-			this.buttonConfigSave.UseVisualStyleBackColor = true;
-			this.buttonConfigSave.Click += new System.EventHandler(this.buttonConfigSave_Click);
 			// 
 			// Debugbox
 			// 
@@ -344,7 +321,7 @@
 			this.Debugbox.Name = "Debugbox";
 			this.Debugbox.ReadOnly = true;
 			this.Debugbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Debugbox.Size = new System.Drawing.Size(336, 373);
+			this.Debugbox.Size = new System.Drawing.Size(336, 408);
 			this.Debugbox.TabIndex = 11;
 			// 
 			// tabPage2
@@ -605,6 +582,16 @@
 			this.tabPage4.Text = "Fun";
 			this.tabPage4.UseVisualStyleBackColor = true;
 			// 
+			// buttonResetStats
+			// 
+			this.buttonResetStats.Location = new System.Drawing.Point(6, 375);
+			this.buttonResetStats.Name = "buttonResetStats";
+			this.buttonResetStats.Size = new System.Drawing.Size(75, 23);
+			this.buttonResetStats.TabIndex = 3;
+			this.buttonResetStats.Text = "Reset Stats";
+			this.buttonResetStats.UseVisualStyleBackColor = true;
+			this.buttonResetStats.Click += new System.EventHandler(this.buttonResetStats_Click);
+			// 
 			// labelCheerTest
 			// 
 			this.labelCheerTest.AutoSize = true;
@@ -634,23 +621,15 @@
 			this.buttonRandomColor.UseVisualStyleBackColor = true;
 			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
 			// 
-			// buttonResetStats
-			// 
-			this.buttonResetStats.Location = new System.Drawing.Point(6, 375);
-			this.buttonResetStats.Name = "buttonResetStats";
-			this.buttonResetStats.Size = new System.Drawing.Size(75, 23);
-			this.buttonResetStats.TabIndex = 3;
-			this.buttonResetStats.Text = "Reset Stats";
-			this.buttonResetStats.UseVisualStyleBackColor = true;
-			this.buttonResetStats.Click += new System.EventHandler(this.buttonResetStats_Click);
-			// 
 			// Maoubot
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(884, 612);
 			this.Controls.Add(this.tableLayoutPanel1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MaximizeBox = false;
 			this.Name = "Maoubot";
 			this.Text = "Maoubot-GUI";
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -694,9 +673,7 @@
 		private System.Windows.Forms.Button buttonDisconnect;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox textBoxOAuth;
-		private System.Windows.Forms.Button buttonConfigLoad;
 		private System.Windows.Forms.TextBox textBoxChannel;
-		private System.Windows.Forms.Button buttonConfigSave;
 		private System.Windows.Forms.TextBox Debugbox;
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.Button buttonSendMessage;

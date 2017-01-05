@@ -409,7 +409,14 @@ namespace Maoubot_GUI
 				else
 				{
 					String Types = CreatePermissionString(e);
+					String k = String.Empty;
+					foreach (byte s in Encoding.Unicode.GetBytes(e.Message)) 
+					{
+						k += String.Format("{0} ", s);
+					}
 					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
+					TwitchEmoteBatch teb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
+					//LogWriteLine(e.RawMessage);
 
 					if (e.IsCheer)
 					{
@@ -549,25 +556,6 @@ namespace Maoubot_GUI
 			buttonConnect.Enabled = true;
 		}
 
-		/// <summary>
-		/// Saves the TwitchConfig
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void buttonConfigSave_Click(object sender, EventArgs e)
-		{
-			SaveTwitchConfig();
-		}
-
-		/// <summary>
-		/// Loads the TwitchConfig
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void buttonConfigLoad_Click(object sender, EventArgs e)
-		{
-			LoadTwitchConfig();
-		}
 		#endregion
 
 		#region Not yet categorized
@@ -861,5 +849,10 @@ namespace Maoubot_GUI
 			UpdateStats();
 		}
 		#endregion
+
+		private void buttonSave_Click(object sender, EventArgs e)
+		{
+			SaveTwitchConfig();
+		}
 	}
 }
