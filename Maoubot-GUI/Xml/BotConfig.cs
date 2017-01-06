@@ -100,7 +100,7 @@ namespace Maoubot_GUI.Xml
 				{
 					t.Output = tc.Output;
 					t.Permission = tc.Permission;
-					t.CommandTimeout = tc.CommandTimeout;
+					t.Timeout = tc.Timeout;
 					return true;
 				}
 			}
