@@ -42,7 +42,7 @@ namespace Maoubot_GUI.Component.Commands.Fun
 
 		public override String Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
-			if (this.CommandPermission >= Permission.Subscriber) return "This command is not available in whisper mode";
+			if (this.Permission >= Permission.Subscriber) return "This command is not available in whisper mode";
 
 			if (!MayExecute(e.Permission)) return String.Empty;
 			if (e.CommandArgs.Length == 0)
