@@ -32,7 +32,7 @@ namespace Maoubot_GUI.Component.Commands
 			this.Permission = Permission;
 			this.LastExecution = DateTime.MinValue;
 		}
-		
+
 		public static String Format(String Input, CommandExecuteEventArgs e, params Object[] format)
 		{
 			String LastIteration = Input;
