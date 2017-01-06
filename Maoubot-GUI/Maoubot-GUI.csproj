@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Component\Commands\ChatCommand.cs" />
     <Compile Include="Component\Commands\Fun\BallCommand.cs" />
+    <Compile Include="Component\Commands\Fun\CatCommand.cs" />
     <Compile Include="Component\Commands\Fun\CheeredBitsCommand.cs" />
     <Compile Include="Component\Commands\Fun\SubsCommand.cs" />
     <Compile Include="Component\Commands\General\CommandCommand.cs" />

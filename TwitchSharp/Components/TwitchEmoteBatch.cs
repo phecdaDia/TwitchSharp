@@ -16,7 +16,7 @@ namespace TwitchSharp.Components
 
 		// Example input 137068:0-8/77870:10-18
 
-		public TwitchEmote[] Emotes { get; }
+		public List<TwitchEmote> Emotes { get; }
 
 		public TwitchEmoteBatch(String EmoteInfoTag, String ChatMessage)
 		{
@@ -32,6 +32,8 @@ namespace TwitchSharp.Components
 					if (te_.EmoteName == te.EmoteName)
 					{
 						ContainsEmote = true;
+						te_.UseEmote();
+						Console.WriteLine(te_.Amount);
 						break;
 					}
 				}
@@ -40,6 +42,41 @@ namespace TwitchSharp.Components
 				{
 					e.Add(te);
 				}
+			}
+
+			Emotes = e;
+		}
+
+		public void AddEmote(String EmoteString, String ChatMessage)
+		{
+			AddEmote(new TwitchEmote(EmoteString, ChatMessage));
+		}
+
+		public void AddEmote(TwitchEmote Emote)
+		{
+			Boolean ContainsEmote = false;
+			foreach (TwitchEmote te_ in this.Emotes)
+			{
+				if (te_.EmoteName == Emote.EmoteName)
+				{
+					ContainsEmote = true;
+					te_.UseEmote(Emote.Amount);
+					Console.WriteLine(te_.Amount);
+					break;
+				}
+			}
+
+			if (!ContainsEmote)
+			{
+				Emotes.Add(Emote);
+			}
+		}
+
+		public void Fusion(TwitchEmoteBatch Teb)
+		{
+			foreach (TwitchEmote Emote in Teb.Emotes)
+			{
+				AddEmote(Emote);
 			}
 		}
 	}

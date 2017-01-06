@@ -44,13 +44,7 @@ namespace Maoubot_GUI
 
 		private readonly Boolean IsInDebugMode = true;
 
-
-		// Debugging only. 
-		// TODO: Remove this for release. (maybe?)
-		private String[] AllowedChannels = new string[]
-		{
-			@"imthe666st",
-		};
+		private TwitchEmoteBatch Teb;
 
 		// TODO: Add method to remove console.
 		[DllImport("kernel32.dll", SetLastError = true)]
@@ -81,6 +75,7 @@ namespace Maoubot_GUI
 
 			// FUN
 			Commands.Add(new BallCommand());
+			Commands.Add(new CatCommand());
 			//Commands.Add(new CheeredBitsCommand());
 			//Commands.Add(new SubsCommand());
 		}
@@ -422,8 +417,11 @@ namespace Maoubot_GUI
 						k += String.Format("{0} ", s);
 					}
 					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
-					TwitchEmoteBatch teb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
-					//LogWriteLine(e.RawMessage);
+					TwitchEmoteBatch TemporaryTeb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
+					if (Teb == null) Teb = TemporaryTeb;
+					else Teb.Fusion(TemporaryTeb);
+
+					LogWriteLine(e.GetSafeTag("emotes"));
 
 					if (e.IsCheer)
 					{
@@ -439,7 +437,7 @@ namespace Maoubot_GUI
 			} else if (e.Type == MessageType.Whisper)
 			{
 				String Types = CreatePermissionString(e);
-				LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
+				LogWriteLine("[{0}] *{1}*: {2}", Types ?? "DUMMY", e.Nick, e.Message);
 			}
 		}
 
@@ -672,6 +670,12 @@ namespace Maoubot_GUI
 		/// </summary>
 		public void RefreshCommands()
 		{
+			if (comboBoxTextCommands.InvokeRequired)
+			{
+				comboBoxTextCommands.Invoke(new RefreshCommandsDelegate(RefreshCommands));
+				return;
+			}
+
 			comboBoxTextCommands.Items.Clear();
 
 			foreach (TextCommand tc in BotFile.TextCommands)
@@ -682,6 +686,7 @@ namespace Maoubot_GUI
 
 			comboBoxTextCommands.SelectedIndex = (comboBoxTextCommands.Items.Count == 0) ? -1 : 0;
 		}
+		private delegate void RefreshCommandsDelegate();
 
 		/// <summary>
 		/// clears the chatbox.
