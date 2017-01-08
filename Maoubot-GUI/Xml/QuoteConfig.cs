@@ -15,7 +15,16 @@ namespace Maoubot_GUI.Xml
 	public class QuoteConfig : XmlManager<QuoteConfig>
 	{
 		[DataMember]
-		public String[] Quotes { get; set; }
+		public String[] Quotes
+		{
+			get { return this.QuoteList.ToArray(); }
+			set { this.QuoteList = value.ToList(); }
+		}
+
+		[IgnoreDataMember]
+		public List<String> QuoteList { get; set; }
+		[IgnoreDataMember]
+		public int Amount { get { return Quotes.Length; } }
 
 		public QuoteConfig()
 			: base()

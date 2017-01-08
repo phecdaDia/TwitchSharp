@@ -52,12 +52,12 @@ namespace Maoubot_GUI.Component.Commands
 				Input = Input.Replace("%noma-brainpower%", @"O-oooooooooo AAAAE-A-A-I-A-U- JO-oooooooooooo AAE-O-A-A-U-U-A- E-eee-ee-eee AAAAE-A-E-I-E-A- JO-ooo-oo-oo-oo EEEEO-A-AAA-AAAA﻿");
 
 				// replace "tag[/w+]" to the e.GetSafeTag(/w+)
-				Regex TagRegex = new Regex(@"%tag\[\w+\]%");
+				Regex TagRegex = new Regex(@"%tag\[[\w|\-]+\]%");
 				MatchCollection TagRegexCollection = TagRegex.Matches(Input);
 				foreach (Match Match in TagRegexCollection)
 				{
 					String Result = Match.Value;
-					if (!Result.Contains("%")) // Make sure it isn't a layered tag ( Like: %tag[%cArgs%]% )
+					if (!Result.Substring(1, Result.Length-2).Contains("%")) // Make sure it isn't a layered tag ( Like: %tag[%cArgs%]% )
 					{
 						String TagName = e.GetSafeTag(Result.Substring(5, Result.Length - 7));
 						Input = Input.Replace(Result, TagName);

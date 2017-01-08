@@ -36,6 +36,9 @@
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.buttonAccountsDelete = new System.Windows.Forms.Button();
+			this.buttonAccountsLoad = new System.Windows.Forms.Button();
+			this.comboBoxAccounts = new System.Windows.Forms.ComboBox();
 			this.buttonPart = new System.Windows.Forms.Button();
 			this.buttonConnect = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
@@ -71,9 +74,6 @@
 			this.labelCheerTest = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
-			this.buttonAccountsDelete = new System.Windows.Forms.Button();
-			this.buttonAccountsLoad = new System.Windows.Forms.Button();
-			this.comboBoxAccounts = new System.Windows.Forms.ComboBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -199,6 +199,37 @@
 			this.splitContainer1.Size = new System.Drawing.Size(336, 552);
 			this.splitContainer1.SplitterDistance = 140;
 			this.splitContainer1.TabIndex = 11;
+			// 
+			// buttonAccountsDelete
+			// 
+			this.buttonAccountsDelete.Location = new System.Drawing.Point(253, 81);
+			this.buttonAccountsDelete.Name = "buttonAccountsDelete";
+			this.buttonAccountsDelete.Size = new System.Drawing.Size(77, 23);
+			this.buttonAccountsDelete.TabIndex = 14;
+			this.buttonAccountsDelete.Text = "Delete";
+			this.buttonAccountsDelete.UseVisualStyleBackColor = true;
+			this.buttonAccountsDelete.Click += new System.EventHandler(this.buttonAccountsDelete_Click);
+			// 
+			// buttonAccountsLoad
+			// 
+			this.buttonAccountsLoad.Location = new System.Drawing.Point(172, 81);
+			this.buttonAccountsLoad.Name = "buttonAccountsLoad";
+			this.buttonAccountsLoad.Size = new System.Drawing.Size(77, 23);
+			this.buttonAccountsLoad.TabIndex = 13;
+			this.buttonAccountsLoad.Text = "Load";
+			this.buttonAccountsLoad.UseVisualStyleBackColor = true;
+			this.buttonAccountsLoad.Click += new System.EventHandler(this.buttonAccountsLoad_Click);
+			// 
+			// comboBoxAccounts
+			// 
+			this.comboBoxAccounts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAccounts.FormattingEnabled = true;
+			this.comboBoxAccounts.Items.AddRange(new object[] {
+            "NO_ACCOUNT"});
+			this.comboBoxAccounts.Location = new System.Drawing.Point(9, 83);
+			this.comboBoxAccounts.Name = "comboBoxAccounts";
+			this.comboBoxAccounts.Size = new System.Drawing.Size(155, 21);
+			this.comboBoxAccounts.TabIndex = 12;
 			// 
 			// buttonPart
 			// 
@@ -589,37 +620,6 @@
 			this.buttonRandomColor.Text = "color";
 			this.buttonRandomColor.UseVisualStyleBackColor = true;
 			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
-			// 
-			// buttonAccountsDelete
-			// 
-			this.buttonAccountsDelete.Location = new System.Drawing.Point(253, 81);
-			this.buttonAccountsDelete.Name = "buttonAccountsDelete";
-			this.buttonAccountsDelete.Size = new System.Drawing.Size(77, 23);
-			this.buttonAccountsDelete.TabIndex = 14;
-			this.buttonAccountsDelete.Text = "Delete";
-			this.buttonAccountsDelete.UseVisualStyleBackColor = true;
-			this.buttonAccountsDelete.Click += new System.EventHandler(this.buttonAccountsDelete_Click);
-			// 
-			// buttonAccountsLoad
-			// 
-			this.buttonAccountsLoad.Location = new System.Drawing.Point(172, 81);
-			this.buttonAccountsLoad.Name = "buttonAccountsLoad";
-			this.buttonAccountsLoad.Size = new System.Drawing.Size(77, 23);
-			this.buttonAccountsLoad.TabIndex = 13;
-			this.buttonAccountsLoad.Text = "Load";
-			this.buttonAccountsLoad.UseVisualStyleBackColor = true;
-			this.buttonAccountsLoad.Click += new System.EventHandler(this.buttonAccountsLoad_Click);
-			// 
-			// comboBoxAccounts
-			// 
-			this.comboBoxAccounts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxAccounts.FormattingEnabled = true;
-			this.comboBoxAccounts.Items.AddRange(new object[] {
-            "NO_ACCOUNT"});
-			this.comboBoxAccounts.Location = new System.Drawing.Point(9, 83);
-			this.comboBoxAccounts.Name = "comboBoxAccounts";
-			this.comboBoxAccounts.Size = new System.Drawing.Size(155, 21);
-			this.comboBoxAccounts.TabIndex = 12;
 			// 
 			// Maoubot
 			// 
