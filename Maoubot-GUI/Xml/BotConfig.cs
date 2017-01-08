@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using TwitchSharp.Components;
 using TwitchSharp.Utilities;
 
 namespace Maoubot_GUI.Xml
@@ -30,7 +31,7 @@ namespace Maoubot_GUI.Xml
 		public String SubMessageResub { get; set; }
 		[DataMember]
 		public Boolean EnableCommands { get; set; }
-		
+
 		[DataMember]
 		public int ChatLines { get; set; }
 		[DataMember]
@@ -40,11 +41,16 @@ namespace Maoubot_GUI.Xml
 		[DataMember]
 		public int Resubs { get; set; }
 
-		public BotConfig()
-			: base()
+		[DataMember]
+		public String[] TwitchClips
 		{
-			Init();
+			get { return this.TwitchClipList?.ToArray() ?? new String[0]; }
+			set { this.TwitchClipList = value.ToList(); }
 		}
+
+		// Ignore
+		[IgnoreDataMember]
+		public List<String> TwitchClipList { get; set; }
 
 		protected override void Init()
 		{
@@ -60,7 +66,6 @@ namespace Maoubot_GUI.Xml
 			}
 			if (String.IsNullOrEmpty(SubMessageNew)) SubMessageNew = @"Thank you for the sub %name%! <3";
 			if (String.IsNullOrEmpty(SubMessageResub)) SubMessageResub = @"Thank you for the %months% sub, %name%! <3";
-
 		}
 
 		// Commands

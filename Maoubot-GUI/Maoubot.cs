@@ -2,6 +2,7 @@
 using Maoubot_GUI.Component.Commands;
 using Maoubot_GUI.Component.Commands.Fun;
 using Maoubot_GUI.Component.Commands.General;
+using Maoubot_GUI.Component.Commands.Utility;
 using Maoubot_GUI.Dialog;
 using Maoubot_GUI.Xml;
 using System;
@@ -33,23 +34,27 @@ namespace Maoubot_GUI
 		public static readonly String TwitchConfigPath = ConfigPath + @"twitch.xml";
 		public static readonly String QuotesConfigPath = ConfigPath + @"quotes.xml";
 		public static readonly String MaoubotConfigPath = ConfigPath + @"maoubot.xml";
+		public static readonly String EmoteDatabasePath = ConfigPath + @"twitch_emotes.xml";
 
 		public ConfigFile ConfigFile;
 		public QuoteConfig QuoteFile;
 		public BotConfig BotFile;
+
+		public EmoteDatabase EmoteDatabase;
 
 		public TwitchChatBot Tcb;
 
 		private List<ChatCommand> Commands = new List<ChatCommand>();
 
 		private readonly Boolean IsInDebugMode = true;
-
-		private TwitchEmoteBatch Teb;
-
-		// TODO: Add method to remove console.
+		
 		[DllImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool AllocConsole();
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool FreeConsole();
 
 
 		/// <summary>
@@ -59,7 +64,7 @@ namespace Maoubot_GUI
 		public Maoubot()
 		{
 			InitializeComponent();
-			// TODO: Remove this before release
+
 			if (IsInDebugMode) AllocConsole(); // Console for debugging usage.
 
 			this.Load += LoadForm;
@@ -72,12 +77,16 @@ namespace Maoubot_GUI
 			// GENERAL
 			Commands.Add(new CommandCommand());
 			Commands.Add(new QuoteCommand());
+			Commands.Add(new ClipsCommand());
 
 			// FUN
 			Commands.Add(new BallCommand());
 			Commands.Add(new CatCommand());
 			//Commands.Add(new CheeredBitsCommand());
 			//Commands.Add(new SubsCommand());
+
+			// Utility commands
+			Commands.Add(new QueueCommand());
 		}
 
 		/// <summary>
@@ -94,8 +103,7 @@ namespace Maoubot_GUI
 
 			this.Tcb.MessageReceived += Tcb_MessageReceived;
 			this.Tcb.CommandExecute += Tcb_CommandExecute;
-
-			// TODO: Remove this before release
+			
 			this.Tcb.Verbose = IsInDebugMode;
 		}
 
@@ -112,6 +120,7 @@ namespace Maoubot_GUI
 			LoadTwitchConfig();
 			LoadQuoteConfig();
 			LoadMaoubotConfig();
+			LoadEmoteDatabase();
 
 			RefreshAccounts();
 			RefreshCommands();
@@ -134,6 +143,7 @@ namespace Maoubot_GUI
 			SaveTwitchConfig();
 			SaveQuoteConfig();
 			SaveMaoubotConfig();
+			SaveEmoteDatabase();
 
 		}
 
@@ -146,6 +156,7 @@ namespace Maoubot_GUI
 		/// <param name="Message"></param>
 		private void LogWrite(String Message, params object[] format)
 		{
+			//return;
 			Message = String.Format(Message, format);
 			if (!IsDisposed)
 			{
@@ -177,6 +188,7 @@ namespace Maoubot_GUI
 		/// <param name="Message"></param>
 		private void LogDebugWrite(String Message, params object[] format)
 		{
+			//return;
 			Message = String.Format(Message, format);
 			if (!IsDisposed)
 			{
@@ -208,7 +220,7 @@ namespace Maoubot_GUI
 		/// Saves the TwitchConfig to twitch.xml
 		/// </summary>
 		/// <param name="ReadFromForm">Shall the config be updated from the form?</param>
-		private void SaveTwitchConfig()
+		public void SaveTwitchConfig()
 		{
 			if (this.ConfigFile == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
 			else
@@ -246,12 +258,12 @@ namespace Maoubot_GUI
 		/// <summary>
 		/// Saves the QuoteConfig to quotes.xml
 		/// </summary>
-		private void SaveQuoteConfig()
+		public void SaveQuoteConfig()
 		{
 			if (this.QuoteFile == null) QuoteConfig.SaveToXml(QuotesConfigPath, new QuoteConfig());
 			else
 			{
-				QuoteConfig.SaveToXml(ConfigPath + QuotesConfigPath, QuoteFile);
+				QuoteConfig.SaveToXml(QuotesConfigPath, QuoteFile);
 				
 			}
 		}
@@ -293,7 +305,7 @@ namespace Maoubot_GUI
 		/// <summary>
 		/// Loads the BotConfig
 		/// </summary>
-		public void LoadMaoubotConfig()
+		private void LoadMaoubotConfig()
 		{
 			this.BotFile = BotConfig.LoadFromXml(MaoubotConfigPath);
 			if (this.BotFile == null)
@@ -308,6 +320,27 @@ namespace Maoubot_GUI
 			this.textBoxSubMessageResub.Text = BotFile.SubMessageResub;
 
 			this.checkBoxEnableCommands.Checked = BotFile.EnableCommands;
+		}
+
+		public void SaveEmoteDatabase()
+		{
+			if (this.EmoteDatabase == null)
+			{
+				EmoteDatabase.SaveToXml(EmoteDatabasePath, new EmoteDatabase());
+				LoadEmoteDatabase();
+				return;
+			}
+			EmoteDatabase.SaveToXml(EmoteDatabasePath, this.EmoteDatabase);
+		}
+
+		private void LoadEmoteDatabase()
+		{
+			this.EmoteDatabase = EmoteDatabase.LoadFromXml(EmoteDatabasePath);
+			if (this.EmoteDatabase == null)
+			{
+				SaveEmoteDatabase();
+				return;
+			}
 		}
 
 		#endregion
@@ -387,6 +420,7 @@ namespace Maoubot_GUI
 				if (!BotFile.EnableSubMessage) return;
 
 				String Msg = this.BotFile.SubMessageResub + " ";
+				// TODO: Replace this.
 				Msg = Msg.Replace("%name%", e.Nick);
 				Msg = Msg.Replace("%months%", e.GetSafeTag("msg-param-months"));
 
@@ -417,11 +451,10 @@ namespace Maoubot_GUI
 						k += String.Format("{0} ", s);
 					}
 					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
-					TwitchEmoteBatch TemporaryTeb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
-					if (Teb == null) Teb = TemporaryTeb;
-					else Teb.Fusion(TemporaryTeb);
 
-					LogWriteLine(e.GetSafeTag("emotes"));
+					TwitchEmoteBatch TemporaryTeb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
+					EmoteDatabase.TwitchEmotes.Fusion(TemporaryTeb);
+					//LogWriteLine(e.GetSafeTag("emotes"));
 
 					if (e.IsCheer)
 					{
@@ -431,6 +464,7 @@ namespace Maoubot_GUI
 
 
 					// finish
+					//Console.WriteLine(BotFile.ChatLines);
 					BotFile.ChatLines++;
 					UpdateStats();
 				}
@@ -527,7 +561,7 @@ namespace Maoubot_GUI
 		/// <param name="e"></param>
 		private void buttonDisconnect_Click(object sender, EventArgs e)
 		{
-			Tcb.Stop();
+			Tcb?.Stop();
 			ClearChatlog();
 			ClearDebuglog();
 
@@ -864,6 +898,10 @@ namespace Maoubot_GUI
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
 			SaveTwitchConfig();
+			SaveMaoubotConfig();
+			SaveQuoteConfig();
+
+			SaveEmoteDatabase();
 		}
 		#endregion
 	}

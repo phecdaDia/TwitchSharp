@@ -1,44 +1,43 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TwitchSharp.Components
 {
+	[DataContract(IsReference=true)]
 	public class TwitchEmote
 	{
-		public String RoomId { get; }
-		public String EmoteName { get; }
-
-		public int Length { get; }
+		[DataMember]
+		public int EmoteId { get; set; }
+		[DataMember]
+		public String EmoteName { get; set; }
+		[DataMember]
 		public int Amount { get; private set; }
 
-		public TwitchEmote(String EmoteString, String ChatMessage)
+		public TwitchEmote(String EmoteName, int EmoteId, int Amount)
 		{
-			try
-			{
-				String[] s1 = EmoteString.Split(':');
-				this.RoomId = s1.FirstOrDefault();
-				s1 = s1[1].Split(',');
-				String[] s2 = s1.FirstOrDefault().Split('-');
-				int l0 = int.Parse(s2[0]);
-				int l1 = int.Parse(s2[1]);
-				this.Length = l1 - l0 + 1;
-
-				this.EmoteName = ChatMessage.Substring(l0, Length);
-				this.Amount = s1.Length;
-
-				//Console.WriteLine("New emote: {0} of room {1} [{2}]", EmoteName, RoomId, Length);
-			} catch (Exception e)
-			{
-				if (String.IsNullOrEmpty(RoomId)) RoomId = "0";
-			}
+			this.EmoteName = EmoteName;
+			this.EmoteId = EmoteId;
+			this.Amount = Amount;
+			//Console.WriteLine("New Emote: {0} x{1}", EmoteName, Amount);
 		}
 
 		public void UseEmote(int Amount = 1)
 		{
 			this.Amount += Amount;
+			//Console.WriteLine("Used emote. {0}", this.Amount);
+		}
+
+		public static IEnumerable<TwitchEmote> QuickSort(IEnumerable<TwitchEmote> i)
+		{
+			if (!i.Any())
+				return i;
+			var p = i.Last().EmoteId;
+			return QuickSort(i.Where(x => x.EmoteId < p)).Concat(i.Where(x => x.EmoteId == p).Concat(QuickSort(i.Where(x => x.EmoteId > p))));
 		}
 	}
 }
