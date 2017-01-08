@@ -141,9 +141,7 @@ namespace TwitchSharp
 		/// <param name="OAuth"></param>
 		public void SetOAuth(String OAuth)
 		{
-			// Warning, if it's set to verbose, the oauth key will be given out in plain text.
-			// TODO: Censor the oauth key in verbose mode. 
-			if (Verbose) Console.WriteLine("Setting oAuth: {0}", OAuth);
+			if (Verbose) Console.WriteLine("Setting oAuth: {0}***", OAuth.Substring(0, 10));
 			this.OAuth = OAuth;
 		}
 
@@ -184,7 +182,7 @@ namespace TwitchSharp
 			OutputStream.Flush();
 			if (Verbose) Console.WriteLine("\tOK!");
 
-			// implement the tag system
+			// implements the tag system
 			UseTags();
 
 			// Login is completed. Fire the event
@@ -215,6 +213,8 @@ namespace TwitchSharp
 					{
 						Console.WriteLine(ex.Message);
 						Console.WriteLine(ex.StackTrace);
+
+						//throw ex;
 						//Console.WriteLine("ReadThread Error");
 						// An error occured / Stream closed?
 					}
@@ -320,7 +320,7 @@ namespace TwitchSharp
 				// Add a LTR unicode then
 				if (Message[0] == '.' || Message[0] == '/')
 				{
-					Message = "\0" + Message;
+					Message = "\u200b" + Message;
 				}
 
 				SendIrcMessage("PRIVMSG #{0} :{1}", Channel, Message);

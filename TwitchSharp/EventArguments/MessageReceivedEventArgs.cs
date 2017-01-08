@@ -157,6 +157,7 @@ namespace TwitchSharp.EventArguments
 					}
 					// Setup Permission
 
+					//Console.WriteLine(this.Nick + " | " + this.Channel);
 					if (IsSubscriber)
 					{
 						this.Permission = Permission.Subscriber;
@@ -167,7 +168,7 @@ namespace TwitchSharp.EventArguments
 						this.Permission = Permission.Moderator;
 					}
 
-					if (this.Nick == this.Channel)
+					if (this.Nick.ToLower() == this.Channel)
 					{
 						this.Permission = Permission.Broadcaster;
 					}
