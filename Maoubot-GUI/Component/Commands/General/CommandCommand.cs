@@ -32,13 +32,13 @@ namespace Maoubot_GUI.Component.Commands.General
 						String Text = String.Empty;
 						List<String> t_ = e.CommandArgs.ToList();
 						t_.RemoveAt(0);     // remove the "add"-subcommand
-						t_.RemoveAt(0);     // remove the caller
+						t_.RemoveAt(0);     // remove the commandname
 						Text = String.Join(" ", t_);
 
 						// Check if the command already exists..
 						if (mb.BotFile.UpdateCommand(Command, Text))
 						{
-							
+
 							return String.Format("{0}: Command updated.", e.Nick);
 						}
 
@@ -48,7 +48,7 @@ namespace Maoubot_GUI.Component.Commands.General
 					}
 					else
 					{
-						return String.Format("{0}: Usage: {1}commands add <Command> <Text>", e.Nick, mb.BotFile.CommandPrefix);
+						return GetHelp(mb, SubCommand);
 					}
 				}
 				else if (SubCommand == "delete")
@@ -66,19 +66,29 @@ namespace Maoubot_GUI.Component.Commands.General
 							return String.Format("{0}: Command not found!", e.Nick);
 						}
 					}
-					else
-					{
-						return String.Format("{0}: Usage: {1}commands delete <Command>", e.Nick, mb.BotFile.CommandPrefix);
-					}
+					else return GetHelp(mb, SubCommand);
 				}
 				else
 				{
-					return String.Format("{0}: Subcommand not found!", e.Nick);
+					return GetHelp(mb);
 				}
 			}
 			else
 			{
-				return String.Format("{0}: Available subcommands: add, delete", e.Nick);
+				return GetHelp(mb);
+			}
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			switch (SubCommand)
+			{
+				case "add":
+					return String.Format("{0}{1} {2} <*command> <*output>", mb.Tcb.CommandChar, this.Command, SubCommand);
+				case "delete":
+					return String.Format("{0}{1} {2} <*command>", mb.Tcb.CommandChar, this.Command, SubCommand);
+				default:
+					return String.Format("{0}{1} <add|delete|...>", mb.Tcb.CommandChar, this.Command);
 			}
 		}
 	}

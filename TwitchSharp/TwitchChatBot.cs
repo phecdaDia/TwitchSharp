@@ -300,7 +300,7 @@ namespace TwitchSharp
 			}
 			OutputStream.WriteLine(Message, args);
 			OutputStream.Flush();
-			if (Verbose) Console.WriteLine("Send IRC Message\t{0}", String.Format(Message, args));
+			//if (Verbose) Console.WriteLine("Send IRC Message\t{0}", String.Format(Message, args));
 		}
 
 		/// <summary>
@@ -324,7 +324,7 @@ namespace TwitchSharp
 				}
 
 				SendIrcMessage("PRIVMSG #{0} :{1}", Channel, Message);
-				if (Verbose) Console.WriteLine("Send Chat Message\t{0}", Message);
+				//if (Verbose) Console.WriteLine("Send Chat Message\t{0}", Message);
 			} else
 			{
 				if (Verbose) Console.WriteLine("Unable to send message. [#{0}]", Channel);
