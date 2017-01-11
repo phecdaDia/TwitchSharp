@@ -1,4 +1,8 @@
-﻿namespace Maoubot_GUI
+﻿using System;
+using System.Collections.Generic;
+using Maoubot_GUI.Component.Commands;
+
+namespace Maoubot_GUI
 {
 	partial class Maoubot
 	{

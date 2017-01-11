@@ -12,7 +12,6 @@ namespace Maoubot_GUI.Component.Commands.Utility
 	{
 		private List<String> Queue;
 
-
 		public QueueCommand()
 			: base ("queue", 0, Permission.Everybody)
 		{
@@ -42,10 +41,14 @@ namespace Maoubot_GUI.Component.Commands.Utility
 				if (SubCommand == @"list")
 				{
 					String l = "Current queue: ";
-					for (int i = 0; i < 5 && i < Queue.Count; i++)
+					int names_to_display = 5;
+					for (int i = 0; i < names_to_display && i < Queue.Count; i++)
 					{
-						l += String.Format("{0}: {1} ", i + 1, Queue[i]);
+						l += String.Format("{0}", Queue[i]);
+						if (i < Queue.Count - 1 && i < names_to_display - 1) l += ", ";
 					}
+
+					if (Queue.Count > 5) l += String.Format(" | {0} people left", Queue.Count - 5);
 
 					return l;
 				}
@@ -69,10 +72,40 @@ namespace Maoubot_GUI.Component.Commands.Utility
 						return "Queue has been cleared.";
 					}
 					else return String.Empty;
+				} else if (SubCommand == @"addrange")
+				{
+					if (e.Permission < Permission.Moderator) return null;
+
+					List<String> ca = e.CommandArgs.ToList();
+					ca.RemoveAt(0);
+					ca = String.Join(",", ca).Replace(",,", ",").Split(',').ToList();
+					foreach (String name in ca)
+					{
+						if (!Queue.Contains(name)) Queue.Add(name);
+						else ca.Remove(name);
+					}
+					return String.Format("Added {0} people to the queue. Total: {1}", ca.Count, this.Queue.Count);
 				}
 			}
 
 			return null;
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			switch (SubCommand)
+			{
+				case "next":
+					return String.Format("{0}{1} {2}", mb.Tcb.CommandChar, this.Command, SubCommand);
+				case "clear":
+					return String.Format("{0}{1} {2}", mb.Tcb.CommandChar, this.Command, SubCommand);
+				case "list":
+					return String.Format("{0}{1} {2}", mb.Tcb.CommandChar, this.Command, SubCommand);
+				case "addrange":
+					return String.Format("{0}{1} {2} <*names+>", mb.Tcb.CommandChar, this.Command, SubCommand);
+				default:
+					return String.Format("{0}{1} [list|next|clear|addrange]", mb.Tcb.CommandChar, this.Command);
+			}
 		}
 	}
 }

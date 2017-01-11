@@ -47,11 +47,16 @@ namespace Maoubot_GUI.Component.Commands.Fun
 			if (!MayExecute(e.Permission)) return String.Empty;
 			if (e.CommandArgs.Length == 0)
 			{
-				return String.Format("{0}: You have to ask a question...", e.Nick);
+				return GetHelp(mb);
 			}
 
 			Random r = new Random();
 			return String.Format("{0}: {1}", e.Nick, BallMessages[r.Next(BallMessages.Length)]);
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			return String.Format("{0}{1} <*Question>", mb.Tcb.CommandChar, this.Command);
 		}
 	}
 }

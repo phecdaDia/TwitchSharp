@@ -10,12 +10,12 @@ namespace Maoubot_GUI.Component.Commands.General
 {
 	public class QuoteCommand : ChatCommand
 	{
-		private Random random;
+		private Random Random;
 
 		public QuoteCommand()
 			: base("quote", 0, Permission.Everybody)
 		{
-			this.random = new Random();
+			this.Random = new Random();
 		}
 
 		public override string Execute(Maoubot mb, CommandExecuteEventArgs e)
@@ -26,7 +26,7 @@ namespace Maoubot_GUI.Component.Commands.General
 			{
 				if (mb.QuoteFile.Quotes.Length == 0) return "No quotes found!";
 
-				return mb.QuoteFile.Quotes[random.Next(mb.QuoteFile.Quotes.Length)];
+				return mb.QuoteFile.Quotes[Random.Next(mb.QuoteFile.Quotes.Length)];
 			}
 			else
 			{
@@ -79,6 +79,19 @@ namespace Maoubot_GUI.Component.Commands.General
 			}
 
 			return null;
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			switch (SubCommand)
+			{
+				case "delete":
+					return String.Format("{0}{1} {2} <*Number>", mb.Tcb.CommandChar, this.Command, SubCommand);
+				case "add":
+					return String.Format("{0}{1} {2} <*Quote>", mb.Tcb.CommandChar, this.Command, SubCommand);
+				default:
+					return String.Format("{0}{1} [#|add|delete]", mb.Tcb.CommandChar, this.Command);
+			}
 		}
 	}
 }

@@ -14,13 +14,16 @@ namespace Maoubot_GUI.Component.Commands
 	public abstract class ChatCommand
 	{
 		[DataMember]
-		public String Command;
+		public String Command { get; protected set; }
 		[DataMember]
-		public int Timeout;
+		public int Timeout { get; protected set; }
 		[DataMember]
-		public Permission Permission;
+		public Permission Permission { get; protected set; }
 		[IgnoreDataMember]
 		public DateTime LastExecution { get; set; }
+
+		[IgnoreDataMember]
+		public static readonly int MAX_MESSAGE_LENGTH = 250;
 
 		public ChatCommand(String Command, int Timeout, Permission Permission = Permission.Everybody)
 		{
@@ -33,8 +36,10 @@ namespace Maoubot_GUI.Component.Commands
 		public static String Format(String Input, CommandExecuteEventArgs e, params Object[] format)
 		{
 			String LastIteration = Input;
+			int Depth = 0;
 			do
 			{
+				Depth++;
 				LastIteration = Input;
 				Input = String.Format(Input, format);
 
@@ -64,8 +69,13 @@ namespace Maoubot_GUI.Component.Commands
 					}
 				}
 			}
-			while (LastIteration != Input);
+			while (LastIteration != Input && !(Depth >= 10));
 
+			if (Input.Length >= MAX_MESSAGE_LENGTH)
+			{
+				Console.WriteLine("String cut, Length: {0}", Input.Length);
+				Input = Input.Substring(0, MAX_MESSAGE_LENGTH);
+			}
 
 			return Input;
 		}
@@ -85,6 +95,8 @@ namespace Maoubot_GUI.Component.Commands
 		}
 
 		public abstract String Execute(Maoubot mb, CommandExecuteEventArgs e);
+
+		public abstract String GetHelp(Maoubot mb, String SubCommand = "");
 
 
 	}

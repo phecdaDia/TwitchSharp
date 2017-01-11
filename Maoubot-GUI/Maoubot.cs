@@ -27,8 +27,6 @@ namespace Maoubot_GUI
 	{
 		// General Todos...
 
-		// IMPLEMENT: Quotes
-
 
 		public static readonly String ConfigPath = @"Config\";
 		public static readonly String TwitchConfigPath = ConfigPath + @"twitch.xml";
@@ -77,7 +75,7 @@ namespace Maoubot_GUI
 			// GENERAL
 			Commands.Add(new CommandCommand());
 			Commands.Add(new QuoteCommand());
-			Commands.Add(new ClipsCommand());
+			Commands.Add(new HelpCommand());
 
 			// FUN
 			Commands.Add(new BallCommand());
@@ -902,6 +900,11 @@ namespace Maoubot_GUI
 			SaveQuoteConfig();
 
 			SaveEmoteDatabase();
+		}
+		
+		public ChatCommand[] GetCommands()
+		{
+			return Commands.ToArray();
 		}
 		#endregion
 	}
