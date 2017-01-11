@@ -13,7 +13,7 @@ namespace Maoubot_GUI.Component.Commands
 	public class TextCommand : ChatCommand
 	{
 		[DataMember]
-		public String Output { get; set; }
+		public String Output { get; protected set; }
 
 		// Non-serializable
 
@@ -33,6 +33,23 @@ namespace Maoubot_GUI.Component.Commands
 		{
 			if (!MayExecute(e.Permission)) return String.Empty;
 			return Format(Output, e);
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			return String.Format("{0}{1}", mb.Tcb.CommandChar, this.Command);
+		}
+
+		internal void Update(string Output, Permission Permission, int Timeout)
+		{
+			this.Output = Output;
+			this.Permission = Permission;
+			this.Timeout = Timeout;
+		}
+
+		public void Update(String Output)
+		{
+			this.Output = Output;
 		}
 	}
 }

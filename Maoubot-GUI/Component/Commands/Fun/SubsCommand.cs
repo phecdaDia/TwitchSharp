@@ -18,5 +18,10 @@ namespace Maoubot_GUI.Component.Commands.Fun
 		{
 			return String.Format("New: {0} | Resub: {1}", mb.BotFile.NewSubs, mb.BotFile.Resubs);
 		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			return String.Format("{0}{1}", mb.Tcb.CommandChar, this.Command);
+		}
 	}
 }

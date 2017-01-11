@@ -41,16 +41,16 @@ namespace Maoubot_GUI.Xml
 		[DataMember]
 		public int Resubs { get; set; }
 
-		[DataMember]
-		public String[] TwitchClips
-		{
-			get { return this.TwitchClipList?.ToArray() ?? new String[0]; }
-			set { this.TwitchClipList = value.ToList(); }
-		}
+		//[DataMember]
+		//public String[] TwitchClips
+		//{
+		//	get { return this.TwitchClipList?.ToArray() ?? new String[0]; }
+		//	set { this.TwitchClipList = value.ToList(); }
+		//}
 
-		// Ignore
-		[IgnoreDataMember]
-		public List<String> TwitchClipList { get; set; }
+		//// Ignore
+		//[IgnoreDataMember]
+		//public List<String> TwitchClipList { get; set; }
 
 		protected override void Init()
 		{
@@ -90,7 +90,7 @@ namespace Maoubot_GUI.Xml
 			{
 				if (t.Command == Command)
 				{
-					t.Output = Text;
+					t.Update(Command);
 					return true;
 				}
 			}
@@ -103,9 +103,7 @@ namespace Maoubot_GUI.Xml
 			{
 				if (t.Command == tc.Command)
 				{
-					t.Output = tc.Output;
-					t.Permission = tc.Permission;
-					t.Timeout = tc.Timeout;
+					t.Update(tc.Output, tc.Permission, tc.Timeout);
 					return true;
 				}
 			}
