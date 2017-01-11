@@ -58,6 +58,7 @@
     <Compile Include="Component\Commands\TextCommand.cs" />
     <Compile Include="Component\Commands\Utility\QueueCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
+    <Compile Include="Component\TwitchUser.cs" />
     <Compile Include="Dialog\AbstractDialog.cs">
       <SubType>Form</SubType>
     </Compile>
