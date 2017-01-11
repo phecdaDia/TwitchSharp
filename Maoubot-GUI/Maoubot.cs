@@ -44,6 +44,10 @@ namespace Maoubot_GUI
 
 		private List<ChatCommand> Commands = new List<ChatCommand>();
 
+		private List<String> ActiveUsers;
+
+		private Thread WatcherThread;
+
 		private readonly Boolean IsInDebugMode = true;
 		
 		[DllImport("kernel32.dll", SetLastError = true)]
@@ -68,9 +72,13 @@ namespace Maoubot_GUI
 			this.Load += LoadForm;
 			this.FormClosing += ClosingForm;
 
+			// init some vars
+
+			this.ActiveUsers = new List<string>();
+
 			// Add commands
 
-			// TODO: Add algorythm to load commands automatically
+			// TODO: Add algorythm to load commands automatically, maybe?
 
 			// GENERAL
 			Commands.Add(new CommandCommand());
@@ -103,6 +111,9 @@ namespace Maoubot_GUI
 			this.Tcb.CommandExecute += Tcb_CommandExecute;
 			
 			this.Tcb.Verbose = IsInDebugMode;
+
+			// Add Coin system
+
 		}
 
 		#region FormEvents
@@ -452,7 +463,6 @@ namespace Maoubot_GUI
 
 					TwitchEmoteBatch TemporaryTeb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
 					EmoteDatabase.TwitchEmotes.Fusion(TemporaryTeb);
-					//LogWriteLine(e.GetSafeTag("emotes"));
 
 					if (e.IsCheer)
 					{
@@ -460,6 +470,8 @@ namespace Maoubot_GUI
 						LogDebugWriteLine("{0} cheered {1} bits!", e.Nick, e.Bits);
 					}
 
+
+					if (!ActiveUsers.Contains(e.Nick)) ActiveUsers.Add(e.Nick);
 
 					// finish
 					//Console.WriteLine(BotFile.ChatLines);
@@ -550,6 +562,51 @@ namespace Maoubot_GUI
 
 			buttonConnect.Enabled = false;
 
+			WatcherThread = new Thread(() =>
+			{
+				int LastSecond = DateTime.Now.Second;
+
+				DateTime ElapsedTime = new DateTime();
+
+				while (Tcb.Active)
+				{
+					while (LastSecond == DateTime.Now.Second || !Tcb.InChannel) Thread.Sleep(100);
+					ElapsedTime = ElapsedTime.AddSeconds(1);
+
+					if (ElapsedTime.Second % 10 == 0) // run every minute once
+					{
+						Boolean AlreadyHasAccount = false;
+						foreach (String Username in ActiveUsers)
+						{
+							AlreadyHasAccount = false;
+							foreach (TwitchUser tu in BotFile.TwitchUsers)
+							{
+								if (tu.Username == Username)
+								{
+									tu.AddWatchMinutes(1);
+									AlreadyHasAccount = true;
+									if (IsInDebugMode) Console.WriteLine("Added 1 WatchMinute to {0}", Username);
+								}
+							}
+							if (!AlreadyHasAccount)
+							{
+								BotFile.TwitchUserList.Add(new TwitchUser(Username));
+								if (IsInDebugMode) Console.WriteLine("Added Account: {0}", Username);
+							}
+						}
+
+						//Tcb.SendChatMessage("Gave everybody 1 coin.");
+						ActiveUsers.Clear();
+					}
+
+
+					Console.WriteLine("Total elapsed time: {0:00}:{1:00}:{2:00}", ElapsedTime.Hour, ElapsedTime.Minute, ElapsedTime.Second);
+					LastSecond = DateTime.Now.Second;
+				}
+			});
+
+			WatcherThread.Start();
+
 		}
 
 		/// <summary>
@@ -573,6 +630,8 @@ namespace Maoubot_GUI
 			buttonAccountsDelete.Enabled = true;
 
 			buttonConnect.Enabled = true;
+
+			WatcherThread?.Abort();
 		}
 
 		/// <summary>

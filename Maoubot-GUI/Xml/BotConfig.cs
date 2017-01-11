@@ -30,6 +30,8 @@ namespace Maoubot_GUI.Xml
 		[DataMember]
 		public String SubMessageResub { get; set; }
 		[DataMember]
+		public String CoinName { get; set; }
+		[DataMember]
 		public Boolean EnableCommands { get; set; }
 
 		[DataMember]
@@ -41,31 +43,28 @@ namespace Maoubot_GUI.Xml
 		[DataMember]
 		public int Resubs { get; set; }
 
-		//[DataMember]
-		//public String[] TwitchClips
-		//{
-		//	get { return this.TwitchClipList?.ToArray() ?? new String[0]; }
-		//	set { this.TwitchClipList = value.ToList(); }
-		//}
+		[DataMember]
+		public TwitchUser[] TwitchUsers
+		{
+			get { return this.TwitchUserList?.ToArray() ?? new TwitchUser[0]; }
+			set { this.TwitchUserList = value.ToList(); }
+		}
 
-		//// Ignore
-		//[IgnoreDataMember]
-		//public List<String> TwitchClipList { get; set; }
+		// Ignore
+		[IgnoreDataMember]
+		public List<TwitchUser> TwitchUserList { get; set; }
 
 		protected override void Init()
 		{
 			if (String.IsNullOrEmpty(CommandPrefix)) CommandPrefix = "!";
 
-			if (TextCommands == null)
-			{
-				TextCommands = new TextCommand[0];
-			}
-			if (Accounts == null)
-			{
-				Accounts = new TwitchAccount[0];
-			}
+			if (TextCommands == null) TextCommands = new TextCommand[0];
+			if (Accounts == null) Accounts = new TwitchAccount[0];
+			if (TwitchUsers == null) TwitchUsers = new TwitchUser[0];
+
 			if (String.IsNullOrEmpty(SubMessageNew)) SubMessageNew = @"Thank you for the sub %name%! <3";
 			if (String.IsNullOrEmpty(SubMessageResub)) SubMessageResub = @"Thank you for the %months% sub, %name%! <3";
+			if (String.IsNullOrEmpty(CoinName)) CoinName = @"Coin(s)";
 		}
 
 		// Commands
@@ -131,9 +130,7 @@ namespace Maoubot_GUI.Xml
 			return true;
 
 		}
-
-
-
+		
 		// Accounts
 		public void AddAccount(String Nick, String OAuth)
 		{
