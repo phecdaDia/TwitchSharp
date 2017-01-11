@@ -8,43 +8,36 @@ using TwitchSharp.Components;
 
 namespace Maoubot_GUI.Component.Commands.General
 {
-	// hacked implementation for quotes - for testing
-	public class ClipsCommand : ChatCommand
+	public class HelpCommand : ChatCommand
 	{
-		private Random random;
-		public ClipsCommand()
-			: base ("clips", 30, Permission.Subscriber)
-		{
-			this.random = new Random();
-		}
-
+		public HelpCommand() : base ("help", 30, Permission.Everybody) { }
 
 		public override string Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
 			if (!MayExecute(e.Permission)) return null;
 
-			if (e.CommandArgs.Length == 0)
-			{
-				if (mb.BotFile.TwitchClips.Length == 0) return "No clips found!";
+			//if (e.CommandArgs.Length < 1) return GetHelp(mb);
 
-				return mb.BotFile.TwitchClips[random.Next(mb.BotFile.TwitchClips.Length)];
-			} else
+			String c = (e.CommandArgs.Length >= 1) ? e.CommandArgs[0] : String.Empty;
+			String sc = (e.CommandArgs.Length >= 2) ? e.CommandArgs[1] : String.Empty;
+			String c_ = String.Empty;
+			foreach (ChatCommand cc in mb.GetCommands())
 			{
-				if (e.Permission >= Permission.Moderator)
+				if (cc.Command == c)
 				{
-					String SubCommand = e.CommandArgs[0];
-					if (SubCommand == "add")
-					{
-						List<String> c = e.CommandArgs.ToList();
-						c.RemoveAt(0);
-						String Quote = String.Join(" ", c);
-						mb.BotFile.TwitchClipList.Add(Quote);
-						return "Added clip.";
-					}
+					return cc.GetHelp(mb, sc);
 				}
+				c_ += cc.Command;
+				if (!(cc == mb.GetCommands().Last())) c_ += ", ";
 			}
 
-			return null;
+			return String.Format("Available Commands: {0}!", c_);
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			//return "You're funny...";
+			return String.Format("{0}{1} <*command>", mb.Tcb.CommandChar, this.Command);
 		}
 	}
 }
