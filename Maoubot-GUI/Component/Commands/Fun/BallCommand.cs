@@ -42,16 +42,21 @@ namespace Maoubot_GUI.Component.Commands.Fun
 
 		public override String Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
-			if (this.CommandPermission >= Permission.Subscriber) return "This command is not available in whisper mode";
+			if (e.IsWhisper) return "This command is not available in whisper mode";
 
 			if (!MayExecute(e.Permission)) return String.Empty;
 			if (e.CommandArgs.Length == 0)
 			{
-				return String.Format("{0}: You have to ask a question...", e.Nick);
+				return GetHelp(mb);
 			}
 
 			Random r = new Random();
 			return String.Format("{0}: {1}", e.Nick, BallMessages[r.Next(BallMessages.Length)]);
+		}
+
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			return String.Format("{0}{1} <*Question>", mb.Tcb.CommandChar, this.Command);
 		}
 	}
 }

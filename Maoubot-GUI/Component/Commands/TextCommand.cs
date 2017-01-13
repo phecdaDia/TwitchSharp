@@ -10,54 +10,46 @@ using TwitchSharp.Components;
 namespace Maoubot_GUI.Component.Commands
 {
 	[DataContract(IsReference=true)]
-	public class TextCommand
+	public class TextCommand : ChatCommand
 	{
 		[DataMember]
-		public String Command { get; set; }
-		[DataMember]
-		public String Output { get; set; }
-		[DataMember]
-		public Permission Permission { get; set; }
-		[DataMember]
-		public int CommandTimeout { get; set; }
+		public String Output { get; protected set; }
 
 		// Non-serializable
-		[IgnoreDataMember]
-		private DateTime LastExecution { get; set; }
 
 
 		public TextCommand(String Command, String Output, Permission Permission = Permission.Everybody, int Timeout = 10)
+			: base (Command, Timeout, Permission)
 		{
-			this.Command = Command;
 			this.Output = Output;
-			this.Permission = Permission;
-			this.CommandTimeout = Timeout;
-
-			this.LastExecution = DateTime.MinValue;
 		}
 
 		public String Format(CommandExecuteEventArgs e)
 		{
-			String o = Output;
-			o = o.Replace("%nick%", e.Nick);
-			o = o.Replace("%time%", DateTime.Now.ToString());
-
-			return o;
+			return Format(Output, e);
 		}
 
-		public bool MayExecute(Permission p)
+		public override string Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
-			if (p >= this.Permission)
-			{
-				if (p >= Permission.Moderator || (DateTime.Now - LastExecution).TotalSeconds > CommandTimeout)
-				{
-					this.LastExecution = DateTime.Now;
-					return true;
-				}
-			}
-
-			return false;
+			if (!MayExecute(e.Permission)) return String.Empty;
+			return Format(Output, e);
 		}
 
+		public override string GetHelp(Maoubot mb, String SubCommand = "")
+		{
+			return String.Format("{0}{1}", mb.Tcb.CommandChar, this.Command);
+		}
+
+		internal void Update(string Output, Permission Permission, int Timeout)
+		{
+			this.Output = Output;
+			this.Permission = Permission;
+			this.Timeout = Timeout;
+		}
+
+		public void Update(String Output)
+		{
+			this.Output = Output;
+		}
 	}
 }

@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TwitchSharp.Components;
 using TwitchSharp.EventArguments;
 
 namespace Maoubot_GUI.Component.Commands.Fun
 {
-	public class SubsCommand : ChatCommand
+	public class CatCommand : ChatCommand
 	{
-		public SubsCommand()
-			: base("subs", 1, Permission.Everybody)
-		{ }
+		public CatCommand()
+			: base ("cat", 10)
+		{
+
+		}
 
 		public override string Execute(Maoubot mb, CommandExecuteEventArgs e)
 		{
-			return String.Format("New: {0} | Resub: {1}", mb.BotFile.NewSubs, mb.BotFile.Resubs);
+			if (e.CommandArgs.Length == 0) return GetHelp(mb);
+			return String.Format("Cat. {0}", String.Join(" ", e.CommandArgs));
 		}
 
 		public override string GetHelp(Maoubot mb, String SubCommand = "")
 		{
-			return String.Format("{0}{1}", mb.Tcb.CommandChar, this.Command);
+			return String.Format("{0}{1} <*Meow>", mb.Tcb.CommandChar, this.Command);
 		}
 	}
 }

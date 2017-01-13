@@ -49,16 +49,17 @@
   <ItemGroup>
     <Compile Include="Component\Commands\ChatCommand.cs" />
     <Compile Include="Component\Commands\Fun\BallCommand.cs" />
+    <Compile Include="Component\Commands\Fun\CatCommand.cs" />
     <Compile Include="Component\Commands\Fun\CheeredBitsCommand.cs" />
     <Compile Include="Component\Commands\Fun\SubsCommand.cs" />
     <Compile Include="Component\Commands\General\CommandCommand.cs" />
+    <Compile Include="Component\Commands\General\HelpCommand.cs" />
     <Compile Include="Component\Commands\General\QuoteCommand.cs" />
     <Compile Include="Component\Commands\TextCommand.cs" />
+    <Compile Include="Component\Commands\Utility\QueueCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
+    <Compile Include="Component\TwitchUser.cs" />
     <Compile Include="Dialog\AbstractDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialog\TestDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialog\TextCommandDialog.cs">
@@ -73,6 +74,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\BotConfig.cs" />
+    <Compile Include="Xml\EmoteDatabase.cs" />
     <Compile Include="Xml\QuoteConfig.cs" />
     <EmbeddedResource Include="Maoubot.resx">
       <DependentUpon>Maoubot.cs</DependentUpon>

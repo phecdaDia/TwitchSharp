@@ -41,7 +41,7 @@ namespace Maoubot_GUI.Dialog
 			this.textboxText.Text = tc.Output;
 
 			this.comboboxPermission.SelectedIndex = Enum.GetValues(typeof(Permission)).Cast<Permission>().ToList().IndexOf(tc.Permission);
-			this.nudTimeout.Value = tc.CommandTimeout;
+			this.nudTimeout.Value = tc.Timeout;
 
 			this.textboxCommand.Enabled = false;
 		}

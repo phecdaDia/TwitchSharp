@@ -1,4 +1,8 @@
-﻿namespace Maoubot_GUI
+﻿using System;
+using System.Collections.Generic;
+using Maoubot_GUI.Component.Commands;
+
+namespace Maoubot_GUI
 {
 	partial class Maoubot
 	{
@@ -595,7 +599,7 @@
 			// labelCheerTest
 			// 
 			this.labelCheerTest.AutoSize = true;
-			this.labelCheerTest.Location = new System.Drawing.Point(3, 12);
+			this.labelCheerTest.Location = new System.Drawing.Point(3, 10);
 			this.labelCheerTest.Name = "labelCheerTest";
 			this.labelCheerTest.Size = new System.Drawing.Size(35, 13);
 			this.labelCheerTest.TabIndex = 2;
@@ -679,9 +683,6 @@
 		private System.Windows.Forms.Button buttonSendMessage;
 		private System.Windows.Forms.TextBox textBoxMessage;
 		private System.Windows.Forms.Button buttonPart;
-		private System.Windows.Forms.Button buttonAccountsDelete;
-		private System.Windows.Forms.Button buttonAccountsLoad;
-		private System.Windows.Forms.ComboBox comboBoxAccounts;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
@@ -706,6 +707,9 @@
 		private System.Windows.Forms.Button buttonTextCommandAdd;
 		private System.Windows.Forms.Label labelCheerTest;
 		private System.Windows.Forms.Button buttonResetStats;
+		private System.Windows.Forms.Button buttonAccountsDelete;
+		private System.Windows.Forms.Button buttonAccountsLoad;
+		private System.Windows.Forms.ComboBox comboBoxAccounts;
 	}
 }
 

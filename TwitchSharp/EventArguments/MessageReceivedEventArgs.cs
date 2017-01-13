@@ -70,7 +70,8 @@ namespace TwitchSharp.EventArguments
 		public Boolean UsesTags { get { return RawMessage.StartsWith("@"); } }
 		public Boolean IsSubMessage { get; }
 		public Boolean IsDeveloper { get; }
-		public Boolean IsWhisper { get; }
+		public Boolean IsWhisper { get { return this.Type == MessageType.Whisper; } }
+		public Boolean IsAction { get; }
 		public Boolean IsCheer { get { return Tags.ContainsKey("bits"); } }
 
 		public Permission Permission { get; }
@@ -150,12 +151,13 @@ namespace TwitchSharp.EventArguments
 					if (this.Message[0] == '\u0001')
 					{
 						//Console.WriteLine("Yay?");
-						IsWhisper = true;
+						IsAction = true;
 						this.Message = this.Message.Substring(8);
 						this.Message = this.Message.Substring(0, this.Message.Length - 1);
 					}
 					// Setup Permission
 
+					//Console.WriteLine(this.Nick + " | " + this.Channel);
 					if (IsSubscriber)
 					{
 						this.Permission = Permission.Subscriber;
@@ -166,7 +168,7 @@ namespace TwitchSharp.EventArguments
 						this.Permission = Permission.Moderator;
 					}
 
-					if (this.Nick == this.Channel)
+					if (this.Nick.ToLower() == this.Channel)
 					{
 						this.Permission = Permission.Broadcaster;
 					}
