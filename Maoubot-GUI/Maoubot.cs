@@ -573,7 +573,7 @@ namespace Maoubot_GUI
 					while (LastSecond == DateTime.Now.Second || !Tcb.InChannel) Thread.Sleep(100);
 					ElapsedTime = ElapsedTime.AddSeconds(1);
 
-					if (ElapsedTime.Second % 10 == 0) // run every minute once
+					if (ElapsedTime.Second == 0) // run every minute once
 					{
 						Boolean AlreadyHasAccount = false;
 						foreach (String Username in ActiveUsers)
