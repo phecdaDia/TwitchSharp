@@ -562,50 +562,54 @@ namespace Maoubot_GUI
 
 			buttonConnect.Enabled = false;
 
-			WatcherThread = new Thread(() =>
+			if (this.WatcherThread == null || (!this.WatcherThread?.IsAlive ?? false))
 			{
-				int LastSecond = DateTime.Now.Second;
-
-				DateTime ElapsedTime = new DateTime();
-
-				while (Tcb.Active)
+				WatcherThread = new Thread(() =>
 				{
-					while (LastSecond == DateTime.Now.Second || !Tcb.InChannel) Thread.Sleep(100);
-					ElapsedTime = ElapsedTime.AddSeconds(1);
+					int LastSecond = DateTime.Now.Second;
 
-					if (ElapsedTime.Second == 0) // run every minute once
+					DateTime ElapsedTime = new DateTime();
+
+					while (Tcb.Active)
 					{
-						Boolean AlreadyHasAccount = false;
-						foreach (String Username in ActiveUsers)
+						while (LastSecond == DateTime.Now.Second || !Tcb.InChannel) Thread.Sleep(500);
+						ElapsedTime = ElapsedTime.AddSeconds(1);
+
+						if (ElapsedTime.Second == 0) // run every minute once
 						{
-							AlreadyHasAccount = false;
-							foreach (TwitchUser tu in BotFile.TwitchUsers)
+							Boolean AlreadyHasAccount = false;
+							foreach (String Username in ActiveUsers)
 							{
-								if (tu.Username == Username)
+								AlreadyHasAccount = false;
+								foreach (TwitchUser tu in BotFile.TwitchUsers)
 								{
-									tu.AddWatchMinutes(1);
-									AlreadyHasAccount = true;
-									if (IsInDebugMode) Console.WriteLine("Added 1 WatchMinute to {0}", Username);
+									if (tu.Username == Username)
+									{
+										tu.AddWatchMinutes(1);
+										AlreadyHasAccount = true;
+										if (IsInDebugMode) Console.WriteLine("Added 1 WatchMinute to {0}", Username);
+									}
+								}
+								if (!AlreadyHasAccount)
+								{
+									BotFile.TwitchUserList.Add(new TwitchUser(Username));
+									if (IsInDebugMode) Console.WriteLine("Added Account: {0}", Username);
 								}
 							}
-							if (!AlreadyHasAccount)
-							{
-								BotFile.TwitchUserList.Add(new TwitchUser(Username));
-								if (IsInDebugMode) Console.WriteLine("Added Account: {0}", Username);
-							}
+
+							//Tcb.SendChatMessage("Gave everybody 1 coin.");
+							ActiveUsers.Clear();
+							SaveMaoubotConfig();
 						}
 
-						//Tcb.SendChatMessage("Gave everybody 1 coin.");
-						ActiveUsers.Clear();
+
+						Console.WriteLine("Total elapsed time: {0} days {1:00}:{2:00}:{3:00}", ElapsedTime.Day, ElapsedTime.Hour, ElapsedTime.Minute, ElapsedTime.Second);
+						LastSecond = DateTime.Now.Second;
 					}
+				});
 
-
-					Console.WriteLine("Total elapsed time: {0:00}:{1:00}:{2:00}", ElapsedTime.Hour, ElapsedTime.Minute, ElapsedTime.Second);
-					LastSecond = DateTime.Now.Second;
-				}
-			});
-
-			WatcherThread.Start();
+				WatcherThread.Start();
+			}
 
 		}
 
