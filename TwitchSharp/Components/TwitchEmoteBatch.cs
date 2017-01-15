@@ -81,10 +81,9 @@ namespace TwitchSharp.Components
 					if (this.Emotes[Index].Amount > this.Emotes[Index - 1].Amount)
 					{
 						int OldIndex = Index;
-						while (this.Emotes[OldIndex].Amount > this.Emotes[Index - 1].Amount)
+						while (Index > 0 && this.Emotes[OldIndex].Amount > this.Emotes[Index - 1].Amount)
 						{
 							Index--;
-							if (Index == 0) break;
                         }
 						TwitchEmote ek = this.Emotes[Index];
 						this.EmoteList[Index] = this.Emotes[OldIndex];
