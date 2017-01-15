@@ -199,7 +199,13 @@ namespace TwitchSharp
 					{
 						// Read the latest message
 						String Message = ReadMessage();
-
+						if (String.IsNullOrEmpty(Message) && this.Active)
+						{
+							Console.WriteLine("RT: Message is null or empty");
+							this.Stop();
+							this.Run();
+							return;
+						}
 						// We received a message, fire the MessageReceived event
 						MessageReceivedEventArgs MREA = new MessageReceivedEventArgs(Message);
 						OnMessageReceived(MREA);

@@ -34,7 +34,7 @@ namespace Maoubot_GUI
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Maoubot));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.Chatbox = new System.Windows.Forms.RichTextBox();
+			this.Chatbox = new System.Windows.Forms.TextBox();
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.buttonSave = new System.Windows.Forms.Button();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -73,11 +73,15 @@ namespace Maoubot_GUI
 			this.buttonTextCommandDelete = new System.Windows.Forms.Button();
 			this.buttonTextCommandEdit = new System.Windows.Forms.Button();
 			this.comboBoxTextCommands = new System.Windows.Forms.ComboBox();
+			this.tabPage6 = new System.Windows.Forms.TabPage();
+			this.labelTwitchEmoteSearch = new System.Windows.Forms.Label();
+			this.textBoxTwitchEmoteSearch = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.buttonResetStats = new System.Windows.Forms.Button();
 			this.labelCheerTest = new System.Windows.Forms.Label();
-			this.button3 = new System.Windows.Forms.Button();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
+			this.buttonTwitchEmoteResort = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -94,6 +98,7 @@ namespace Maoubot_GUI
 			this.tableLayoutPanel4.SuspendLayout();
 			this.tabControl2.SuspendLayout();
 			this.tabPage5.SuspendLayout();
+			this.tabPage6.SuspendLayout();
 			this.tabPage4.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -117,12 +122,12 @@ namespace Maoubot_GUI
 			this.Chatbox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Chatbox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Chatbox.Location = new System.Drawing.Point(3, 3);
+			this.Chatbox.Multiline = true;
 			this.Chatbox.Name = "Chatbox";
 			this.Chatbox.ReadOnly = true;
-			this.Chatbox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+			this.Chatbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.Chatbox.Size = new System.Drawing.Size(528, 606);
 			this.Chatbox.TabIndex = 0;
-			this.Chatbox.Text = "";
 			// 
 			// panel3
 			// 
@@ -150,12 +155,15 @@ namespace Maoubot_GUI
 			// 
 			// tabControl1
 			// 
+			this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Controls.Add(this.tabPage6);
 			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
+			this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
 			this.tabControl1.Size = new System.Drawing.Size(350, 584);
@@ -164,10 +172,10 @@ namespace Maoubot_GUI
 			// tabPage1
 			// 
 			this.tabPage1.Controls.Add(this.splitContainer1);
-			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Location = new System.Drawing.Point(4, 25);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(342, 558);
+			this.tabPage1.Size = new System.Drawing.Size(342, 555);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Login/Connect";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -200,8 +208,8 @@ namespace Maoubot_GUI
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.Debugbox);
-			this.splitContainer1.Size = new System.Drawing.Size(336, 552);
-			this.splitContainer1.SplitterDistance = 140;
+			this.splitContainer1.Size = new System.Drawing.Size(336, 549);
+			this.splitContainer1.SplitterDistance = 139;
 			this.splitContainer1.TabIndex = 11;
 			// 
 			// buttonAccountsDelete
@@ -325,16 +333,16 @@ namespace Maoubot_GUI
 			this.Debugbox.Name = "Debugbox";
 			this.Debugbox.ReadOnly = true;
 			this.Debugbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Debugbox.Size = new System.Drawing.Size(336, 408);
+			this.Debugbox.Size = new System.Drawing.Size(336, 406);
 			this.Debugbox.TabIndex = 11;
 			// 
 			// tabPage2
 			// 
 			this.tabPage2.Controls.Add(this.tableLayoutPanel3);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Location = new System.Drawing.Point(4, 25);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(342, 558);
+			this.tabPage2.Size = new System.Drawing.Size(342, 555);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Maoubot Config";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -353,7 +361,7 @@ namespace Maoubot_GUI
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(336, 552);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(336, 549);
 			this.tableLayoutPanel3.TabIndex = 3;
 			// 
 			// tableLayoutPanel2
@@ -377,7 +385,7 @@ namespace Maoubot_GUI
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(336, 529);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(336, 526);
 			this.tableLayoutPanel2.TabIndex = 0;
 			// 
 			// textBoxSubMessageResub
@@ -473,9 +481,9 @@ namespace Maoubot_GUI
 			// tabPage3
 			// 
 			this.tabPage3.Controls.Add(this.tableLayoutPanel4);
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Location = new System.Drawing.Point(4, 25);
 			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(342, 558);
+			this.tabPage3.Size = new System.Drawing.Size(342, 555);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Commands";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -493,7 +501,7 @@ namespace Maoubot_GUI
 			this.tableLayoutPanel4.RowCount = 2;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(342, 558);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(342, 555);
 			this.tableLayoutPanel4.TabIndex = 1;
 			// 
 			// checkBoxEnableCommands
@@ -515,7 +523,7 @@ namespace Maoubot_GUI
 			this.tabControl2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
 			this.tabControl2.Name = "tabControl2";
 			this.tabControl2.SelectedIndex = 0;
-			this.tabControl2.Size = new System.Drawing.Size(342, 530);
+			this.tabControl2.Size = new System.Drawing.Size(342, 527);
 			this.tabControl2.TabIndex = 1;
 			// 
 			// tabPage5
@@ -527,7 +535,7 @@ namespace Maoubot_GUI
 			this.tabPage5.Location = new System.Drawing.Point(4, 22);
 			this.tabPage5.Name = "tabPage5";
 			this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage5.Size = new System.Drawing.Size(334, 504);
+			this.tabPage5.Size = new System.Drawing.Size(334, 501);
 			this.tabPage5.TabIndex = 0;
 			this.tabPage5.Text = "TextCommands";
 			this.tabPage5.UseVisualStyleBackColor = true;
@@ -573,22 +581,61 @@ namespace Maoubot_GUI
 			this.comboBoxTextCommands.Size = new System.Drawing.Size(160, 21);
 			this.comboBoxTextCommands.TabIndex = 0;
 			// 
+			// tabPage6
+			// 
+			this.tabPage6.Controls.Add(this.buttonTwitchEmoteResort);
+			this.tabPage6.Controls.Add(this.labelTwitchEmoteSearch);
+			this.tabPage6.Controls.Add(this.textBoxTwitchEmoteSearch);
+			this.tabPage6.Controls.Add(this.label6);
+			this.tabPage6.Location = new System.Drawing.Point(4, 25);
+			this.tabPage6.Name = "tabPage6";
+			this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage6.Size = new System.Drawing.Size(342, 555);
+			this.tabPage6.TabIndex = 4;
+			this.tabPage6.Text = "Emote";
+			this.tabPage6.UseVisualStyleBackColor = true;
+			// 
+			// labelTwitchEmoteSearch
+			// 
+			this.labelTwitchEmoteSearch.AutoSize = true;
+			this.labelTwitchEmoteSearch.Location = new System.Drawing.Point(6, 42);
+			this.labelTwitchEmoteSearch.Name = "labelTwitchEmoteSearch";
+			this.labelTwitchEmoteSearch.Size = new System.Drawing.Size(69, 13);
+			this.labelTwitchEmoteSearch.TabIndex = 2;
+			this.labelTwitchEmoteSearch.Text = "Emote Data: ";
+			// 
+			// textBoxTwitchEmoteSearch
+			// 
+			this.textBoxTwitchEmoteSearch.Location = new System.Drawing.Point(9, 19);
+			this.textBoxTwitchEmoteSearch.Name = "textBoxTwitchEmoteSearch";
+			this.textBoxTwitchEmoteSearch.Size = new System.Drawing.Size(325, 20);
+			this.textBoxTwitchEmoteSearch.TabIndex = 1;
+			this.textBoxTwitchEmoteSearch.TextChanged += new System.EventHandler(this.textBoxTwitchEmoteSearch_Changed);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(6, 3);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(74, 13);
+			this.label6.TabIndex = 0;
+			this.label6.Text = "Emote Search";
+			// 
 			// tabPage4
 			// 
 			this.tabPage4.Controls.Add(this.buttonResetStats);
 			this.tabPage4.Controls.Add(this.labelCheerTest);
-			this.tabPage4.Controls.Add(this.button3);
 			this.tabPage4.Controls.Add(this.buttonRandomColor);
-			this.tabPage4.Location = new System.Drawing.Point(4, 22);
+			this.tabPage4.Location = new System.Drawing.Point(4, 25);
 			this.tabPage4.Name = "tabPage4";
-			this.tabPage4.Size = new System.Drawing.Size(342, 558);
+			this.tabPage4.Size = new System.Drawing.Size(342, 555);
 			this.tabPage4.TabIndex = 3;
 			this.tabPage4.Text = "Fun";
 			this.tabPage4.UseVisualStyleBackColor = true;
 			// 
 			// buttonResetStats
 			// 
-			this.buttonResetStats.Location = new System.Drawing.Point(6, 375);
+			this.buttonResetStats.Location = new System.Drawing.Point(6, 529);
 			this.buttonResetStats.Name = "buttonResetStats";
 			this.buttonResetStats.Size = new System.Drawing.Size(75, 23);
 			this.buttonResetStats.TabIndex = 3;
@@ -605,25 +652,25 @@ namespace Maoubot_GUI
 			this.labelCheerTest.TabIndex = 2;
 			this.labelCheerTest.Text = "label6";
 			// 
-			// button3
-			// 
-			this.button3.Location = new System.Drawing.Point(6, 532);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 1;
-			this.button3.Text = "TestDialog";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
-			// 
 			// buttonRandomColor
 			// 
-			this.buttonRandomColor.Location = new System.Drawing.Point(87, 532);
+			this.buttonRandomColor.Location = new System.Drawing.Point(87, 529);
 			this.buttonRandomColor.Name = "buttonRandomColor";
 			this.buttonRandomColor.Size = new System.Drawing.Size(75, 23);
 			this.buttonRandomColor.TabIndex = 0;
 			this.buttonRandomColor.Text = "color";
 			this.buttonRandomColor.UseVisualStyleBackColor = true;
 			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
+			// 
+			// buttonTwitchEmoteResort
+			// 
+			this.buttonTwitchEmoteResort.Location = new System.Drawing.Point(9, 68);
+			this.buttonTwitchEmoteResort.Name = "buttonTwitchEmoteResort";
+			this.buttonTwitchEmoteResort.Size = new System.Drawing.Size(77, 23);
+			this.buttonTwitchEmoteResort.TabIndex = 15;
+			this.buttonTwitchEmoteResort.Text = "Resort";
+			this.buttonTwitchEmoteResort.UseVisualStyleBackColor = true;
+			this.buttonTwitchEmoteResort.Click += new System.EventHandler(this.buttonTwitchEmoteResort_Click);
 			// 
 			// Maoubot
 			// 
@@ -637,6 +684,7 @@ namespace Maoubot_GUI
 			this.Name = "Maoubot";
 			this.Text = "Maoubot-GUI";
 			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.panel3.ResumeLayout(false);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
@@ -657,6 +705,8 @@ namespace Maoubot_GUI
 			this.tableLayoutPanel4.PerformLayout();
 			this.tabControl2.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
+			this.tabPage6.ResumeLayout(false);
+			this.tabPage6.PerformLayout();
 			this.tabPage4.ResumeLayout(false);
 			this.tabPage4.PerformLayout();
 			this.ResumeLayout(false);
@@ -666,7 +716,7 @@ namespace Maoubot_GUI
 		#endregion
 
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-		private System.Windows.Forms.RichTextBox Chatbox;
+		private System.Windows.Forms.TextBox Chatbox;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.SplitContainer splitContainer1;
@@ -703,13 +753,17 @@ namespace Maoubot_GUI
 		private System.Windows.Forms.ComboBox comboBoxTextCommands;
 		private System.Windows.Forms.Button buttonTextCommandDelete;
 		private System.Windows.Forms.Button buttonTextCommandEdit;
-		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button buttonTextCommandAdd;
 		private System.Windows.Forms.Label labelCheerTest;
 		private System.Windows.Forms.Button buttonResetStats;
 		private System.Windows.Forms.Button buttonAccountsDelete;
 		private System.Windows.Forms.Button buttonAccountsLoad;
 		private System.Windows.Forms.ComboBox comboBoxAccounts;
+		private System.Windows.Forms.TabPage tabPage6;
+		private System.Windows.Forms.TextBox textBoxTwitchEmoteSearch;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label labelTwitchEmoteSearch;
+		private System.Windows.Forms.Button buttonTwitchEmoteResort;
 	}
 }
 

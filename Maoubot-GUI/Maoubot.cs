@@ -25,15 +25,8 @@ namespace Maoubot_GUI
 {
 	public partial class Maoubot : Form
 	{
-		// General Todos...
-
-
-		public static readonly String ConfigPath = @"Config\";
-		public static readonly String TwitchConfigPath = ConfigPath + @"twitch.xml";
-		public static readonly String QuotesConfigPath = ConfigPath + @"quotes.xml";
-		public static readonly String MaoubotConfigPath = ConfigPath + @"maoubot.xml";
-		public static readonly String EmoteDatabasePath = ConfigPath + @"twitch_emotes.xml";
-
+		#region Variables
+		#region Public
 		public ConfigFile ConfigFile;
 		public QuoteConfig QuoteFile;
 		public BotConfig BotFile;
@@ -42,6 +35,14 @@ namespace Maoubot_GUI
 
 		public TwitchChatBot Tcb;
 
+		public DateTime BotUptime { get; private set; }
+
+		#endregion
+		#region Private
+		private Boolean ChatboxAutoscroll = true;
+
+		private String BufferedChatlog;
+
 		private List<ChatCommand> Commands = new List<ChatCommand>();
 
 		private List<String> ActiveUsers;
@@ -49,7 +50,20 @@ namespace Maoubot_GUI
 		private Thread WatcherThread;
 
 		private readonly Boolean IsInDebugMode = true;
-		
+		private readonly Boolean EnableCoinSystem = false;
+		private readonly Boolean EnableEmoteCollection = true;
+
+		#endregion
+		#region Static Readonly
+		public static readonly String ConfigPath = @"Config\";
+		public static readonly String TwitchConfigPath = ConfigPath + @"twitch.xml";
+		public static readonly String QuotesConfigPath = ConfigPath + @"quotes.xml";
+		public static readonly String MaoubotConfigPath = ConfigPath + @"maoubot.xml";
+		public static readonly String EmoteDatabasePath = ConfigPath + @"twitch_emotes.xml";
+
+		#endregion
+		#endregion Variables
+		#region Extern Methods
 		[DllImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool AllocConsole();
@@ -58,7 +72,8 @@ namespace Maoubot_GUI
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool FreeConsole();
 
-
+		#endregion
+		#region Constructor
 		/// <summary>
 		/// Maoubot-GUI
 		/// A simple chatbot for use on Twitch.tv ( irc.twitch.tv:6667 )
@@ -71,6 +86,17 @@ namespace Maoubot_GUI
 
 			this.Load += LoadForm;
 			this.FormClosing += ClosingForm;
+
+			this.Chatbox.MouseEnter += (s, e) => { this.ChatboxAutoscroll= false; };
+			this.Chatbox.MouseLeave += (s, e) => 
+			{
+				this.ChatboxAutoscroll = true;
+				if (!String.IsNullOrEmpty(BufferedChatlog))
+				{
+					this.Chatbox.AppendText(BufferedChatlog);
+					BufferedChatlog = String.Empty;
+				}
+			};
 
 			// init some vars
 
@@ -95,6 +121,64 @@ namespace Maoubot_GUI
 			Commands.Add(new QueueCommand());
 		}
 
+		#endregion
+		#region Threading
+		private void CreateWatcherThread()
+		{
+			if (this.WatcherThread == null || (!this.WatcherThread?.IsAlive ?? false))
+			{
+				this.WatcherThread = new Thread(() =>
+				{
+					int LastSecond = DateTime.Now.Second;
+
+					while (!this.IsDisposed)
+					{
+						while (LastSecond == DateTime.Now.Second) Thread.Sleep(500);
+						BotUptime = BotUptime.AddSeconds(1);
+						//Console.WriteLine("PLZ NOT BE 0: " + this.EmoteDatabase.TwitchEmotes.Emotes.Length);
+
+						if (BotUptime.Second % 15 == 0) Console.WriteLine("Uptime: {0:00}:{1:00}:{2:00}", BotUptime.Hour, BotUptime.Minute, BotUptime.Second);
+
+
+						if (BotUptime.Second == 0 && Tcb.InChannel && EnableCoinSystem) // run every minute once
+						{
+							
+							Boolean AlreadyHasAccount = false;
+							foreach (String Username in ActiveUsers.ToArray())
+							{
+								AlreadyHasAccount = false;
+								foreach (TwitchUser tu in BotFile.TwitchUsers)
+								{
+									if (tu.Username == Username)
+									{
+										tu.AddWatchMinutes(1);
+										AlreadyHasAccount = true;
+										if (IsInDebugMode) Console.WriteLine("Added 1 WatchMinute to {0}", Username);
+									}
+								}
+								if (!AlreadyHasAccount)
+								{
+									BotFile.TwitchUserList.Add(new TwitchUser(Username));
+									if (IsInDebugMode) Console.WriteLine("Added Account: {0}", Username);
+								}
+							}
+
+							//Tcb.SendChatMessage("Gave everybody 1 coin.");
+							ActiveUsers.Clear();
+							SaveMaoubotConfig();
+						}
+
+
+						//Console.WriteLine("Total elapsed time: {0} days {1:00}:{2:00}:{3:00}", ElapsedTime.Day, ElapsedTime.Hour, ElapsedTime.Minute, ElapsedTime.Second);
+						LastSecond = DateTime.Now.Second;
+					}
+				});
+
+				WatcherThread.Start();
+			}
+		}
+		#endregion
+		#region TwitchChatBot Control
 		/// <summary>
 		/// Creates the TCB object and adds events
 		/// </summary>
@@ -112,248 +196,7 @@ namespace Maoubot_GUI
 
 			this.Tcb.Verbose = IsInDebugMode;
 
-			// Add Coin system
-
 		}
-
-		#region FormEvents
-
-		/// <summary>
-		/// Load Event Method
-		/// Loads important assets ( Twitch.xml, etc )
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void LoadForm(object sender, EventArgs e)
-		{
-			LoadTwitchConfig();
-			LoadQuoteConfig();
-			LoadMaoubotConfig();
-			LoadEmoteDatabase();
-
-			RefreshAccounts();
-			RefreshCommands();
-
-			CreateTwitchChatBot();
-
-			UpdateStats();
-		}
-
-		/// <summary>
-		/// Event called when the form is closing
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ClosingForm(object sender, EventArgs e)
-		{
-			Tcb?.Stop();
-
-			// Save all configs
-			SaveTwitchConfig();
-			SaveQuoteConfig();
-			SaveMaoubotConfig();
-			SaveEmoteDatabase();
-
-		}
-
-		#endregion
-		#region Logging
-
-		/// <summary>
-		/// Append Message to the Chatbox
-		/// </summary>
-		/// <param name="Message"></param>
-		private void LogWrite(String Message, params object[] format)
-		{
-			//return;
-			Message = String.Format(Message, format);
-			if (!IsDisposed)
-			{
-				if (Chatbox.InvokeRequired)
-				{
-					Chatbox.Invoke(new LogWriteDelegate(LogWrite), new object[] { Message, format });
-				}
-				else
-				{
-
-					Chatbox.AppendText(Message);
-				}
-			}
-		}
-		private delegate void LogWriteDelegate(String Message, params object[] format);
-		
-		/// <summary>
-		/// Append Message to the Chatbox and a newline.
-		/// </summary>
-		/// <param name="Message"></param>
-		private void LogWriteLine(String Message, params object[] format)
-		{
-			LogWrite(String.Format("{0}\n", Message), format);
-		}
-		
-		/// <summary>
-		/// Append Message to the Debugbox
-		/// </summary>
-		/// <param name="Message"></param>
-		private void LogDebugWrite(String Message, params object[] format)
-		{
-			//return;
-			Message = String.Format(Message, format);
-			if (!IsDisposed)
-			{
-				if (Debugbox.InvokeRequired)
-				{
-					Debugbox.Invoke(new LogDebugWriteDelegate(LogDebugWrite), new object[] { Message, format });
-				}
-				else
-				{
-					Debugbox.AppendText(Message);
-				}
-			}
-		}
-		private delegate void LogDebugWriteDelegate(String Message, params object[] format);
-
-		/// <summary>
-		/// Append Message to the Debugbox and a newline
-		/// </summary>
-		/// <param name="Message"></param>
-		private void LogDebugWriteLine(String Message, params object[] format)
-		{
-			LogDebugWrite(String.Format("{0}\n", Message), format);
-		}
-
-		#endregion
-		#region Config Save/Load
-
-		/// <summary>
-		/// Saves the TwitchConfig to twitch.xml
-		/// </summary>
-		/// <param name="ReadFromForm">Shall the config be updated from the form?</param>
-		public void SaveTwitchConfig()
-		{
-			if (this.ConfigFile == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
-			else
-			{
-					this.ConfigFile.Nick = textBoxNickname.Text;
-					this.ConfigFile.oAuth = textBoxOAuth.Text;
-					this.ConfigFile.Channel = textBoxChannel.Text;
-
-				ConfigFile.SaveToXml(TwitchConfigPath, this.ConfigFile);
-			}
-		}
-
-		/// <summary>
-		/// Load your TwitchConfig
-		/// Creates an empty TwitchConfig if none could be found.
-		/// </summary>
-		private void LoadTwitchConfig()
-		{
-			this.ConfigFile = ConfigFile.LoadFromXml(TwitchConfigPath);
-			if (this.ConfigFile == null)
-			{
-				// Save an empty config file and load it
-				// Return to prevent recursion
-				SaveTwitchConfig();
-				LoadTwitchConfig();
-				return;
-			}
-			
-			// Load config to form
-			textBoxNickname.Text = ConfigFile.Nick;
-			textBoxOAuth.Text = ConfigFile.oAuth;
-			textBoxChannel.Text = ConfigFile.Channel;
-		}
-
-		/// <summary>
-		/// Saves the QuoteConfig to quotes.xml
-		/// </summary>
-		public void SaveQuoteConfig()
-		{
-			if (this.QuoteFile == null) QuoteConfig.SaveToXml(QuotesConfigPath, new QuoteConfig());
-			else
-			{
-				QuoteConfig.SaveToXml(QuotesConfigPath, QuoteFile);
-				
-			}
-		}
-
-		/// <summary>
-		/// Load your QuoteConfig
-		/// Creates an empty QuoteConfig if none could be found.
-		/// </summary>
-		private void LoadQuoteConfig()
-		{
-			this.QuoteFile = QuoteConfig.LoadFromXml(QuotesConfigPath);
-			if (this.QuoteFile == null)
-			{
-				SaveQuoteConfig();
-				LoadQuoteConfig();
-				return;
-			}
-		}
-
-		/// <summary>
-		/// Saves the BotConfig
-		/// Creates an empty BotConfig if none could be found
-		/// </summary>
-		public void SaveMaoubotConfig()
-		{
-			if (this.BotFile == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
-			else
-			{
-				BotFile.EnableSubMessage = this.checkBoxEnableSubMessage.Checked;
-				BotFile.SubMessageNew = this.textBoxSubMessageNew.Text;
-				BotFile.SubMessageResub = this.textBoxSubMessageResub.Text;
-
-				BotFile.EnableCommands = this.checkBoxEnableCommands.Checked;
-
-				BotConfig.SaveToXml(MaoubotConfigPath, BotFile);
-			}
-		}
-
-		/// <summary>
-		/// Loads the BotConfig
-		/// </summary>
-		private void LoadMaoubotConfig()
-		{
-			this.BotFile = BotConfig.LoadFromXml(MaoubotConfigPath);
-			if (this.BotFile == null)
-			{
-				SaveMaoubotConfig();
-				LoadMaoubotConfig();
-				return;
-			}
-
-			this.checkBoxEnableSubMessage.Checked = BotFile.EnableSubMessage;
-			this.textBoxSubMessageNew.Text = BotFile.SubMessageNew;
-			this.textBoxSubMessageResub.Text = BotFile.SubMessageResub;
-
-			this.checkBoxEnableCommands.Checked = BotFile.EnableCommands;
-		}
-
-		public void SaveEmoteDatabase()
-		{
-			if (this.EmoteDatabase == null)
-			{
-				EmoteDatabase.SaveToXml(EmoteDatabasePath, new EmoteDatabase());
-				LoadEmoteDatabase();
-				return;
-			}
-			EmoteDatabase.SaveToXml(EmoteDatabasePath, this.EmoteDatabase);
-		}
-
-		private void LoadEmoteDatabase()
-		{
-			this.EmoteDatabase = EmoteDatabase.LoadFromXml(EmoteDatabasePath);
-			if (this.EmoteDatabase == null)
-			{
-				SaveEmoteDatabase();
-				return;
-			}
-		}
-
-		#endregion
-		#region TCB Events
 
 		/// <summary>
 		/// Executes the commands
@@ -369,7 +212,7 @@ namespace Maoubot_GUI
 			Console.WriteLine("Executing {0}. Whisper: {1}", e.Command, e.IsWhisper);
 
 			// TextCommands. 
-			foreach(TextCommand tc in BotFile.TextCommands)
+			foreach (TextCommand tc in BotFile.TextCommands)
 			{
 				if (tc.Command == e.Command)
 				{
@@ -382,7 +225,7 @@ namespace Maoubot_GUI
 				}
 			}
 
-			foreach(ChatCommand cc in Commands)
+			foreach (ChatCommand cc in Commands)
 			{
 				if (cc.Command == e.Command)
 				{
@@ -406,9 +249,9 @@ namespace Maoubot_GUI
 		{
 			if (e.Type == MessageType.Ping)
 			{
-				Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
+				//Tcb.SendIrcMessage("PONG {0}", Tcb.HOST);
 				SaveTwitchConfig();
-				//LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
+				LogDebugWriteLine("Send 'PONG {0}'", Tcb.HOST);
 			}
 			else if (e.Type == MessageType.Server)
 			{
@@ -422,7 +265,7 @@ namespace Maoubot_GUI
 			else if (e.Type == MessageType.Usernotice)
 			{
 				//Console.WriteLine("{0}", e.RawMessage);
-				LogDebugWriteLine("{0} just resubbed for {1} months! {2}", e.Nick, e.GetSafeTag("msg-param-months"), (++BotFile.Resubs)+ BotFile.NewSubs);
+				LogDebugWriteLine("{0} just resubbed for {1} months! {2}", e.Nick, e.GetSafeTag("msg-param-months"), (++BotFile.Resubs) + BotFile.NewSubs);
 
 				UpdateStats();
 
@@ -440,7 +283,7 @@ namespace Maoubot_GUI
 			{
 				if (e.IsSubMessage)
 				{
-					LogDebugWriteLine("{0} just subscribed! {1}", e.Nick, (++BotFile.NewSubs)+ BotFile.Resubs);
+					LogDebugWriteLine("{0} just subscribed! {1}", e.Nick, (++BotFile.NewSubs) + BotFile.Resubs);
 
 					UpdateStats();
 
@@ -455,14 +298,21 @@ namespace Maoubot_GUI
 				{
 					String Types = CreatePermissionString(e);
 					String k = String.Empty;
-					foreach (byte s in Encoding.Unicode.GetBytes(e.Message)) 
+					foreach (byte s in Encoding.Unicode.GetBytes(e.Message))
 					{
 						k += String.Format("{0} ", s);
 					}
 					LogWriteLine("[{0}] {1}: {2}", Types ?? "DUMMY", e.Nick, e.Message);
 
-					TwitchEmoteBatch TemporaryTeb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
-					EmoteDatabase.TwitchEmotes.Fusion(TemporaryTeb);
+					if (!String.IsNullOrEmpty(e.GetSafeTag("emotes")) && EnableEmoteCollection)
+					{
+
+						Task.Run(new Action(() =>
+						{
+							TwitchEmoteBatch TemporaryTeb = new TwitchEmoteBatch(e.GetSafeTag("emotes"), e.Message);
+							EmoteDatabase.TwitchEmotes.Fusion(TemporaryTeb);
+						}));
+					}
 
 					if (e.IsCheer)
 					{
@@ -471,20 +321,333 @@ namespace Maoubot_GUI
 					}
 
 
-					if (!ActiveUsers.Contains(e.Nick)) ActiveUsers.Add(e.Nick);
+					if (!ActiveUsers.Contains(e.Nick) && EnableCoinSystem) ActiveUsers.Add(e.Nick);
 
 					// finish
 					//Console.WriteLine(BotFile.ChatLines);
 					BotFile.ChatLines++;
 					UpdateStats();
 				}
-			} else if (e.Type == MessageType.Whisper)
+			}
+			else if (e.Type == MessageType.Whisper)
 			{
 				String Types = CreatePermissionString(e);
 				LogWriteLine("[{0}] *{1}*: {2}", Types ?? "DUMMY", e.Nick, e.Message);
 			}
 		}
 
+		#endregion
+		#region Config
+		#region Loading
+		/// <summary>
+		/// Load your TwitchConfig
+		/// Creates an empty TwitchConfig if none could be found.
+		/// </summary>
+		private void LoadTwitchConfig()
+		{
+			this.ConfigFile = ConfigFile.LoadFromXml(TwitchConfigPath);
+			if (this.ConfigFile == null)
+			{
+				// Save an empty config file and load it
+				// Return to prevent recursion
+				SaveTwitchConfig();
+				LoadTwitchConfig();
+				return;
+			}
+
+			// Load config to form
+			textBoxNickname.Text = ConfigFile.Nick;
+			textBoxOAuth.Text = ConfigFile.oAuth;
+			textBoxChannel.Text = ConfigFile.Channel;
+		}
+
+		/// <summary>
+		/// Load your QuoteConfig
+		/// Creates an empty QuoteConfig if none could be found.
+		/// </summary>
+		private void LoadQuoteConfig()
+		{
+			this.QuoteFile = QuoteConfig.LoadFromXml(QuotesConfigPath);
+			if (this.QuoteFile == null)
+			{
+				SaveQuoteConfig();
+				LoadQuoteConfig();
+				return;
+			}
+		}
+
+		/// <summary>
+		/// Loads the BotConfig
+		/// </summary>
+		private void LoadMaoubotConfig()
+		{
+			this.BotFile = BotConfig.LoadFromXml(MaoubotConfigPath);
+			if (this.BotFile == null)
+			{
+				SaveMaoubotConfig();
+				LoadMaoubotConfig();
+				return;
+			}
+
+			this.checkBoxEnableSubMessage.Checked = BotFile.EnableSubMessage;
+			this.textBoxSubMessageNew.Text = BotFile.SubMessageNew;
+			this.textBoxSubMessageResub.Text = BotFile.SubMessageResub;
+
+			this.checkBoxEnableCommands.Checked = BotFile.EnableCommands;
+		}
+
+		private void LoadEmoteDatabase()
+		{
+			this.EmoteDatabase = EmoteDatabase.LoadFromXml(EmoteDatabasePath);
+			if (this.EmoteDatabase == null)
+			{
+				SaveEmoteDatabase();
+				return;
+			}
+		}
+		#endregion
+		#region Saving
+
+		/// <summary>
+		/// Saves the TwitchConfig to twitch.xml
+		/// </summary>
+		public void SaveTwitchConfig()
+		{
+			if (this.ConfigFile == null) ConfigFile.SaveToXml(TwitchConfigPath, new ConfigFile());
+			else
+			{
+				this.ConfigFile.Nick = textBoxNickname.Text;
+				this.ConfigFile.oAuth = textBoxOAuth.Text;
+				this.ConfigFile.Channel = textBoxChannel.Text;
+
+				ConfigFile.SaveToXml(TwitchConfigPath, this.ConfigFile);
+			}
+		}
+
+		/// <summary>
+		/// Saves the QuoteConfig to quotes.xml
+		/// </summary>
+		public void SaveQuoteConfig()
+		{
+			if (this.QuoteFile == null) QuoteConfig.SaveToXml(QuotesConfigPath, new QuoteConfig());
+			else
+			{
+				QuoteConfig.SaveToXml(QuotesConfigPath, QuoteFile);
+
+			}
+		}
+
+		/// <summary>
+		/// Saves the BotConfig
+		/// Creates an empty BotConfig if none could be found
+		/// </summary>
+		public void SaveMaoubotConfig()
+		{
+			if (this.BotFile == null) BotConfig.SaveToXml(MaoubotConfigPath, new BotConfig());
+			else
+			{
+				BotFile.EnableSubMessage = this.checkBoxEnableSubMessage.Checked;
+				BotFile.SubMessageNew = this.textBoxSubMessageNew.Text;
+				BotFile.SubMessageResub = this.textBoxSubMessageResub.Text;
+
+				BotFile.EnableCommands = this.checkBoxEnableCommands.Checked;
+
+				BotConfig.SaveToXml(MaoubotConfigPath, BotFile);
+			}
+		}
+
+		public void SaveEmoteDatabase()
+		{
+			if (this.EmoteDatabase == null)
+			{
+				EmoteDatabase.SaveToXml(EmoteDatabasePath, new EmoteDatabase());
+				LoadEmoteDatabase();
+				return;
+			}
+			EmoteDatabase.SaveToXml(EmoteDatabasePath, this.EmoteDatabase);
+		}
+
+		#endregion
+		#endregion
+		#region Command Control
+		/// <summary>
+		/// Refreshes all commands
+		/// </summary>
+		public void RefreshCommands()
+		{
+			if (comboBoxTextCommands.InvokeRequired)
+			{
+				comboBoxTextCommands.Invoke(new RefreshCommandsDelegate(RefreshCommands));
+				return;
+			}
+
+			comboBoxTextCommands.Items.Clear();
+
+			foreach (TextCommand tc in BotFile.TextCommands)
+			{
+				comboBoxTextCommands.Items.Add(tc.Command);
+
+			}
+
+			comboBoxTextCommands.SelectedIndex = (comboBoxTextCommands.Items.Count == 0) ? -1 : 0;
+		}
+		private delegate void RefreshCommandsDelegate();
+
+		public ChatCommand[] GetCommands()
+		{
+			return Commands.ToArray();
+		}
+		#endregion
+		#region Account Control
+		/// <summary>
+		/// Refreshes the combobox to select the accounts.
+		/// </summary>
+		public void RefreshAccounts()
+		{
+			comboBoxAccounts.Items.Clear();
+			comboBoxAccounts.Items.AddRange(BotFile.GetAccountNames());
+			comboBoxAccounts.SelectedIndex = (comboBoxAccounts.Items.Count == 0) ? -1 : 0;
+		}
+
+		/// <summary>
+		/// Adds a new account by the currently defined data
+		/// </summary>
+		private void AddAccount()
+		{
+			String Nick = textBoxNickname.Text;
+			String OAuth = textBoxOAuth.Text;
+
+			if (BotFile.GetAccountNames().Contains(Nick))
+			{
+				int pos = -1;
+				for (int i = 0; i < BotFile.GetAccountNames().Length; i++)
+				{
+					if (BotFile.GetAccountNames()[i] == Nick)
+					{
+						pos = i;
+						break;
+					}
+				}
+				if (pos < 0) return;
+
+				// Update the oauth key
+				BotFile.Accounts[pos].OAuth = OAuth;
+				return;
+			}
+			else
+			{
+				TwitchAccount t = new TwitchAccount(Nick, OAuth);
+				BotFile.AddAccount(t);
+				RefreshAccounts();
+			}
+		}
+
+		#endregion
+		#region Logging
+		#region Chatlog
+		/// <summary>
+		/// Append Message to the Chatbox
+		/// </summary>
+		/// <param name="Message"></param>
+		private void LogWrite(String Message, params object[] format)
+		{
+			//return;
+			Message = String.Format(Message, format);
+			if (!IsDisposed)
+			{
+				if (Chatbox.InvokeRequired)
+				{
+					Chatbox.Invoke(new Action(() => 
+					{
+						if (ChatboxAutoscroll) Chatbox.AppendText(Message);
+						else BufferedChatlog += Message;
+
+					}));
+				}
+				else
+				{
+
+					Chatbox.AppendText(Message);
+				}
+			}
+		}
+		private delegate void LogWriteDelegate(String Message, params object[] format);
+
+		/// <summary>
+		/// Append Message to the Chatbox and a newline.
+		/// </summary>
+		/// <param name="Message"></param>
+		private void LogWriteLine(String Message, params object[] format)
+		{
+			LogWrite(String.Format("{0}" + Environment.NewLine, Message), format);
+		}
+
+		/// <summary>
+		/// clears the chatbox.
+		/// </summary>
+		private void ClearChatlog()
+		{
+			if (Chatbox.IsDisposed) return;
+			if (Chatbox.InvokeRequired)
+			{
+				Chatbox.Invoke(new Action(() => { Chatbox.Clear(); }));
+			}
+			else
+			{
+				Chatbox.Clear();
+			}
+		}
+		#endregion
+		#region Debuglog
+		/// <summary>
+		/// Append Message to the Debugbox
+		/// </summary>
+		/// <param name="Message"></param>
+		private void LogDebugWrite(String Message, params object[] format)
+		{
+			//return;
+			Message = String.Format(Message, format);
+			if (!IsDisposed)
+			{
+				if (Debugbox.InvokeRequired)
+				{
+					Debugbox.Invoke(new Action(() => { Debugbox.AppendText(Message); }));
+				}
+				else
+				{
+					Debugbox.AppendText(Message);
+				}
+			}
+		}
+		private delegate void LogDebugWriteDelegate(String Message, params object[] format);
+
+		/// <summary>
+		/// Append Message to the Debugbox and a newline
+		/// </summary>
+		/// <param name="Message"></param>
+		private void LogDebugWriteLine(String Message, params object[] format)
+		{
+			LogDebugWrite(String.Format("{0}" + Environment.NewLine, Message), format);
+		}
+
+		/// <summary>
+		/// clears the debugbox
+		/// </summary>
+		private void ClearDebuglog()
+		{
+			if (Debugbox.IsDisposed) return;
+			if (Debugbox.InvokeRequired)
+			{
+				Debugbox.Invoke(new Action(() => { Debugbox.Clear(); }));
+			}
+			else
+			{
+				Debugbox.Clear();
+			}
+		}
+		#endregion
+		#endregion
+		#region Methods
 		/// <summary>
 		/// Creates the Permission String for logging
 		/// </summary>
@@ -518,10 +681,86 @@ namespace Maoubot_GUI
 
 			return Types;
 
-			
+
+		}
+
+		/// <summary>
+		/// Updates the Statslabel.
+		/// </summary>
+		private void UpdateStats()
+		{
+			if (labelCheerTest.InvokeRequired)
+			{
+				labelCheerTest.Invoke(new UpdateStatsDelegate(UpdateStats));
+				return;
+			}
+
+			String stats = String.Format(
+				"Total Chatlines: {0}" + Environment.NewLine +
+				Environment.NewLine +
+				"Total Newsubs: {1}" + Environment.NewLine +
+				"Total Resubs: {2}" + Environment.NewLine +
+				"Total cheered bits: {3}"
+			, BotFile.ChatLines, BotFile.NewSubs, BotFile.Resubs, BotFile.CheeredBits);
+
+			labelCheerTest.Text = stats;
+		}
+		private delegate void UpdateStatsDelegate();
+		#endregion
+		#region Formevents
+		#region Form
+		/// <summary>
+		/// Load Event Method
+		/// Loads important assets ( Twitch.xml, etc )
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void LoadForm(object sender, EventArgs e)
+		{
+			LoadTwitchConfig();
+			LoadQuoteConfig();
+			LoadMaoubotConfig();
+			LoadEmoteDatabase();
+
+			RefreshAccounts();
+			RefreshCommands();
+
+			CreateTwitchChatBot();
+
+			UpdateStats();
+
+
+			CreateWatcherThread();
+		}
+
+		/// <summary>
+		/// Event called when the form is closing
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void ClosingForm(object sender, EventArgs e)
+		{
+			Tcb?.Stop();
+			WatcherThread?.Abort();
+
+			// Save all configs
+			SaveTwitchConfig();
+			SaveQuoteConfig();
+			SaveMaoubotConfig();
+			SaveEmoteDatabase();
+
+		}
+		
+		private void buttonSave_Click(object sender, EventArgs e)
+		{
+			SaveTwitchConfig();
+			SaveMaoubotConfig();
+			SaveQuoteConfig();
+
+			SaveEmoteDatabase();
 		}
 		#endregion
-		#region FormComponent Events
+		#region Login Tab
 		/// <summary>
 		/// Connects the bot with the specified settings. 
 		/// What else?
@@ -533,7 +772,7 @@ namespace Maoubot_GUI
 			if (Tcb == null)
 			{
 				CreateTwitchChatBot();
-            }
+			}
 
 			if (!Tcb.Active)
 			{
@@ -546,7 +785,8 @@ namespace Maoubot_GUI
 				AddAccount();
 
 				Tcb.Run();
-			} else
+			}
+			else
 			{
 				Tcb.JoinChannel(textBoxChannel.Text);
 			}
@@ -561,58 +801,8 @@ namespace Maoubot_GUI
 			buttonAccountsDelete.Enabled = false;
 
 			buttonConnect.Enabled = false;
-
-			if (this.WatcherThread == null || (!this.WatcherThread?.IsAlive ?? false))
-			{
-				WatcherThread = new Thread(() =>
-				{
-					int LastSecond = DateTime.Now.Second;
-
-					DateTime ElapsedTime = new DateTime();
-
-					while (Tcb.Active)
-					{
-						while (LastSecond == DateTime.Now.Second || !Tcb.InChannel) Thread.Sleep(500);
-						ElapsedTime = ElapsedTime.AddSeconds(1);
-
-						if (ElapsedTime.Second == 0) // run every minute once
-						{
-							Boolean AlreadyHasAccount = false;
-							foreach (String Username in ActiveUsers)
-							{
-								AlreadyHasAccount = false;
-								foreach (TwitchUser tu in BotFile.TwitchUsers)
-								{
-									if (tu.Username == Username)
-									{
-										tu.AddWatchMinutes(1);
-										AlreadyHasAccount = true;
-										if (IsInDebugMode) Console.WriteLine("Added 1 WatchMinute to {0}", Username);
-									}
-								}
-								if (!AlreadyHasAccount)
-								{
-									BotFile.TwitchUserList.Add(new TwitchUser(Username));
-									if (IsInDebugMode) Console.WriteLine("Added Account: {0}", Username);
-								}
-							}
-
-							//Tcb.SendChatMessage("Gave everybody 1 coin.");
-							ActiveUsers.Clear();
-							SaveMaoubotConfig();
-						}
-
-
-						Console.WriteLine("Total elapsed time: {0} days {1:00}:{2:00}:{3:00}", ElapsedTime.Day, ElapsedTime.Hour, ElapsedTime.Minute, ElapsedTime.Second);
-						LastSecond = DateTime.Now.Second;
-					}
-				});
-
-				WatcherThread.Start();
-			}
-
 		}
-
+		
 		/// <summary>
 		/// Disconnects and stops the bot.
 		/// </summary>
@@ -635,7 +825,7 @@ namespace Maoubot_GUI
 
 			buttonConnect.Enabled = true;
 
-			WatcherThread?.Abort();
+			//WatcherThread?.Abort();
 		}
 
 		/// <summary>
@@ -654,34 +844,6 @@ namespace Maoubot_GUI
 			buttonAccountsDelete.Enabled = true;
 
 			buttonConnect.Enabled = true;
-		}
-		/// <summary>
-		/// Event called when any key is pressed on the textbox that's used to enter a message to send.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void textBoxMessage_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Enter)
-			{
-				String Message = textBoxMessage.Text;
-				textBoxMessage.Text = "";
-				if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
-				LogWriteLine("{0}: {1}", Tcb.Nick, Message);
-			}
-		}
-
-		/// <summary>
-		/// Sends a message defined by the textboxMessage textbox
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void buttonSendMessage_Click(object sender, EventArgs e)
-		{
-			String Message = textBoxMessage.Text;
-			textBoxMessage.Text = "";
-			if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
-			LogWriteLine("{0}: {1}", Tcb.Nick, Message);
 		}
 
 		/// <summary>
@@ -714,160 +876,57 @@ namespace Maoubot_GUI
 			// refresh the combobox
 			RefreshAccounts();
 		}
-
 		#endregion
-		#region Not yet categorized
-
+		#region Maoubot Tab
 		/// <summary>
-		/// Adds a new account by the currently defined data
-		/// </summary>
-		private void AddAccount()
-		{
-			String Nick = textBoxNickname.Text;
-			String OAuth = textBoxOAuth.Text;
-
-			if (BotFile.GetAccountNames().Contains(Nick))
-			{
-				int pos = -1;
-				for (int i=0; i< BotFile.GetAccountNames().Length; i++)
-				{
-					if (BotFile.GetAccountNames()[i] == Nick)
-					{
-						pos = i;
-						break;
-					}
-				}
-				if (pos < 0) return;
-
-				// Update the oauth key
-				BotFile.Accounts[pos].OAuth = OAuth;
-				return;
-			} else
-			{
-				TwitchAccount t = new TwitchAccount(Nick, OAuth);
-				BotFile.AddAccount(t);
-				RefreshAccounts();
-			}
-		}
-
-		/// <summary>
-		/// Refreshes the combobox to select the accounts.
-		/// </summary>
-		public void RefreshAccounts()
-		{
-			comboBoxAccounts.Items.Clear();
-			comboBoxAccounts.Items.AddRange(BotFile.GetAccountNames());
-			comboBoxAccounts.SelectedIndex = (comboBoxAccounts.Items.Count == 0) ? -1 : 0;
-        }
-
-		/// <summary>
-		/// Refreshes all commands
-		/// </summary>
-		public void RefreshCommands()
-		{
-			if (comboBoxTextCommands.InvokeRequired)
-			{
-				comboBoxTextCommands.Invoke(new RefreshCommandsDelegate(RefreshCommands));
-				return;
-			}
-
-			comboBoxTextCommands.Items.Clear();
-
-			foreach (TextCommand tc in BotFile.TextCommands)
-			{
-				comboBoxTextCommands.Items.Add(tc.Command);
-
-			}
-
-			comboBoxTextCommands.SelectedIndex = (comboBoxTextCommands.Items.Count == 0) ? -1 : 0;
-		}
-		private delegate void RefreshCommandsDelegate();
-
-		/// <summary>
-		/// clears the chatbox.
-		/// </summary>
-		private void ClearChatlog()
-		{
-			if (Chatbox.IsDisposed) return;
-			if (Chatbox.InvokeRequired)
-			{
-				Chatbox.Invoke(new Action(() => { Chatbox.Clear(); }));
-			}
-			else
-			{
-				Chatbox.Clear();
-			}
-		}
-
-		/// <summary>
-		/// clears the debugbox
-		/// </summary>
-		private void ClearDebuglog()
-		{
-			if (Debugbox.IsDisposed) return;
-			if (Debugbox.InvokeRequired)
-			{
-				Debugbox.Invoke(new Action(() => { Debugbox.Clear(); }));
-			}
-			else
-			{
-				Debugbox.Clear();
-			}
-		}
-
-		/// <summary>
-		/// Sends a random color command
+		/// Event called when any key is pressed on the textbox that's used to enter a message to send.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void buttonRandomColor_Click(object sender, EventArgs e)
+		private void textBoxMessage_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (Tcb != null)
+			if (e.KeyCode == Keys.Enter)
 			{
-				Random r = new Random();
-				int color = r.Next(0x1000000);
-                Tcb.SendEscapedChatMessage(".color #{0:X6}", color);
-				//Tcb.SendChatMessage("I'm now #{0:X6} chrisGrin", color);
+				String Message = textBoxMessage.Text;
+				textBoxMessage.Text = "";
+				if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
+				LogWriteLine("{0}: {1}", Tcb.Nick, Message);
 			}
 		}
 
 		/// <summary>
-		/// TextCommandDialog Test
-		/// WARNING: USELESS >:(
+		/// Sends a message defined by the textboxMessage textbox
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void button3_Click(object sender, EventArgs e)
+		private void buttonSendMessage_Click(object sender, EventArgs e)
 		{
-			using (TextCommandDialog tcd = new TextCommandDialog(new TextCommand("EXAMPLE_COMMAND", "EXAMPLE_OUTPUT", Permission.Developer, 33)))
+			String Message = textBoxMessage.Text;
+			textBoxMessage.Text = "";
+			if (!String.IsNullOrEmpty(Message)) Tcb.SendEscapedChatMessage(Message);
+			LogWriteLine("{0}: {1}", Tcb.Nick, Message);
+		}
+		#endregion
+		#region Command Tab
+		/// <summary>
+		/// Opens the TextCommandDialog to add a new command
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void buttonTextCommandAdd_Click(object sender, EventArgs e)
+		{
+			using (TextCommandDialog tcd = new TextCommandDialog())
 			{
 				tcd.ShowDialog();
 				if (tcd.DialogResult == DialogResult.OK)
 				{
 					TextCommand tc = tcd.Result;
-					((Button)sender).Text = tc.Command;
+					BotFile.AddCommand(tc);
+					RefreshCommands();
+
+					SaveMaoubotConfig();
 				}
 			}
-		}
-
-		/// <summary>
-		/// Deletes the current Dialog. 
-		/// WARNING: No confirmation dialog implemented.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void buttonTextCommandDelete_Click(object sender, EventArgs e)
-		{
-			if (BotFile.DeleteCommand(comboBoxTextCommands.Text))
-			{
-				Console.WriteLine("Deleted command!");
-			} else
-			{
-				Console.WriteLine("Unable to delete command! >:(");
-			}
-			RefreshCommands();
-
-			SaveMaoubotConfig();
 		}
 
 		/// <summary>
@@ -898,48 +957,50 @@ namespace Maoubot_GUI
 		}
 
 		/// <summary>
-		/// Opens the TextCommandDialog to add a new command
+		/// Deletes the current Dialog. 
+		/// WARNING: No confirmation dialog implemented.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void buttonTextCommandAdd_Click(object sender, EventArgs e)
+		private void buttonTextCommandDelete_Click(object sender, EventArgs e)
 		{
-			using (TextCommandDialog tcd = new TextCommandDialog())
+			if (BotFile.DeleteCommand(comboBoxTextCommands.Text))
 			{
-				tcd.ShowDialog();
-				if (tcd.DialogResult == DialogResult.OK)
-				{
-					TextCommand tc = tcd.Result;
-					BotFile.AddCommand(tc);
-					RefreshCommands();
-
-					SaveMaoubotConfig();
-				}
+				Console.WriteLine("Deleted command!");
 			}
-		}
+			else
+			{
+				Console.WriteLine("Unable to delete command! >:(");
+			}
+			RefreshCommands();
 
+			SaveMaoubotConfig();
+		}
+		#endregion
+		#region Emote Tab
+		private void textBoxTwitchEmoteSearch_Changed(object sender, EventArgs e)
+		{
+			TwitchEmote te = this.EmoteDatabase.TwitchEmotes.Emotes.Where(x => x.EmoteName == this.textBoxTwitchEmoteSearch.Text).FirstOrDefault();
+			if (te == null) this.labelTwitchEmoteSearch.Text = String.Format("Emote Data: NOT FOUND!");
+			else this.labelTwitchEmoteSearch.Text = String.Format("Emote Data: {0}", te.ToString());
+		}
+		#endregion
+		#region Fun Tab
 		/// <summary>
-		/// Updates the Statslabel.
+		/// Sends a random color command
 		/// </summary>
-		private void UpdateStats()
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void buttonRandomColor_Click(object sender, EventArgs e)
 		{
-			if (labelCheerTest.InvokeRequired)
+			if (Tcb != null)
 			{
-				labelCheerTest.Invoke(new UpdateStatsDelegate(UpdateStats));
-				return;
+				Random r = new Random();
+				int color = r.Next(0x1000000);
+				Tcb.SendEscapedChatMessage(".color #{0:X6}", color);
+				//Tcb.SendChatMessage("I'm now #{0:X6} chrisGrin", color);
 			}
-
-			String stats = String.Format(
-				"Total Chatlines: {0}" + Environment.NewLine +
-				Environment.NewLine +
-				"Total Newsubs: {1}" + Environment.NewLine +
-				"Total Resubs: {2}" + Environment.NewLine +
-				"Total cheered bits: {3}"
-			, BotFile.ChatLines, BotFile.NewSubs, BotFile.Resubs, BotFile.CheeredBits);
-
-			labelCheerTest.Text = stats;
 		}
-		private delegate void UpdateStatsDelegate();
 
 		/// <summary>
 		/// Sets all stats to 0 and refreshes them
@@ -955,20 +1016,13 @@ namespace Maoubot_GUI
 
 			UpdateStats();
 		}
-
-		private void buttonSave_Click(object sender, EventArgs e)
-		{
-			SaveTwitchConfig();
-			SaveMaoubotConfig();
-			SaveQuoteConfig();
-
-			SaveEmoteDatabase();
-		}
-		
-		public ChatCommand[] GetCommands()
-		{
-			return Commands.ToArray();
-		}
 		#endregion
+
+		#endregion
+
+		private void buttonTwitchEmoteResort_Click(object sender, EventArgs e)
+		{
+			this.EmoteDatabase.TwitchEmotes.Sort();
+		}
 	}
 }

@@ -37,7 +37,7 @@ namespace TwitchSharp.Components
 
 		[IgnoreDataMember]
 		public Boolean HasEmotes { get { return Emotes.Length > 0; } }
-
+		
 		public TwitchEmoteBatch()
 		{
 			this.EmoteList = new List<TwitchEmote>();
@@ -56,7 +56,7 @@ namespace TwitchSharp.Components
 				int EmoteId = int.Parse(EmoteIndexSplit.FirstOrDefault());
 				String EmoteIndexText = EmoteIndexSplit.LastOrDefault();
 				EmoteIndexSplit = EmoteIndexText.Split(',');
-				String[] EmoteIndexInMessageSplit = EmoteIndexSplit.FirstOrDefault().Split('-'); // kill me
+				String[] EmoteIndexInMessageSplit = EmoteIndexSplit.FirstOrDefault().Split('-');
 				int l0 = int.Parse(EmoteIndexInMessageSplit[0]);
 				int l1 = int.Parse(EmoteIndexInMessageSplit[1]);
 				int length = l1 - l0 + 1;
@@ -68,58 +68,113 @@ namespace TwitchSharp.Components
 
 		public void AddEmote(TwitchEmote te)
 		{
-			int Index = ContainsEmote(te);
+			int Index = this.ContainsEmote(te);
+			//Console.WriteLine(te.EmoteName + " | " + Index);
 
-			//Console.Write("We found {0}:{1} at Index {2}\t", te.EmoteName, te.EmoteId, Index);
-			
 			if (Index != -1)
 			{
+				
 				this.Emotes[Index].UseEmote(te.Amount);
-				//Console.WriteLine("{0}:{1} x{2}", this.Emotes[Index].EmoteName, this.Emotes[Index].EmoteId, this.Emotes[Index].Amount);
+				//Console.WriteLine("Using Emote: {0} - Amount: {1} Index: {2}", this.Emotes[Index].ToString(), te.Amount, Index);
+				if (Index > 0)
+				{
+					if (this.Emotes[Index].Amount > this.Emotes[Index - 1].Amount)
+					{
+						int OldIndex = Index;
+						while (this.Emotes[OldIndex].Amount > this.Emotes[Index - 1].Amount)
+						{
+							Index--;
+							if (Index == 0) break;
+                        }
+						TwitchEmote ek = this.Emotes[Index];
+						this.EmoteList[Index] = this.Emotes[OldIndex];
+						this.EmoteList[OldIndex] = ek;
+						Console.WriteLine("Swapped {1} -> {2}\t{0}", this.Emotes[Index].ToString(), OldIndex, Index);
+					}
+				}
+				return;
 			}
 			else
 			{
 				//Console.WriteLine("This is a new emote!");
-				EmoteList.Add(te);
-				Sort();
+				//Console.WriteLine("Adding emote: {0}", te.ToString());
+				if (!HasEmotes)
+				{
+					this.EmoteList.Add(te);
+					return;
+				}
+				int EmoteIndex = -1;
+				int l = 0;
+				int r = this.Emotes.Length - 1;
+				do
+				{
+					EmoteIndex = (l + r) / 2;
+					if (this.Emotes[l].Amount == this.Emotes[r].Amount) break;
+					int Amount = this.Emotes[EmoteIndex].Amount;
+					if (this.Emotes[l].Amount == Amount)
+					{
+						EmoteIndex = l;
+						break;
+					}
+					else if (this.Emotes[r].Amount == Amount)
+					{
+						EmoteIndex = r;
+						break;
+					}
+					else if (Amount > te.Amount)
+					{
+						l = EmoteIndex + 1;
+					}
+					else
+					{
+						r = EmoteIndex - 1;
+					}
+
+				} while (this.Emotes[EmoteIndex].Amount != te.Amount);
+                if (this.Emotes.Length > 10) Console.WriteLine("Inserting {0} to position {1} | REF: {2}", te.ToString(), EmoteIndex, (EmoteIndex > -1) ? this.Emotes[EmoteIndex].ToString() : "None");
+				if (EmoteIndex > -1) this.EmoteList.Insert(EmoteIndex, te);
+				else this.EmoteList.Add(te);
 			}
 		}
 
 		public void Fusion(TwitchEmoteBatch Teb)
 		{
+			//Console.WriteLine(this.Emotes.Length + " | " + Teb.Emotes.Length); // 843 | 0
 			if (!Teb.HasEmotes) return;
 
 			//Console.WriteLine("FUSION! (TEB)");
 			for (int j = 0; j < Teb.Emotes.Length; j++)
 			{
-
-				AddEmote(Teb.Emotes[j]);
+				this.AddEmote(Teb.Emotes[j]);
 			}
 		}
 
 		public int ContainsEmote(TwitchEmote te)
 		{
-			return ContainsEmote(te, 0, this.Emotes.Length-1);
-		}
-
-		public int ContainsEmote(TwitchEmote te, int l, int r)
-		{
-			if (l > r) return -1;
-
-			int Index = (l + r) / 2;
-			if (Index >= this.Emotes.Length || Index < 0) return -1;
-            int Id = this.Emotes[Index].EmoteId;
-			
-			//Console.WriteLine("{0} < {1} < {2} [{3}]?", this.Emotes[l].EmoteId, Id, this.Emotes[r].EmoteId, te.EmoteId);
-
-			if (te.EmoteId == Id) return Index;
-			else if (te.EmoteId > Id) return ContainsEmote(te, Index + 1, r);
-			else return ContainsEmote(te, l, Index - 1);
+			for (int i = 0; i < this.Emotes.Length; i++)
+			{
+				if (this.Emotes[i].EmoteId == te.EmoteId) return i;
+			}
+			return -1;
 		}
 
 		public void Sort()
 		{
-			this.Emotes = TwitchEmote.QuickSort(this.Emotes).ToArray();
+			this.Emotes = TwitchEmote.SortByAmount(this.Emotes).ToArray();
 		}
+
+		public TwitchEmote GetEmoteById(int Id)
+		{
+			if (!HasEmotes) return null;
+			return this.Emotes.Where(x => x.EmoteId == Id).FirstOrDefault();
+		}
+
+		//private TwitchEmote GetEmoteById(TwitchEmote[] e, int Id)
+		//{
+		//	// TODO: Binary quicksort search
+
+
+		//	return null;
+		//}
 	}
 }

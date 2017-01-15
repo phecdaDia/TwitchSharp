@@ -84,6 +84,8 @@ namespace TwitchSharp.EventArguments
 			this.Type = MessageType.UNDEFINED;
 			this.Permission = Permission.Everybody;
 
+			if (String.IsNullOrEmpty(Message)) return;
+
             if (Message.StartsWith(@"PING"))
 			{
 				this.Type = MessageType.Ping;
