@@ -32,12 +32,24 @@ namespace TwitchSharp.Components
 			//Console.WriteLine("Used emote. {0}", this.Amount);
 		}
 
-		public static IEnumerable<TwitchEmote> QuickSort(IEnumerable<TwitchEmote> i)
+		//public static IEnumerable<TwitchEmote> SortById(IEnumerable<TwitchEmote> i)
+		//{
+		//	if (!i.Any())
+		//		return i;
+		//	var p = i.Last().EmoteId;
+		//	return SortById(i.Where(x => x.EmoteId < p)).Concat(i.Where(x => x.EmoteId == p).Concat(SortById(i.Where(x => x.EmoteId > p))));
+		//}
+
+		public static IEnumerable<TwitchEmote> SortByAmount(IEnumerable<TwitchEmote> i)
 		{
 			if (!i.Any())
 				return i;
-			var p = i.Last().EmoteId;
-			return QuickSort(i.Where(x => x.EmoteId < p)).Concat(i.Where(x => x.EmoteId == p).Concat(QuickSort(i.Where(x => x.EmoteId > p))));
+			return i.OrderBy(x => x.Amount).Reverse();
+		}
+
+		public override String ToString()
+		{
+			return String.Format("{0}:{1}:{2}", EmoteName, EmoteId, Amount);
 		}
 	}
 }

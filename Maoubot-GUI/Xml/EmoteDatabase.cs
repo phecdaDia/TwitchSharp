@@ -25,13 +25,24 @@ namespace Maoubot_GUI.Xml
 		public void AddEmoteBatch(TwitchEmoteBatch Teb)
 		{
 			TwitchEmotes.Fusion(Teb);
-			TwitchEmotes.Sort();
 		}
 
-		public String GetEmoteById(int Id)
+		public TwitchEmote GetMostUsed()
 		{
-			// do binary search or something. 
-			return "Unimplemented";
+			TwitchEmote TopEmote = null;
+			foreach (TwitchEmote te in this.TwitchEmotes.Emotes)
+			{
+				if (te.Amount > (TopEmote?.Amount ?? -1))
+				{
+					TopEmote = te;
+				}
+			}
+			return TopEmote;
+		}
+
+		public TwitchEmote GetEmoteById(int Id)
+		{
+			return this.TwitchEmotes.GetEmoteById(Id);
 		}
 	}
 }
