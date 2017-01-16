@@ -74,6 +74,7 @@ namespace Maoubot_GUI
 			this.buttonTextCommandEdit = new System.Windows.Forms.Button();
 			this.comboBoxTextCommands = new System.Windows.Forms.ComboBox();
 			this.tabPage6 = new System.Windows.Forms.TabPage();
+			this.buttonTwitchEmoteResort = new System.Windows.Forms.Button();
 			this.labelTwitchEmoteSearch = new System.Windows.Forms.Label();
 			this.textBoxTwitchEmoteSearch = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
@@ -81,7 +82,6 @@ namespace Maoubot_GUI
 			this.buttonResetStats = new System.Windows.Forms.Button();
 			this.labelCheerTest = new System.Windows.Forms.Label();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
-			this.buttonTwitchEmoteResort = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -595,14 +595,24 @@ namespace Maoubot_GUI
 			this.tabPage6.Text = "Emote";
 			this.tabPage6.UseVisualStyleBackColor = true;
 			// 
+			// buttonTwitchEmoteResort
+			// 
+			this.buttonTwitchEmoteResort.Location = new System.Drawing.Point(257, 42);
+			this.buttonTwitchEmoteResort.Name = "buttonTwitchEmoteResort";
+			this.buttonTwitchEmoteResort.Size = new System.Drawing.Size(77, 23);
+			this.buttonTwitchEmoteResort.TabIndex = 15;
+			this.buttonTwitchEmoteResort.Text = "Resort";
+			this.buttonTwitchEmoteResort.UseVisualStyleBackColor = true;
+			this.buttonTwitchEmoteResort.Click += new System.EventHandler(this.buttonTwitchEmoteResort_Click);
+			// 
 			// labelTwitchEmoteSearch
 			// 
 			this.labelTwitchEmoteSearch.AutoSize = true;
-			this.labelTwitchEmoteSearch.Location = new System.Drawing.Point(6, 42);
+			this.labelTwitchEmoteSearch.Location = new System.Drawing.Point(6, 47);
 			this.labelTwitchEmoteSearch.Name = "labelTwitchEmoteSearch";
-			this.labelTwitchEmoteSearch.Size = new System.Drawing.Size(69, 13);
+			this.labelTwitchEmoteSearch.Size = new System.Drawing.Size(133, 13);
 			this.labelTwitchEmoteSearch.TabIndex = 2;
-			this.labelTwitchEmoteSearch.Text = "Emote Data: ";
+			this.labelTwitchEmoteSearch.Text = "Emote Data: NOT FOUND";
 			// 
 			// textBoxTwitchEmoteSearch
 			// 
@@ -661,16 +671,6 @@ namespace Maoubot_GUI
 			this.buttonRandomColor.Text = "color";
 			this.buttonRandomColor.UseVisualStyleBackColor = true;
 			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
-			// 
-			// buttonTwitchEmoteResort
-			// 
-			this.buttonTwitchEmoteResort.Location = new System.Drawing.Point(9, 68);
-			this.buttonTwitchEmoteResort.Name = "buttonTwitchEmoteResort";
-			this.buttonTwitchEmoteResort.Size = new System.Drawing.Size(77, 23);
-			this.buttonTwitchEmoteResort.TabIndex = 15;
-			this.buttonTwitchEmoteResort.Text = "Resort";
-			this.buttonTwitchEmoteResort.UseVisualStyleBackColor = true;
-			this.buttonTwitchEmoteResort.Click += new System.EventHandler(this.buttonTwitchEmoteResort_Click);
 			// 
 			// Maoubot
 			// 

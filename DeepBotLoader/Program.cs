@@ -41,7 +41,7 @@ namespace DeepBotLoader
 					Console.WriteLine("Failed: {0:X}", i);
 					i++;
 
-				} catch (Exception e)
+				} catch (Exception)
 				{
 					Console.WriteLine("Failed: {0:X}", i);
 					i++;

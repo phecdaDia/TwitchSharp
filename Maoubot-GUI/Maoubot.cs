@@ -984,6 +984,11 @@ namespace Maoubot_GUI
 			if (te == null) this.labelTwitchEmoteSearch.Text = String.Format("Emote Data: NOT FOUND!");
 			else this.labelTwitchEmoteSearch.Text = String.Format("Emote Data: {0}", te.ToString());
 		}
+		
+		private void buttonTwitchEmoteResort_Click(object sender, EventArgs e)
+		{
+			this.EmoteDatabase.TwitchEmotes.Sort();
+		}
 		#endregion
 		#region Fun Tab
 		/// <summary>
@@ -998,7 +1003,6 @@ namespace Maoubot_GUI
 				Random r = new Random();
 				int color = r.Next(0x1000000);
 				Tcb.SendEscapedChatMessage(".color #{0:X6}", color);
-				//Tcb.SendChatMessage("I'm now #{0:X6} chrisGrin", color);
 			}
 		}
 
@@ -1019,10 +1023,5 @@ namespace Maoubot_GUI
 		#endregion
 
 		#endregion
-
-		private void buttonTwitchEmoteResort_Click(object sender, EventArgs e)
-		{
-			this.EmoteDatabase.TwitchEmotes.Sort();
-		}
 	}
 }
