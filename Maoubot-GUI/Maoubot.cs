@@ -50,7 +50,7 @@ namespace Maoubot_GUI
 		private Thread WatcherThread;
 
 		private readonly Boolean IsInDebugMode = true;
-		private readonly Boolean EnableCoinSystem = false;
+		private readonly Boolean EnableCoinSystem = true;
 		private readonly Boolean EnableEmoteCollection = true;
 
 		#endregion
@@ -104,12 +104,11 @@ namespace Maoubot_GUI
 
 			// Add commands
 
-			// TODO: Add algorythm to load commands automatically, maybe?
-
 			// GENERAL
 			Commands.Add(new CommandCommand());
 			Commands.Add(new QuoteCommand());
 			Commands.Add(new HelpCommand());
+			if (EnableCoinSystem) Commands.Add(new CoinsCommand());
 
 			// FUN
 			Commands.Add(new BallCommand());
@@ -119,6 +118,7 @@ namespace Maoubot_GUI
 
 			// Utility commands
 			Commands.Add(new QueueCommand());
+			Commands.Add(new EmoteCommand());
 		}
 
 		#endregion
@@ -272,7 +272,7 @@ namespace Maoubot_GUI
 				if (!BotFile.EnableSubMessage) return;
 
 				String Msg = this.BotFile.SubMessageResub + " ";
-				// TODO: Replace this.
+
 				Msg = Msg.Replace("%name%", e.Nick);
 				Msg = Msg.Replace("%months%", e.GetSafeTag("msg-param-months"));
 
@@ -321,7 +321,7 @@ namespace Maoubot_GUI
 					}
 
 
-					if (!ActiveUsers.Contains(e.Nick) && EnableCoinSystem) ActiveUsers.Add(e.Nick);
+					if (!ActiveUsers.Contains(e.InternalNick) && EnableCoinSystem) ActiveUsers.Add(e.InternalNick);
 
 					// finish
 					//Console.WriteLine(BotFile.ChatLines);

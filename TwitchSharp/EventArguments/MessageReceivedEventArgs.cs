@@ -51,7 +51,8 @@ namespace TwitchSharp.EventArguments
 		public String Channel { get; }
 		public String RawMessage { get; }
 
-		public String Nick { get { return GetSafeTag("display-name"); } }
+		public String Nick { get { return GetSafeTag("display-name"); } private set { this.Tags["display-name"] = value; } }
+		public String InternalNick { get; }
 		public String Badges { get { return GetSafeTag("badges"); } }
 
 		public String UserType { get { return GetSafeTag("user-type"); } }
@@ -118,24 +119,36 @@ namespace TwitchSharp.EventArguments
 						Tags.Add(TagExpressionSplit[0], TagExpressionSplit[1]);
 					}
 				}
-				String t_;
-				Tags.TryGetValue("display-name", out t_);
-				if (!Tags.ContainsKey("display-name") || String.IsNullOrWhiteSpace(t_))
+				//String t_;
+				//Tags.TryGetValue("display-name", out t_);
+				//if (!Tags.ContainsKey("display-name") || String.IsNullOrWhiteSpace(t_))
+				//{
+				//	if (SpaceSplit[0].Contains(":twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv"))
+				//	{
+				//		IsSubMessage = true;
+				//		Tags["display-name"] = SpaceSplit[3].Substring(1);
+				//	}
+				//	else
+				//	{
+				//		String RegexMatch = new Regex(@":([A-Za-z0-9_-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;
+				//		if (!String.IsNullOrEmpty(RegexMatch))
+				//			Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();
+				//		else
+				//			Tags["display-name"] = "**NO_NAME**";
+				//	}
+				//}
+
+				String RegexMatch = new Regex(@":([A-Za-z0-9_-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;
+				if (!String.IsNullOrEmpty(RegexMatch))
+					this.InternalNick = RegexMatch.Substring(1).Split('!').FirstOrDefault();
+				else
+					InternalNick = "**NO_NAME**";
+
+				if (String.IsNullOrEmpty(Nick))
 				{
-					if (SpaceSplit[0].Contains(":twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv"))
-					{
-						IsSubMessage = true;
-						Tags["display-name"] = SpaceSplit[3].Substring(1);
-					}
-					else
-					{
-						String RegexMatch = new Regex(@":([A-Za-z0-9_-]+)!\1@\1.tmi.twitch.tv").Match(this.RawMessage).Value;
-						if (!String.IsNullOrEmpty(RegexMatch))
-							Tags["display-name"] = RegexMatch.Substring(1).Split('!').FirstOrDefault();
-						else
-							Tags["display-name"] = "**NO_NAME**";
-					}
+					this.Nick = InternalNick;
 				}
+
 				if (SpaceSplit[(UsesTags) ? 2 : 1] == @"PRIVMSG")
 				{
 					this.Type = MessageType.Chat;

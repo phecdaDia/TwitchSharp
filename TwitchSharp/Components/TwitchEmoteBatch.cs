@@ -157,6 +157,15 @@ namespace TwitchSharp.Components
 			return -1;
 		}
 
+		public int ContainsEmote(String te)
+		{
+			for (int i = 0; i < this.Emotes.Length; i++)
+			{
+				if (this.Emotes[i].EmoteName == te) return i;
+			}
+			return -1;
+		}
+
 		public void Sort()
 		{
 			this.Emotes = TwitchEmote.SortByAmount(this.Emotes).ToArray();
@@ -167,13 +176,5 @@ namespace TwitchSharp.Components
 			if (!HasEmotes) return null;
 			return this.Emotes.Where(x => x.EmoteId == Id).FirstOrDefault();
 		}
-
-		//private TwitchEmote GetEmoteById(TwitchEmote[] e, int Id)
-		//{
-		//	// TODO: Binary quicksort search
-
-
-		//	return null;
-		//}
 	}
 }

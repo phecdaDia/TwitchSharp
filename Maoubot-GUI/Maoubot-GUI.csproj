@@ -58,10 +58,12 @@
     <Compile Include="Component\Commands\Fun\CatCommand.cs" />
     <Compile Include="Component\Commands\Fun\CheeredBitsCommand.cs" />
     <Compile Include="Component\Commands\Fun\SubsCommand.cs" />
+    <Compile Include="Component\Commands\General\CoinsCommand.cs" />
     <Compile Include="Component\Commands\General\CommandCommand.cs" />
     <Compile Include="Component\Commands\General\HelpCommand.cs" />
     <Compile Include="Component\Commands\General\QuoteCommand.cs" />
     <Compile Include="Component\Commands\TextCommand.cs" />
+    <Compile Include="Component\Commands\Utility\EmoteCommand.cs" />
     <Compile Include="Component\Commands\Utility\QueueCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
     <Compile Include="Component\TwitchUser.cs" />

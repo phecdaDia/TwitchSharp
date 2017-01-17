@@ -34,9 +34,9 @@ namespace Maoubot_GUI.Xml
 
 		protected override void Init()
 		{
-			if (this.Quotes == null)
+			if (this.QuoteList == null)
 			{
-				this.Quotes = new String[0];
+				this.QuoteList = new List<String>();
 			}
 		}
 

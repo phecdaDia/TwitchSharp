@@ -126,7 +126,7 @@ namespace Maoubot_GUI.Xml
 			List<TextCommand> t = TextCommands.ToList();
 			t.RemoveAt(Index);
 			TextCommands = t.ToArray();
-			Console.WriteLine("Removed " + Index);
+			//Console.WriteLine("Removed " + Index);
 			return true;
 
 		}
@@ -154,7 +154,7 @@ namespace Maoubot_GUI.Xml
 			return a.ToArray();
 		}
 
-		internal void DeleteAccount(string Nick)
+		public void DeleteAccount(string Nick)
 		{
 			bool Found = true;
 			do
@@ -175,6 +175,18 @@ namespace Maoubot_GUI.Xml
 
 			} while (Found == true);
 
+		}
+
+		public int ContainsTwitchuser(String Nick)
+		{
+			try
+			{
+				return this.TwitchUserList.IndexOf(this.TwitchUserList.Where(x => x.Username == Nick).FirstOrDefault());
+			}
+			catch (Exception)
+			{
+				return -1;
+			}
 		}
 	}
 }
