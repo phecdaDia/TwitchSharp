@@ -51,7 +51,7 @@ namespace Maoubot_GUI.Window
 
 		private DebugForm DebugForm;
 
-		private readonly Boolean IsInDebugMode = true;
+		private readonly Boolean IsInDebugMode = false;
 		private readonly Boolean EnableCoinSystem = true;
 		private readonly Boolean EnableEmoteCollection = true;
 
@@ -100,6 +100,9 @@ namespace Maoubot_GUI.Window
 				}
 			};
 
+			// enable / disable controls
+			this.buttonOpenDebugMenu.Enabled = this.IsInDebugMode;
+
 			// init some vars
 
 			this.ActiveUsers = new List<string>();
@@ -131,13 +134,22 @@ namespace Maoubot_GUI.Window
 			{
 				this.WatcherThread = new Thread(() =>
 				{
-					int LastSecond = DateTime.Now.Second;
-
+					TimeSpan UpdateDelay = new TimeSpan(0, 0, 0, 1, 0);
+					TimeSpan ElapsedTime = new TimeSpan();
+					DateTime LastExecution = DateTime.Now;
 					while (!this.IsDisposed)
 					{
-						while (LastSecond == DateTime.Now.Second) Thread.Sleep(500);
-						BotUptime = BotUptime.AddSeconds(1);
-						//Console.WriteLine("PLZ NOT BE 0: " + this.EmoteDatabase.TwitchEmotes.Emotes.Length);
+						while (ElapsedTime < UpdateDelay)
+						{
+							ElapsedTime += DateTime.Now.Subtract(LastExecution);
+							LastExecution = DateTime.Now;
+							if (ElapsedTime < UpdateDelay)
+								Thread.Sleep((int)UpdateDelay.Subtract(ElapsedTime).TotalMilliseconds + 1);
+						}
+						ElapsedTime -= UpdateDelay;
+						if (this.IsDisposed) return;
+
+						BotUptime = this.BotUptime.Add(UpdateDelay);
 
 						if (BotUptime.Second % 15 == 0) Console.WriteLine("Uptime: {0:00}:{1:00}:{2:00}", BotUptime.Hour, BotUptime.Minute, BotUptime.Second);
 
@@ -169,10 +181,6 @@ namespace Maoubot_GUI.Window
 							ActiveUsers.Clear();
 							SaveMaoubotConfig();
 						}
-
-
-						//Console.WriteLine("Total elapsed time: {0} days {1:00}:{2:00}:{3:00}", ElapsedTime.Day, ElapsedTime.Hour, ElapsedTime.Minute, ElapsedTime.Second);
-						LastSecond = DateTime.Now.Second;
 					}
 				});
 

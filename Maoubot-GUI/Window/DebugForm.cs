@@ -41,9 +41,10 @@ namespace Maoubot_GUI.Window
 								ElapsedTime += DateTime.Now.Subtract(LastExecution);
 								LastExecution = DateTime.Now;
 								if (ElapsedTime < UpdateDelay)
-									Thread.Sleep(250); // Todo: Create a better method
+									Thread.Sleep((int)UpdateDelay.Subtract(ElapsedTime).TotalMilliseconds + 1); 
 							}
 							ElapsedTime -= UpdateDelay;
+							if (this.IsDisposed) return;
 
 							// Update stuff
 							SetTextOfComponent(label1, Counter++.ToString());
@@ -63,17 +64,17 @@ namespace Maoubot_GUI.Window
 		public delegate void SetTextOfComponentDelegate(Control c, String Text);
         public void SetTextOfComponent(Control c, String Text)
 		{
-			if (!c.IsDisposed)
+			if (c.IsDisposed) return;
+			
+			if (c.InvokeRequired)
 			{
-				if (c.InvokeRequired)
-				{
-					c.Invoke(new SetTextOfComponentDelegate(SetTextOfComponent), new object[] { c, Text });
-				}
-				else
-				{
-					c.Text = Text;
-				}
+				c.Invoke(new SetTextOfComponentDelegate(SetTextOfComponent), new object[] { c, Text });
 			}
+			else
+			{
+				c.Text = Text;
+			}
+			
 		}
 	}
 }
