@@ -49,6 +49,8 @@ namespace Maoubot_GUI.Window
 
 		private Thread WatcherThread;
 
+		private DebugForm DebugForm;
+
 		private readonly Boolean IsInDebugMode = true;
 		private readonly Boolean EnableCoinSystem = true;
 		private readonly Boolean EnableEmoteCollection = true;
@@ -1019,6 +1021,12 @@ namespace Maoubot_GUI.Window
 			BotFile.CheeredBits = 0;
 
 			UpdateStats();
+		}
+
+		private void buttonOpenDebugMenu_Click(object sender, EventArgs e)
+		{
+			if (DebugForm == null || DebugForm.IsDisposed) this.DebugForm = new DebugForm(this);
+			this.DebugForm.Show();
 		}
 		#endregion
 

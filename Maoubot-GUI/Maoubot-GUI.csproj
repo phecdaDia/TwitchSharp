@@ -67,6 +67,12 @@
     <Compile Include="Component\Commands\Utility\QueueCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
     <Compile Include="Component\TwitchUser.cs" />
+    <Compile Include="Window\DebugForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\DebugForm.Designer.cs">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Window\Dialog\AbstractDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
     <Compile Include="Xml\BotConfig.cs" />
     <Compile Include="Xml\EmoteDatabase.cs" />
     <Compile Include="Xml\QuoteConfig.cs" />
+    <EmbeddedResource Include="Window\DebugForm.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Window\Maoubot.resx">
       <DependentUpon>Maoubot.cs</DependentUpon>
     </EmbeddedResource>

@@ -82,6 +82,7 @@ namespace Maoubot_GUI.Window
 			this.buttonResetStats = new System.Windows.Forms.Button();
 			this.labelCheerTest = new System.Windows.Forms.Label();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
+			this.buttonOpenDebugMenu = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -633,6 +634,7 @@ namespace Maoubot_GUI.Window
 			// 
 			// tabPage4
 			// 
+			this.tabPage4.Controls.Add(this.buttonOpenDebugMenu);
 			this.tabPage4.Controls.Add(this.buttonResetStats);
 			this.tabPage4.Controls.Add(this.labelCheerTest);
 			this.tabPage4.Controls.Add(this.buttonRandomColor);
@@ -671,6 +673,16 @@ namespace Maoubot_GUI.Window
 			this.buttonRandomColor.Text = "color";
 			this.buttonRandomColor.UseVisualStyleBackColor = true;
 			this.buttonRandomColor.Click += new System.EventHandler(this.buttonRandomColor_Click);
+			// 
+			// buttonOpenDebugMenu
+			// 
+			this.buttonOpenDebugMenu.Location = new System.Drawing.Point(259, 529);
+			this.buttonOpenDebugMenu.Name = "buttonOpenDebugMenu";
+			this.buttonOpenDebugMenu.Size = new System.Drawing.Size(75, 23);
+			this.buttonOpenDebugMenu.TabIndex = 4;
+			this.buttonOpenDebugMenu.Text = "Debug";
+			this.buttonOpenDebugMenu.UseVisualStyleBackColor = true;
+			this.buttonOpenDebugMenu.Click += new System.EventHandler(this.buttonOpenDebugMenu_Click);
 			// 
 			// Maoubot
 			// 
@@ -764,6 +776,7 @@ namespace Maoubot_GUI.Window
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label labelTwitchEmoteSearch;
 		private System.Windows.Forms.Button buttonTwitchEmoteResort;
+		private System.Windows.Forms.Button buttonOpenDebugMenu;
 	}
 }
 

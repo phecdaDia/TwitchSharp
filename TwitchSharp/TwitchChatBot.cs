@@ -141,7 +141,7 @@ namespace TwitchSharp
 		/// <param name="OAuth"></param>
 		public void SetOAuth(String OAuth)
 		{
-			if (Verbose) Console.WriteLine("Setting oAuth: {0}***", OAuth.Substring(0, 10));
+			if (Verbose) Console.WriteLine("Setting oAuth: {0}...", OAuth.Substring(0, 14));
 			this.OAuth = OAuth;
 		}
 
