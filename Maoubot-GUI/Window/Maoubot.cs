@@ -3,7 +3,7 @@ using Maoubot_GUI.Component.Commands;
 using Maoubot_GUI.Component.Commands.Fun;
 using Maoubot_GUI.Component.Commands.General;
 using Maoubot_GUI.Component.Commands.Utility;
-using Maoubot_GUI.Dialog;
+using Maoubot_GUI.Window.Dialog;
 using Maoubot_GUI.Xml;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ using TwitchSharp.Components;
 using TwitchSharp.EventArguments;
 using TwitchSharp.Utilities;
 
-namespace Maoubot_GUI
+namespace Maoubot_GUI.Window
 {
 	public partial class Maoubot : Form
 	{

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TwitchSharp.EventArguments;
 using System.Runtime.Serialization;
 using TwitchSharp.Components;
+using Maoubot_GUI.Window;
 
 namespace Maoubot_GUI.Component.Commands
 {

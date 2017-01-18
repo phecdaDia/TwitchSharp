@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Maoubot_GUI.Dialog
+namespace Maoubot_GUI.Window.Dialog
 {
 	public abstract class AbstractDialog<T> : Form
 	{

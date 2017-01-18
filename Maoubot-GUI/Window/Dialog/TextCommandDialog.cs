@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TwitchSharp.Components;
 
-namespace Maoubot_GUI.Dialog
+namespace Maoubot_GUI.Window.Dialog
 {
 	public class TextCommandDialog : AbstractDialog<TextCommand>
 	{

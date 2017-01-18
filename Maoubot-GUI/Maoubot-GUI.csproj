@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>imthe666st-profile_image-fb33ff90bf9c12ef-300x300.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Maoubot_GUI.Program</StartupObject>
@@ -67,16 +67,16 @@
     <Compile Include="Component\Commands\Utility\QueueCommand.cs" />
     <Compile Include="Component\TwitchAccount.cs" />
     <Compile Include="Component\TwitchUser.cs" />
-    <Compile Include="Dialog\AbstractDialog.cs">
+    <Compile Include="Window\Dialog\AbstractDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialog\TextCommandDialog.cs">
+    <Compile Include="Window\Dialog\TextCommandDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Maoubot.cs">
+    <Compile Include="Window\Maoubot.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Maoubot.Designer.cs">
+    <Compile Include="Window\Maoubot.Designer.cs">
       <DependentUpon>Maoubot.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="Xml\BotConfig.cs" />
     <Compile Include="Xml\EmoteDatabase.cs" />
     <Compile Include="Xml\QuoteConfig.cs" />
-    <EmbeddedResource Include="Maoubot.resx">
+    <EmbeddedResource Include="Window\Maoubot.resx">
       <DependentUpon>Maoubot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -116,7 +116,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="imthe666st-profile_image-fb33ff90bf9c12ef-300x300.ico" />
+    <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

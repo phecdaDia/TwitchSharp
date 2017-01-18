@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TwitchSharp.EventArguments;
 using TwitchSharp.Components;
+using Maoubot_GUI.Window;
 
 namespace Maoubot_GUI.Component.Commands.General
 {
@@ -23,12 +24,15 @@ namespace Maoubot_GUI.Component.Commands.General
 			String c_ = String.Empty;
 			foreach (ChatCommand cc in mb.GetCommands())
 			{
-				if (cc.Command == c)
+				if (cc.MayExecute(e.Permission))
 				{
-					return cc.GetHelp(mb, sc);
+					if (cc.Command == c)
+					{
+						return cc.GetHelp(mb, sc);
+					}
+					c_ += cc.Command;
+					if (!(cc == mb.GetCommands().Last())) c_ += ", ";
 				}
-				c_ += cc.Command;
-				if (!(cc == mb.GetCommands().Last())) c_ += ", ";
 			}
 
 			return String.Format("Available Commands: {0}!", c_);

@@ -8,6 +8,7 @@ namespace TwitchSharp.Components
 {
 	public enum Permission
 	{
+		UNKNOWN = -1,
 		Everybody = 0,
 		Subscriber = 1,
 		//Subscriber3 = 2,

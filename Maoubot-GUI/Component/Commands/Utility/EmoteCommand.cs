@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Maoubot_GUI.Window;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,6 @@ namespace Maoubot_GUI.Component.Commands.Utility
 
 		public override string GetHelp(Maoubot mb, string SubCommand = "")
 		{
-			// Todo: Here is a bug. Leave it
 			if (!String.IsNullOrEmpty(SubCommand)) return String.Format("{0} couldn't be found. Make sure it isn't a FFZ emote!", SubCommand);
 			return String.Format("***TODO***");
 		}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Maoubot_GUI.Component.Commands;
 
-namespace Maoubot_GUI
+namespace Maoubot_GUI.Window
 {
 	partial class Maoubot
 	{
