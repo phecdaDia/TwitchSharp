@@ -27,7 +27,7 @@ namespace Maoubot_GUI.Component.Commands.Utility
 				int Index = mb.EmoteDatabase.TwitchEmotes.ContainsEmote(EmoteName);
                 if (Index < 0) return GetHelp(mb, EmoteName);
 				TwitchEmote te = mb.EmoteDatabase.TwitchEmotes.Emotes.Where(x => x.EmoteName == EmoteName).FirstOrDefault();
-				return Format("%name%: \"{0}\" has been used {1} times and is #{2} total", e, te.EmoteName, te.Amount, Index);
+				return Format("%name%: \"{0}\" has been used {1} times and is #{2} total", e, te.EmoteName, te.Amount, Index+1);
 			}
 			else return GetHelp(mb);
 		}

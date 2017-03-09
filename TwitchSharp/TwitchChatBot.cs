@@ -387,7 +387,7 @@ namespace TwitchSharp
 				if (Verbose)
 			{
 					Console.WriteLine("{0}-Error\r\n{1}", System.Reflection.MethodBase.GetCurrentMethod().Name, ex.StackTrace);
-					Console.WriteLine("*Pfft. We just killed the Thread. What do you want to do, zombie it?*");
+					Console.WriteLine("The inputstream has been killed.");
 				}
 				return String.Empty;
 			}

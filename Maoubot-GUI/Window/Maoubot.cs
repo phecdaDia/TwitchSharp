@@ -42,6 +42,7 @@ namespace Maoubot_GUI.Window
 		private Boolean ChatboxAutoscroll = true;
 
 		private String BufferedChatlog;
+		private String DefaultStats;
 
 		private List<ChatCommand> Commands = new List<ChatCommand>();
 
@@ -51,8 +52,8 @@ namespace Maoubot_GUI.Window
 
 		private DebugForm DebugForm;
 
-		private readonly Boolean IsInDebugMode = false;
-		private readonly Boolean EnableCoinSystem = true;
+		private readonly Boolean IsInDebugMode = true;
+		private readonly Boolean EnableCoinSystem = false;
 		private readonly Boolean EnableEmoteCollection = true;
 
 		#endregion
@@ -115,14 +116,14 @@ namespace Maoubot_GUI.Window
 			Commands.Add(new HelpCommand());
 			if (EnableCoinSystem) Commands.Add(new CoinsCommand());
 
-			// FUN
-			Commands.Add(new BallCommand());
+			//FUN
+            Commands.Add(new BallCommand());
 			Commands.Add(new CatCommand());
-			//Commands.Add(new CheeredBitsCommand());
-			//Commands.Add(new SubsCommand());
+			Commands.Add(new CheeredBitsCommand());
+			Commands.Add(new SubsCommand());
 
-			// Utility commands
-			Commands.Add(new QueueCommand());
+			//Utility commands
+            Commands.Add(new QueueCommand());
 			Commands.Add(new EmoteCommand());
 		}
 
@@ -134,7 +135,7 @@ namespace Maoubot_GUI.Window
 			{
 				this.WatcherThread = new Thread(() =>
 				{
-					TimeSpan UpdateDelay = new TimeSpan(0, 0, 0, 1, 0);
+					TimeSpan UpdateDelay = new TimeSpan(0, 0, 0, 1, 0); // 1 Update Per Second
 					TimeSpan ElapsedTime = new TimeSpan();
 					DateTime LastExecution = DateTime.Now;
 					while (!this.IsDisposed)
@@ -150,11 +151,12 @@ namespace Maoubot_GUI.Window
 						if (this.IsDisposed) return;
 
 						BotUptime = this.BotUptime.Add(UpdateDelay);
+						int UptimeSeconds = BotUptime.Second + 60 * BotUptime.Minute + 3600 * BotUptime.Hour;
 
-						if (BotUptime.Second % 15 == 0) Console.WriteLine("Uptime: {0:00}:{1:00}:{2:00}", BotUptime.Hour, BotUptime.Minute, BotUptime.Second);
+						if (UptimeSeconds % 15 == 0) Console.WriteLine("Uptime: {0:00}:{1:00}:{2:00}", BotUptime.Hour, BotUptime.Minute, BotUptime.Second);
 
 
-						if (BotUptime.Second == 0 && Tcb.InChannel && EnableCoinSystem) // run every minute once
+						if (UptimeSeconds % 60 == 0 && Tcb.InChannel && EnableCoinSystem) // run every minute once
 						{
 							
 							Boolean AlreadyHasAccount = false;
@@ -699,21 +701,21 @@ namespace Maoubot_GUI.Window
 		/// </summary>
 		private void UpdateStats()
 		{
-			if (labelCheerTest.InvokeRequired)
+			if (labelStats.InvokeRequired)
 			{
-				labelCheerTest.Invoke(new UpdateStatsDelegate(UpdateStats));
+				labelStats.Invoke(new UpdateStatsDelegate(UpdateStats));
 				return;
 			}
+			if (String.IsNullOrEmpty(this.DefaultStats)) this.DefaultStats = this.labelStats.Text;
 
-			String stats = String.Format(
-				"Total Chatlines: {0}" + Environment.NewLine +
-				Environment.NewLine +
-				"Total Newsubs: {1}" + Environment.NewLine +
-				"Total Resubs: {2}" + Environment.NewLine +
-				"Total cheered bits: {3}"
-			, BotFile.ChatLines, BotFile.NewSubs, BotFile.Resubs, BotFile.CheeredBits);
+			String Stats = this.DefaultStats;
+			Stats = Stats.Replace("%chat_lines%", BotFile.ChatLines.ToString());
+			Stats = Stats.Replace("%cheered_bits%", BotFile.CheeredBits.ToString());
+			Stats = Stats.Replace("%new_subs%", BotFile.NewSubs.ToString());
+			Stats = Stats.Replace("%renewed_subs%", BotFile.Resubs.ToString());
 
-			labelCheerTest.Text = stats;
+
+			labelStats.Text = Stats;
 		}
 		private delegate void UpdateStatsDelegate();
 		#endregion

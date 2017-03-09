@@ -53,20 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\Commands\ChatCommand.cs" />
-    <Compile Include="Component\Commands\Fun\BallCommand.cs" />
-    <Compile Include="Component\Commands\Fun\CatCommand.cs" />
-    <Compile Include="Component\Commands\Fun\CheeredBitsCommand.cs" />
-    <Compile Include="Component\Commands\Fun\SubsCommand.cs" />
-    <Compile Include="Component\Commands\General\CoinsCommand.cs" />
-    <Compile Include="Component\Commands\General\CommandCommand.cs" />
-    <Compile Include="Component\Commands\General\HelpCommand.cs" />
-    <Compile Include="Component\Commands\General\QuoteCommand.cs" />
-    <Compile Include="Component\Commands\TextCommand.cs" />
-    <Compile Include="Component\Commands\Utility\EmoteCommand.cs" />
-    <Compile Include="Component\Commands\Utility\QueueCommand.cs" />
-    <Compile Include="Component\TwitchAccount.cs" />
-    <Compile Include="Component\TwitchUser.cs" />
+    <Compile Include="Components\Commands\ChatCommand.cs" />
+    <Compile Include="Components\Commands\Fun\BallCommand.cs" />
+    <Compile Include="Components\Commands\Fun\CatCommand.cs" />
+    <Compile Include="Components\Commands\Fun\CheeredBitsCommand.cs" />
+    <Compile Include="Components\Commands\Fun\SubsCommand.cs" />
+    <Compile Include="Components\Commands\General\CoinsCommand.cs" />
+    <Compile Include="Components\Commands\General\CommandCommand.cs" />
+    <Compile Include="Components\Commands\General\HelpCommand.cs" />
+    <Compile Include="Components\Commands\General\QuoteCommand.cs" />
+    <Compile Include="Components\Commands\TextCommand.cs" />
+    <Compile Include="Components\Commands\Utility\EmoteCommand.cs" />
+    <Compile Include="Components\Commands\Utility\QueueCommand.cs" />
+    <Compile Include="Components\TwitchAccount.cs" />
+    <Compile Include="Components\TwitchUser.cs" />
     <Compile Include="Window\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>

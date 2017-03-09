@@ -80,9 +80,9 @@ namespace Maoubot_GUI.Window
 			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.buttonResetStats = new System.Windows.Forms.Button();
-			this.labelCheerTest = new System.Windows.Forms.Label();
 			this.buttonRandomColor = new System.Windows.Forms.Button();
 			this.buttonOpenDebugMenu = new System.Windows.Forms.Button();
+			this.labelStats = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -634,9 +634,9 @@ namespace Maoubot_GUI.Window
 			// 
 			// tabPage4
 			// 
+			this.tabPage4.Controls.Add(this.labelStats);
 			this.tabPage4.Controls.Add(this.buttonOpenDebugMenu);
 			this.tabPage4.Controls.Add(this.buttonResetStats);
-			this.tabPage4.Controls.Add(this.labelCheerTest);
 			this.tabPage4.Controls.Add(this.buttonRandomColor);
 			this.tabPage4.Location = new System.Drawing.Point(4, 25);
 			this.tabPage4.Name = "tabPage4";
@@ -654,15 +654,6 @@ namespace Maoubot_GUI.Window
 			this.buttonResetStats.Text = "Reset Stats";
 			this.buttonResetStats.UseVisualStyleBackColor = true;
 			this.buttonResetStats.Click += new System.EventHandler(this.buttonResetStats_Click);
-			// 
-			// labelCheerTest
-			// 
-			this.labelCheerTest.AutoSize = true;
-			this.labelCheerTest.Location = new System.Drawing.Point(3, 10);
-			this.labelCheerTest.Name = "labelCheerTest";
-			this.labelCheerTest.Size = new System.Drawing.Size(35, 13);
-			this.labelCheerTest.TabIndex = 2;
-			this.labelCheerTest.Text = "label6";
 			// 
 			// buttonRandomColor
 			// 
@@ -683,6 +674,17 @@ namespace Maoubot_GUI.Window
 			this.buttonOpenDebugMenu.Text = "Debug";
 			this.buttonOpenDebugMenu.UseVisualStyleBackColor = true;
 			this.buttonOpenDebugMenu.Click += new System.EventHandler(this.buttonOpenDebugMenu_Click);
+			// 
+			// labelStats
+			// 
+			this.labelStats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.labelStats.Dock = System.Windows.Forms.DockStyle.Top;
+			this.labelStats.Location = new System.Drawing.Point(0, 0);
+			this.labelStats.Name = "labelStats";
+			this.labelStats.Size = new System.Drawing.Size(342, 71);
+			this.labelStats.TabIndex = 6;
+			this.labelStats.Text = "\r\nChatlines: %chat_lines%\r\n(Re-)Subs: %renewed_subs% | %new_subs%\r\nCheered bits: " +
+    "%cheered_bits%";
 			// 
 			// Maoubot
 			// 
@@ -720,7 +722,6 @@ namespace Maoubot_GUI.Window
 			this.tabPage6.ResumeLayout(false);
 			this.tabPage6.PerformLayout();
 			this.tabPage4.ResumeLayout(false);
-			this.tabPage4.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -766,7 +767,6 @@ namespace Maoubot_GUI.Window
 		private System.Windows.Forms.Button buttonTextCommandDelete;
 		private System.Windows.Forms.Button buttonTextCommandEdit;
 		private System.Windows.Forms.Button buttonTextCommandAdd;
-		private System.Windows.Forms.Label labelCheerTest;
 		private System.Windows.Forms.Button buttonResetStats;
 		private System.Windows.Forms.Button buttonAccountsDelete;
 		private System.Windows.Forms.Button buttonAccountsLoad;
@@ -777,6 +777,7 @@ namespace Maoubot_GUI.Window
 		private System.Windows.Forms.Label labelTwitchEmoteSearch;
 		private System.Windows.Forms.Button buttonTwitchEmoteResort;
 		private System.Windows.Forms.Button buttonOpenDebugMenu;
+		private System.Windows.Forms.Label labelStats;
 	}
 }
 
