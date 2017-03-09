@@ -38,7 +38,7 @@ namespace TwitchSharp
 		/// <summary>
 		/// Nickname set by the user
 		/// </summary>
-        public String Nick;
+        public String Nick { get; private set; }
 		/// <summary>
 		/// OAuth set by the user. Kept private for privacy.
 		/// </summary>
@@ -46,17 +46,17 @@ namespace TwitchSharp
 		/// <summary>
 		/// Currently connected channel
 		/// </summary>
-        public String Channel;
+        public String Channel { get; private set; }
 
 		/// <summary>
 		/// Is the bot currently running?
 		/// </summary>
-		public bool Active = false;
+		public bool Active { get; private set; }
 		/// <summary>
 		/// Debug output
 		/// TALK TO ME! ;(
 		/// </summary>
-		public bool Verbose = false;
+		public bool Verbose { get; private set; }
 		/// <summary>
 		/// Is connected to a channel.
 		/// </summary>
