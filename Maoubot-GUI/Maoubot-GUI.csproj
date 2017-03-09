@@ -67,22 +67,22 @@
     <Compile Include="Components\Commands\Utility\QueueCommand.cs" />
     <Compile Include="Components\TwitchAccount.cs" />
     <Compile Include="Components\TwitchUser.cs" />
-    <Compile Include="Window\DebugForm.cs">
+    <Compile Include="Windows\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Window\DebugForm.Designer.cs">
+    <Compile Include="Windows\DebugForm.Designer.cs">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Window\Dialog\AbstractDialog.cs">
+    <Compile Include="Windows\Dialogs\AbstractDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Window\Dialog\TextCommandDialog.cs">
+    <Compile Include="Windows\Dialogs\TextCommandDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Window\Maoubot.cs">
+    <Compile Include="Windows\Maoubot.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Window\Maoubot.Designer.cs">
+    <Compile Include="Windows\Maoubot.Designer.cs">
       <DependentUpon>Maoubot.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -90,10 +90,10 @@
     <Compile Include="Xml\BotConfig.cs" />
     <Compile Include="Xml\EmoteDatabase.cs" />
     <Compile Include="Xml\QuoteConfig.cs" />
-    <EmbeddedResource Include="Window\DebugForm.resx">
+    <EmbeddedResource Include="Windows\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Window\Maoubot.resx">
+    <EmbeddedResource Include="Windows\Maoubot.resx">
       <DependentUpon>Maoubot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
